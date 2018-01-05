@@ -1,0 +1,25 @@
+{
+    "name": "serverhub-mvc",
+    "version": "0.0.2",
+    "description": "Pure nodejs mvc framework",
+    "main": "index.js",
+    "scripts": {
+        "test": "node test/app.js",
+        "prepublish": "gulp"
+    },
+    "keywords": [
+        "mvc",
+        "nodejs"
+    ],
+    "author": "DevChache",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^8.5.2",
+        "graceful-fs": "^4.1.11",
+        "gulp": "^3.9.1",
+        "gulp-filter": "^5.1.0",
+        "gulp-typescript": "^3.2.3",
+        "minimatch": "^3.0.4",
+        "typescript": "^2.6.2"
+    }
+}
