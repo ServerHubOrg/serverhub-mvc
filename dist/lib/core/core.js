@@ -13,6 +13,11 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     PageNotFound: '404.html',
     WebDir: 'www'
 };
+const core_env = {
+    platform: process.platform,
+    version: '0.0.2',
+    node_version: process.version
+};
 function RegisterController(controllerJs) {
     return controller.Controller.Register(controllerJs);
 }
@@ -31,6 +36,7 @@ function SetGlobalVariable(variable, value) {
 exports.SetGlobalVariable = SetGlobalVariable;
 function RoutePath(path, req, res) {
     let routeResult = ROUTE.RunRoute(path);
+    res.setHeader('server', `ServerHub/${core_env.version} (${core_env.platform}) Node.js ${core_env.node_version}`);
     if (!routeResult)
         return NoRoute(path, req, res);
     let method = req.method.toLowerCase();

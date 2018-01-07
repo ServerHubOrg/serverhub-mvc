@@ -16,6 +16,12 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     WebDir: 'www'
 } as GlobalEnvironmentVariables;
 
+const core_env = {
+    platform: process.platform,
+    version: '0.0.2',
+    node_version: process.version
+}
+
 export function RegisterController(controllerJs: string) {
     return controller.Controller.Register(controllerJs);
 }
@@ -50,6 +56,7 @@ export function SetGlobalVariable(variable: string, value: Object): void {
 
 export function RoutePath(path: string, req: IncomingMessage, res: ServerResponse): void {
     let routeResult = ROUTE.RunRoute(path);
+    res.setHeader('server', `ServerHub/${core_env.version} (${core_env.platform}) Node.js ${core_env.node_version}`);
     // console.log(routeResult); // TODO, remove when release
     if (!routeResult)
         return NoRoute(path, req, res);
