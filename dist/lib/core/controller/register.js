@@ -4,7 +4,6 @@ const error_1 = require("../error/error");
 const fs = require("fs");
 const path = require("path");
 function Register(controllerJs) {
-    console.log(global['EnvironmentVariables'].ServerBaseDir);
     let file = Path2File(controllerJs);
     let variables = global['EnvironmentVariables'];
     let filepath = path.resolve(variables.ServerBaseDir, variables.ControllerDir, controllerJs);

@@ -39,6 +39,12 @@ Category | Type | Unique | Cause
 02 | 01 | 01 | [Controller not registered](#sh020101)
 02 | 01 | 02 | [Default controller not found](#sh020102)
 02 | 07 | 01 | [AppStart method not found](#sh020701)
+02 | 07 | 02 | [Allocated cache size exceeded limitation](#sh020702)
+02 | 07 | 03 | [Content pointer index overflow](#sh020703)
+02 | 07 | 04 | [File already exists](#sh020704)
+02 | 07 | 05 | [File path invalid](#sh020705)
+02 | 07 | 06 | [File not exist](#sh020706)
+02 | 07 | 07 | [Resource not cacheable](#sh020707)
 
 ## Compile Time Errors (CTE) (SH01____)
 
@@ -110,3 +116,45 @@ There is not default controller, user cannot get access to '/' on your site.
 ***AppStart method not found***
 
 Did you forget to implement and pass appstart as a parameter to 'serverhub.Run()'?
+
+#### SH020702
+
+<span id='sh020702'></span>
+***Allocated cache size exceeded limitation***
+
+According to Cache document, ServerHub allows maxmium cache size to be 20% of physical installed memory. So it's possible that you passed a configuration object to serverhub.Run() method with a MaxCacheSize that is too large.
+
+#### SH020703
+
+<span id='sh020703'></span>
+***Content pointer index overflow***
+
+In storage service, service APIs with 'chunk' names may cause this error. The FileChunk interface has a From (number) and a Length (number) property. So if From or From + Length is larger than file length, this error may be thrown.
+
+#### SH020704
+
+<span id='sh020704'></span>
+***File already exists***
+
+When using service API "PutFile()", if a file exists, this error will be thrown. See doc/Storage for details.
+
+#### SH020705
+
+<span id='sh020705'></span>
+***File path invalid***
+
+Every service API requires a file path (as well as a basedir parameter if necessary). But if both path and basedir parameters are undefined or null, this error will be thrown.
+
+#### SH020706
+
+<span id='sh020706'></span>
+***File not exists***
+
+When using service API "GetFile()", "PatchFile()", if a file not exists, this error will be thrown. See doc/Storage for details.
+
+#### SH020707
+
+<span id='sh020707'></span>
+***Resource not cacheable***
+
+Check doc/Cache for detailed information. This is usually caused by an invalid or uncacheable resource URI.

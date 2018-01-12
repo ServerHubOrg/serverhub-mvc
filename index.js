@@ -34,6 +34,20 @@ exports.Run = (config, appstart) => {
         libcore.SetGlobalVariable('ModelDir', config['ModelDir']);
     }
 
+    if (config['MaxCacheSize']) {
+        try {
+            let config_size = parseInt(config['MaxCacheSize']);
+            let installed_memory = parseInt(require('os').totalmem() / 1024 / 1024);
+            if (config_size > 0.2 * installed_memory) {
+                config_size = 0.2 * installed_memory;
+                console.log('MaxCacheSize exceeded limitation, reduce to', config_size, 'MB');
+            } else console.log('Maximum cache size set to', config_size, 'MB');
+            libcore.SetGlobalVariable('MaxCacheSize', config_size);
+        } catch (error) {
+            console.error('Configuration property "MaxCacheSize" is not a valid number');
+        }
+    }
+
     if (appstart)
         appstart(libroute.Route.GetRoute());
     else throw new Error("Error SH020701: Missing appstart method");
@@ -46,4 +60,6 @@ exports.Run = (config, appstart) => {
 
 
     server.listen(port);
+
+    console.log('Server started on port:', port);
 }

@@ -74,6 +74,13 @@ var RuntimeError;
     RuntimeError[RuntimeError["SH020401"] = 132097] = "SH020401";
     RuntimeError[RuntimeError["SH020402"] = 132098] = "SH020402";
     RuntimeError[RuntimeError["SH020501"] = 132353] = "SH020501";
+    RuntimeError[RuntimeError["SH020701"] = 132865] = "SH020701";
+    RuntimeError[RuntimeError["SH020702"] = 132866] = "SH020702";
+    RuntimeError[RuntimeError["SH020703"] = 132867] = "SH020703";
+    RuntimeError[RuntimeError["SH020704"] = 132868] = "SH020704";
+    RuntimeError[RuntimeError["SH020705"] = 132869] = "SH020705";
+    RuntimeError[RuntimeError["SH020706"] = 132870] = "SH020706";
+    RuntimeError[RuntimeError["SH020707"] = 132871] = "SH020707";
 })(RuntimeError = exports.RuntimeError || (exports.RuntimeError = {}));
 ;
 const ErrorTemplate = {
@@ -85,4 +92,11 @@ const ErrorTemplate = {
     SH020201: "View file '$${0}' does not exist on '$${1}'.",
     SH020401: "Model file '$${0}' does not exist on '$${1}'.",
     SH020402: "Model file '$${0}' is not valid.",
+    SH020701: "AppStart method not found.",
+    SH020702: "Allocated cache size exceeded limitation.",
+    SH020703: "Content pointer index overflow in storage services.",
+    SH020704: "File '$${0}' already exists in storage services.",
+    SH020705: "File path invalid in storage services.",
+    SH020706: "File '$${0}' does not exist.",
+    SH020707: "URI '$${0}' is not cacheable.",
 };
