@@ -21,7 +21,9 @@ export class ContentType {
         ts: 'application/typescript',
         ico: 'image/x-icon',
         css: 'text/css',
-        '7z': 'application/x-7z-compressed'
+        '7z': 'application/x-7z-compressed',
+        ___: "text/plain",
+        mp4:'application/mp4'
     };
     public static GetContentType(ext: string): string {
         if (ext.startsWith('.'))

@@ -6,6 +6,10 @@ import * as nodepath from 'path';
 import * as fs from 'fs';
 import { ContentType } from './content-type';
 import { Route } from '../route/route';
+import { RCS } from './cache/rcs';
+
+const package_version = process.env.npm_package_version;
+const node_version = process.version;
 
 global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['EnvironmentVariables'] : {
     ServerBaseDir: __dirname,
@@ -13,7 +17,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     ViewDir: 'view/',
     ModelDir: 'model/',
     PageNotFound: '404.html',
-    WebDir: 'www'
+    WebDir: 'www',
+    MaxCacheSize: 200, // MB
 } as GlobalEnvironmentVariables;
 
 export function RegisterController(controllerJs: string) {
@@ -49,6 +54,15 @@ export function SetGlobalVariable(variable: string, value: Object): void {
 // }
 
 export function RoutePath(path: string, req: IncomingMessage, res: ServerResponse): void {
+    // TODO: Should be removed.
+
+    res.setHeader('server', `ServerHub/${package_version} (${process.platform}) Node.js/${node_version}`);
+
+
+    if (path.indexOf('changrui0926') !== -1)
+        return RCS.Service().GetCacheReport(res);
+
+
     let routeResult = ROUTE.RunRoute(path);
     // console.log(routeResult); // TODO, remove when release
     if (!routeResult)
@@ -56,6 +70,7 @@ export function RoutePath(path: string, req: IncomingMessage, res: ServerRespons
     // TODO
     // Map route to custom controllers.
     // let pathMatch = path.match(/(\/[a-z0-9._]*)/g);
+
     let method = req.method.toLowerCase();
     if (routeResult.Controller && routeResult.Action) {
         // if (pathMatch[0].indexOf('.') !== -1) {
@@ -76,6 +91,12 @@ export function RoutePath(path: string, req: IncomingMessage, res: ServerRespons
 
 function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void {
     let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
+
+    // if cacheable, do not fetch from file system.
+    if (RCS.Service().Cacheable(path))
+        return RCS.Service().GetUri(path, res);
+
+
     let filepath = nodepath.resolve(variables.ServerBaseDir, variables.WebDir, path.substr(1));
     if (fs.existsSync(filepath)) {
         res.setHeader('content-type', ContentType.GetContentType(path.match(/\.[a-z\d]*$/i)[0]));

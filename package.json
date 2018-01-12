@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "node test/app.js",
+        "unit_test": "node unit_test/index.js",
         "prepublish": "gulp"
     },
     "keywords": [

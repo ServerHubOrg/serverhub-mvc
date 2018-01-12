@@ -23,7 +23,7 @@ export class ErrorManager {
         let stack = '';
         let stackvalue = (error.stack as string).split('\n');
         stackvalue.forEach(ele => {
-            stack += `<p class='stack'>${ele.replace(/\s/g, '&nbsp;').replace(/at/g,'<span class="at">at</span>')}</p>`;
+            stack += `<p class='stack'>${ele.replace(/\s/g, '&nbsp;').replace(/at/g, '<span class="at">at</span>')}</p>`;
         });
         let message = `<h2>Error ${error.message}</h2>`;
         return `<html DOCTYPE><head>
@@ -76,6 +76,14 @@ export enum RuntimeError {
     SH020402 = 0x020402,
     // - network
     SH020501 = 0x020501,
+    // - server
+    SH020701 = 0x020701,
+    SH020702 = 0x020702,
+    SH020703 = 0x020703,
+    SH020704 = 0x020704,
+    SH020705 = 0x020705,
+    SH020706 = 0x020706,
+    SH020707 = 0x020707,
 };
 
 const ErrorTemplate = {
@@ -87,4 +95,11 @@ const ErrorTemplate = {
     SH020201: "View file '$${0}' does not exist on '$${1}'.", // 0：viewFileName.js; 1: viewPath, see global['EnvironmentVariables'].
     SH020401: "Model file '$${0}' does not exist on '$${1}'.", // 0：modelFileName.js; 1: modelPath, see global['EnvironmentVariables'].
     SH020402: "Model file '$${0}' is not valid.", // 0：modelFileName.js.
+    SH020701: "AppStart method not found.",
+    SH020702: "Allocated cache size exceeded limitation.",
+    SH020703: "Content pointer index overflow in storage services.",
+    SH020704: "File '$${0}' already exists in storage services.", // 0: file path
+    SH020705: "File path invalid in storage services.",
+    SH020706: "File '$${0}' does not exist.", // 0: file path.
+    SH020707: "URI '$${0}' is not cacheable.", // 0: resource URI.
 }

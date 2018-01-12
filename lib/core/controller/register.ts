@@ -8,7 +8,7 @@ export interface ControllerBundle {
     Controller: Object
 }
 export function Register(controllerJs: string): ControllerBundle {
-    console.log(global['EnvironmentVariables'].ServerBaseDir);
+    // console.log(global['EnvironmentVariables'].ServerBaseDir);
     let file = Path2File(controllerJs);
     let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
     let filepath = path.resolve(variables.ServerBaseDir, variables.ControllerDir, controllerJs);

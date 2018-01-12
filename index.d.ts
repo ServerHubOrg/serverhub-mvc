@@ -11,4 +11,5 @@ export declare interface ServerHubConfig {
     ViewDir: string;
     ModelDir: string;
     Controllers: Array<string>;
+    MaxCacheSize: number;
 }
