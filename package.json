@@ -1,6 +1,6 @@
 {
     "name": "serverhub-mvc",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Pure nodejs mvc framework",
     "main": "index.js",
     "scripts": {

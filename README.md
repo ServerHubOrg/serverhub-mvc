@@ -70,7 +70,8 @@ const path = require('path');
 serverhub.Run({
     BaseDir: __dirname,
     WebDir: 'www/',
-    Controllers: ['home.js']
+    Controllers: ['home.js'],
+    MaxCacheSize: 256 // unit: MB
 }, (route) => {
     route.MapRoute('default', '{controller}/{action}/{id}', {
         Controller: 'home',
