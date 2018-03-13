@@ -23,11 +23,6 @@ export function Register(controllerJs: string): ControllerBundle {
         if (new ControllerValidation().Validate(output))
             exp = output;
         else throw new Error();
-        // if (scriptFile)
-        //     exp = eval(scriptFile);
-        // else throw new Error();
-        // if (!exp)
-        //     throw new Error();
     } catch (error) {
         throw ErrorManager.RenderError(CompileTimeError.SH010103);
     }

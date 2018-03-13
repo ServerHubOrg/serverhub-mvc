@@ -16,7 +16,8 @@ function ApplyModel(view, model) {
         try {
             let keys = Object.keys(model);
             keys.forEach(ele => {
-                htmlFile = htmlFile.replace(`\$\$\{${view}\.${ele}\}`, model[ele]);
+                let reg = new RegExp(`(\\$\\$\\{${view}\\.${ele}\\})`, 'g');
+                htmlFile = htmlFile.replace(reg, model[ele]);
             });
             result = htmlFile;
         }
