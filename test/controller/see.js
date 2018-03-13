@@ -1,7 +1,5 @@
 return {
-    index: function (req, res, context) {
-        count++;
-        context.count = count;
-        return context;
+    index: function (req, res, method) {
+        return this.View();
     }
 }

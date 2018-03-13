@@ -14,6 +14,8 @@ import { ApplyModel } from '../view/view';
 import { ReadModel } from '../model/model';
 import { Route, RouteValue } from "../../route/route";
 
+const PlantableVariables = ["View", "Runtime", "Console"];
+
 /**
  * Controller storage service provider
  */
@@ -43,7 +45,28 @@ class ControllerCollection {
             Object.keys(controller).map(action => {
                 if (action === actionName.toLowerCase()) {
                     let context = ReadModel(controllerName);
-                    context = controller[action](dispatch.Request, dispatch.Response, context, dispatch.Method);
+
+                    controller['View'] = () => {
+                        return context;
+                    };
+
+                    controller['Console'] = global.console;
+
+                    controller['Runtime'] = {
+                        branch: 'beta'
+                    };
+                    
+                    try {
+                        context = controller[action](dispatch.Request, dispatch.Response, dispatch.Method);
+                    } catch (e) {
+                        if ((e as Error).message.match(/.*not.*define/i))
+                            console.error('Undefined function called. Did you missed a "this" reference while calling "View()"?')
+                    }
+
+                    PlantableVariables.forEach((variable) => {
+                        delete controller[variable];
+                    });
+
                     dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
                     dispatch.Response.write(ApplyModel(controllerName, context));
                     dispatch.Response.end();
@@ -95,6 +118,9 @@ export class Controller {
 
 }
 
+/**
+ * Contains values that will be passed to custom controller action.
+ */
 interface ControllDispatch {
     Method: string;
     Request: IncomingMessage;

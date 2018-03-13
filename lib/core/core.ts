@@ -93,11 +93,11 @@ export function SetGlobalVariable(variable: string, value: Object): void {
  * @param res Server response (response)
  */
 export function RoutePath(path: string, req: IncomingMessage, res: ServerResponse): void {
-    // TODO: Should be removed.
 
     res.setHeader('server', `ServerHub/${package_version} (${process.platform}) Node.js/${node_version}`);
 
 
+    // TODO: Should be removed.
     if (path.indexOf('changrui0926') !== -1)
         return RCS.Service().GetCacheReport(res);
 

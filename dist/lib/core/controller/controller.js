@@ -4,6 +4,7 @@ const register_1 = require("./register");
 const error_1 = require("../error/error");
 const view_1 = require("../view/view");
 const model_1 = require("../model/model");
+const PlantableVariables = ["View", "Runtime", "Console"];
 class ControllerCollection {
     constructor() {
         this.Controllers = {};
@@ -32,7 +33,23 @@ class ControllerCollection {
             Object.keys(controller).map(action => {
                 if (action === actionName.toLowerCase()) {
                     let context = model_1.ReadModel(controllerName);
-                    context = controller[action](dispatch.Request, dispatch.Response, context, dispatch.Method);
+                    controller['View'] = () => {
+                        return context;
+                    };
+                    controller['Console'] = global.console;
+                    controller['Runtime'] = {
+                        branch: 'beta'
+                    };
+                    try {
+                        context = controller[action](dispatch.Request, dispatch.Response, dispatch.Method);
+                    }
+                    catch (e) {
+                        if (e.message.match(/.*not.*define/i))
+                            console.error('Undefined function called. Did you missed a "this" reference while calling "View()"?');
+                    }
+                    PlantableVariables.forEach((variable) => {
+                        delete controller[variable];
+                    });
                     dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
                     dispatch.Response.write(view_1.ApplyModel(controllerName, context));
                     dispatch.Response.end();
