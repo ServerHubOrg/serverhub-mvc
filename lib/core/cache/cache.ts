@@ -1,3 +1,11 @@
+/**
+ * Cache Manage Library
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
 export class Cache {
     private _id: string;
     private _uri: string;

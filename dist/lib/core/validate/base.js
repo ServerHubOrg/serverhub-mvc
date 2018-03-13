@@ -1,5 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class IValidator {
+class Validator {
 }
-exports.default = IValidator;
+exports.default = Validator;

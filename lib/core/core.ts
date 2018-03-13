@@ -1,4 +1,12 @@
-import * as controller from './controller/controller';
+/**
+ * Core Entry
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
+import * as controller from './controller/index';
 import { GlobalEnvironmentVariables } from './global';
 import { IncomingMessage, ServerResponse } from 'http';
 import { ErrorManager, RuntimeError } from './error/error';
@@ -11,6 +19,7 @@ import { RCS } from './cache/rcs';
 const package_version = process.env.npm_package_version;
 const node_version = process.version;
 
+// Export initial values to global object of Node.
 global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['EnvironmentVariables'] : {
     ServerBaseDir: __dirname,
     ControllerDir: 'controller/',
@@ -21,21 +30,38 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     MaxCacheSize: 200, // MB
 } as GlobalEnvironmentVariables;
 
+/**
+ * Environment variables for ServerHub.
+ */
 const core_env = {
     platform: process.platform,
     version: '0.0.2',
     node_version: process.version
 }
 
+/**
+ * Expose to developer using ServerHub. Developers can use this function to register custom controllers.
+ * @param controllerJs Controller file name
+ */
 export function RegisterController(controllerJs: string) {
     return controller.Controller.Register(controllerJs);
 }
 
+/**
+ * Update global variable with new value.
+ * @param variable Which global variable to update
+ * @param value New value of the global variable.
+ */
 export function UpdateGlobalVariable(variable: string, value: Object): boolean {
     if (global['EnvironmentVariables'].hasOwnProperty(variable)) { global['EnvironmentVariables'][variable] = value; return true; }
     return false;
 }
 
+/**
+ * Can both update and add new global variable.
+ * @param variable What global variable to set
+ * @param value Value of the variable
+ */
 export function SetGlobalVariable(variable: string, value: Object): void {
     global['EnvironmentVariables'][variable] = value;
 }
@@ -59,6 +85,13 @@ export function SetGlobalVariable(variable: string, value: Object): void {
 //     }
 // }
 
+
+/**
+ * Route a specific path.
+ * @param path Path to be routed.
+ * @param req Incomming message (request)
+ * @param res Server response (response)
+ */
 export function RoutePath(path: string, req: IncomingMessage, res: ServerResponse): void {
     // TODO: Should be removed.
 

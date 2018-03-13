@@ -1,5 +1,15 @@
 /**
- * Interface of global environment variables. With TypeScript, import this file and use `let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables` to get access to the environment variables.
+ * Global Environment Variable Definition Entry
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
+/**
+ * Interface of global environment variables. 
+ * With TypeScript, import this file and use `let variables = global['EnvironmentVariables'] 
+ * as GlobalEnvironmentVariables` to get access to the environment variables.
  */
 export interface GlobalEnvironmentVariables {
     ServerBaseDir: string;
@@ -10,5 +20,5 @@ export interface GlobalEnvironmentVariables {
     ModelDir: string;
     Controllers: Array<string>;
     WebDir: string;
-    MaxCacheSize: number; // byte
+    MaxCacheSize: number; // unit byte
 };

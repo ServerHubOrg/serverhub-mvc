@@ -1,9 +1,21 @@
-import IValidator, { FunctionDefinition } from "./base";
-export default class ControllerValidation extends IValidator {
+/**
+ * Controller Validation Library
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
+import Validator, { FunctionDefinition } from "./base";
+
+/**
+ * A sub class for Validator
+ */
+export default class ControllerValidation extends Validator {
     readonly RequiredFunctions = [{
         FunctionName: 'index',
         Required: true,
-        ParamRequirement: 2
+        ParamRequirement: 3 // request, response, viewbundle.
     }, {
         FunctionName: 'primary',
         Required: false,
@@ -13,6 +25,11 @@ export default class ControllerValidation extends IValidator {
     constructor() {
         super();
     }
+
+    /**
+     * Determines whether an object is a valid controller.
+     * @param obj Target object
+     */
     public Validate(obj: Object): boolean {
         if (obj)
             this.Target = obj;
@@ -23,6 +40,11 @@ export default class ControllerValidation extends IValidator {
         });
         return allpass;
     }
+
+    /**
+     * Check each function definition with target object
+     * @param definition Function definition
+     */
     protected PassFunction(definition: FunctionDefinition): boolean {
         if (this.Target === void 0 || this.Target === null)
             throw new Error('Validate() method must be called before checking each function');

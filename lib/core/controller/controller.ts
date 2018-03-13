@@ -1,3 +1,11 @@
+/**
+ * Controller Library
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
 import { GlobalEnvironmentVariables } from "../global";
 import { IncomingMessage, ServerResponse } from "http";
 import { ControllerBundle, Register } from "./register";
@@ -6,6 +14,9 @@ import { ApplyModel } from '../view/view';
 import { ReadModel } from '../model/model';
 import { Route, RouteValue } from "../../route/route";
 
+/**
+ * Controller storage service provider
+ */
 class ControllerCollection {
     private Controllers = {};
     public Add(bundle: ControllerBundle): void {
@@ -45,20 +56,35 @@ class ControllerCollection {
 }
 
 
-
+/**
+ * Controller operations
+ */
 export class Controller {
-    /**
-     * Register
-     */
     private static Collection = new ControllerCollection();
 
+    /**
+     * Register a new controller
+     * @param controller Controller file name
+     */
     public static Register(controller: string) {
         Controller.Collection.Add(Register(controller));
     }
+
+    /**
+     * Unregister a controller (not frequently used)
+     * @param controllerName Controller file name
+     */
     public static Unregister(controllerName: string) {
         Controller.Collection.Remove(controllerName);
     }
 
+    /**
+     * Dispatch a controller.
+     * @param method HTTP method
+     * @param route Current hit route path
+     * @param request HTTP request info
+     * @param response Server response
+     */
     public static Dispatch(method: string, route: RouteValue, request: IncomingMessage, response: ServerResponse): boolean {
         return Controller.Collection.DispatchController(route.Controller, route.Action, route.Id, route.Search, {
             Method: method,

@@ -1,3 +1,14 @@
+/**
+ * Content Type Definitions
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
+/**
+ * Provide Content Type operations.
+ */
 export class ContentType {
     private static types = {
         png: 'image/png',
@@ -23,8 +34,13 @@ export class ContentType {
         css: 'text/css',
         '7z': 'application/x-7z-compressed',
         ___: "text/plain",
-        mp4:'application/mp4'
+        mp4: 'application/mp4'
     };
+
+    /**
+     * Return content type string with file extension type.
+     * @param ext File extension
+     */
     public static GetContentType(ext: string): string {
         if (ext.startsWith('.'))
             ext = ext.slice(1);

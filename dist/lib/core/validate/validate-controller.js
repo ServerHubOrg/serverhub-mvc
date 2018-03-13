@@ -7,7 +7,7 @@ class ControllerValidation extends base_1.default {
         this.RequiredFunctions = [{
                 FunctionName: 'index',
                 Required: true,
-                ParamRequirement: 2
+                ParamRequirement: 3
             }, {
                 FunctionName: 'primary',
                 Required: false,

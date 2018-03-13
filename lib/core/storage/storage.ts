@@ -1,4 +1,14 @@
 /**
+ * Storage Library
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
+
+
+/**
  * Storage interface definition and storage service provider.
  */
 

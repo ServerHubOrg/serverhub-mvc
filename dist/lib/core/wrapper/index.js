@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const strict_mode_check = new RegExp(`^(?:'use strict';)|(?:"use strict";).*$`);
 function FunctionWrapper(obj_string) {
     try {
         if (!strict_mode_check.test(obj_string))
@@ -15,4 +14,5 @@ function FunctionWrapper(obj_string) {
         throw new Error('Input JavaScript content is not valid. Here is an example: "return {a: function(){} }"');
     }
 }
+const strict_mode_check = new RegExp(`^(?:'use strict';)|(?:"use strict";).*$`);
 exports.default = FunctionWrapper;

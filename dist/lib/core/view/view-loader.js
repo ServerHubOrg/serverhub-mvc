@@ -10,6 +10,7 @@ function LoadView(viewFile) {
     if (!fs.existsSync(filepath))
         throw error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020201, file.FullName, variables.ViewDir);
     let viewString = fs.readFileSync(filepath).toString();
+    return viewString;
 }
 function Path2File(path) {
     if (!path.endsWith('.html'))
@@ -25,3 +26,4 @@ function Path2File(path) {
     };
     return file;
 }
+exports.default = LoadView;

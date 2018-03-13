@@ -1,3 +1,11 @@
+/**
+ * Type Definition of cache.ts
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
 export class CacheStorage {
     constructor();
     public AddCache(cache: Cache): void;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const controller = require("./controller/controller");
+const controller = require("./controller/index");
 const error_1 = require("./error/error");
 const nodepath = require("path");
 const fs = require("fs");

@@ -1,3 +1,11 @@
+/**
+ * Test example
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
 const serverhub = require('../index');
 const fs = require('fs');
 const path = require('path');

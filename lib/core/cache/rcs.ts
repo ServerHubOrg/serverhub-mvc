@@ -1,3 +1,11 @@
+/**
+ * Resource Caching Service Library
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
 import { Cache, CacheStorage, CacheReportInfo } from './cache';
 import { ServerResponse } from 'http';
 import { ErrorManager, RuntimeError } from '../error/error';

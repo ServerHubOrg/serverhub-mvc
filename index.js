@@ -1,19 +1,34 @@
+/**
+ * ServerHub Entry
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
 const libcore = require('./dist/lib/core/core');
 const libroute = require('./dist/lib/route/route');
 const http = require('http');
 
 
 var server;
+
+/**
+ * Call this method to start ServerHub service.
+ * @param {object} config Initial configuration
+ * @param {function} appstart Callback when ServerHub starts.
+ */
 exports.Run = (config, appstart) => {
     if (!config['BaseDir'])
         throw new Error("Must specify server base dir at least.");
     libcore.UpdateGlobalVariable('ServerBaseDir', config['BaseDir']);
-    let port = 926;
+
+    let port = 926; // Birthday of my beloved friend, Changrui.
     if (config['Port'])
         port = config['Port'];
 
     if (config['PageNotFound'])
-    // libcore.SetGlobalVariable('PageNotFound', config['PageNotFound']);
+        // libcore.SetGlobalVariable('PageNotFound', config['PageNotFound']);
         throw new Error('Not implemented!');
 
     if (config['Controllers']) {
@@ -58,8 +73,12 @@ exports.Run = (config, appstart) => {
         libcore.RoutePath(req.url, req, res);
     });
 
-
-    server.listen(port);
-
-    console.log('Server started on port:', port);
+    try {
+        server.listen(port);
+        console.log('Server started on port:', port);
+    } catch (e) {
+        console.error('Server cannot start and listen to', port);
+        console.error('There might be another instance process of ServerHub. Please check and attempt to start later.')
+        process.exit(1);
+    }
 }

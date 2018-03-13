@@ -1,4 +1,12 @@
-import { GlobalEnvironmentVariables } from "../global";
+/**
+ * View Support
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
+ import { GlobalEnvironmentVariables } from "../global";
 import { ErrorManager, CompileTimeError, RuntimeError } from "../error/error";
 import * as path from 'path';
 import * as fs from 'fs';

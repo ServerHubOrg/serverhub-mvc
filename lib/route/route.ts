@@ -1,3 +1,14 @@
+/**
+ * Route Entry
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
+/**
+ * Route static class provide operations such as map a new route or ignore a specific one.
+ */
 export class Route {
     private static Instance = new Route();
     private Name: string;
@@ -14,6 +25,7 @@ export class Route {
         };
         this.IgnoredRules = new Array<string>(0);
     }
+    
     public MapRoute(routeName: string, routeRule: string, defaultValue: RouteValue) {
         this.Name = routeName;
         this.Rule = routeRule;

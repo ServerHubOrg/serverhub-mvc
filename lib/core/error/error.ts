@@ -1,3 +1,11 @@
+/**
+ * Error Library
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
 import { GlobalEnvironmentVariables } from "../global";
 export class ErrorManager {
     public static RenderError(errorEnum: CompileTimeError | RuntimeError, ...params): string {

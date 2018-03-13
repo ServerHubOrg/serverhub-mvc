@@ -1,3 +1,11 @@
+/**
+ * Type Definition for core.ts
+ * 
+ * ServerHub MVC, MIT License
+ * March 13, 2018
+ * Yang Zhongdong (yangzd1996@outlook.com)
+ */
+
 export function RegisterController(controllerJs: string): void;
 
 export function UpdateGlobalVariable(variable: string, value: Object): boolean;
