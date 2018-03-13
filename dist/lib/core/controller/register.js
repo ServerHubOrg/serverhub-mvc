@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_1 = require("../error/error");
+const index_1 = require("../validate/index");
+const index_2 = require("../wrapper/index");
 const fs = require("fs");
 const path = require("path");
 function Register(controllerJs) {
@@ -12,11 +14,10 @@ function Register(controllerJs) {
     let scriptFile = fs.readFileSync(filepath).toString();
     let exp = void 0;
     try {
-        if (scriptFile)
-            exp = eval(scriptFile);
+        let output = index_2.default(scriptFile);
+        if (new index_1.ControllerValidation().Validate(output))
+            exp = output;
         else
-            throw new Error();
-        if (!exp)
             throw new Error();
     }
     catch (error) {

@@ -1,5 +1,7 @@
 import { GlobalEnvironmentVariables } from "../global";
 import { ErrorManager, CompileTimeError, RuntimeError } from '../error/error';
+import { ControllerValidation } from '../validate/index';
+import Wrapper from '../wrapper/index';
 import * as fs from 'fs';
 import * as path from 'path';
 export interface ControllerBundle {
@@ -17,11 +19,15 @@ export function Register(controllerJs: string): ControllerBundle {
     let scriptFile = fs.readFileSync(filepath).toString();
     let exp = void 0;
     try {
-        if (scriptFile)
-            exp = eval(scriptFile);
+        let output = Wrapper(scriptFile);
+        if (new ControllerValidation().Validate(output))
+            exp = output;
         else throw new Error();
-        if (!exp)
-            throw new Error();
+        // if (scriptFile)
+        //     exp = eval(scriptFile);
+        // else throw new Error();
+        // if (!exp)
+        //     throw new Error();
     } catch (error) {
         throw ErrorManager.RenderError(CompileTimeError.SH010103);
     }

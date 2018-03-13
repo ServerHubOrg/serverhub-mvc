@@ -6,7 +6,8 @@
     "scripts": {
         "test": "node test/app.js",
         "unit_test": "node unit_test/index.js",
-        "prepublish": "gulp"
+        "prepublish": "gulp",
+        "play": "node playground/index.js"
     },
     "keywords": [
         "mvc",
