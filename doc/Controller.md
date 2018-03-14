@@ -40,3 +40,22 @@ So, never try to change controller files during ServerHub running.
 There are several variables that can be accessed inside controller actions. In order to use them, you must explicitly use pointer **_this_** as a reference to the controller instance. Or, there will be an error message displayed.
 
 You are suggested to use **arrow functions** that accessible since ECMAScript 2015. Or, you may use some workaround to access to those variables (closure or something else).
+
+### Complete list of supported controller scope variables
+
+Usage of these variables are avaliable at `doc/variables/{VariableName}.md`. Some variables that have primitive types like `string`, `number` etc. (as well as some reference to vanilla Node.js implementation) will not be doced, FYI.
+
+- `this.View` **_Function()_** Returns the corresponding model file.
+- `this.Runtime` **_Object_** Contains bunch of other runtime features.
+    1. `this.Runtime.DBProvider` **_Object_** A reference to initialized database provider instanced (default MySQL).
+    1. `this.Runtime.FileHelper` **_Object_** A reference to FileHelper object.
+
+- `this.System` **_Object_** Provide bunch of readonly constants inside ServerHub instance.
+    1. `this.System.Version` **_string_** ServerHub version.
+    1. `this.System.NodeVersion` **_string_** Node.js version.
+    1. `this.System.Platform` **_string_** Platform information (win32, linux, etc.).
+    1. `this.System.Hardware` **_Object_** Bunch of information about hardware.
+        - `this.System.Hardware.TotalMemory` **_number_** Installed memory size (byte).
+        - `this.System.Hardware.FreeMemory` **_number_** Free memory size (byte).
+        - `this.System.Hardware.NetworkInterfaces` **_Object_** Returns interfaces that have been assigned a network address.
+    1. `this.System.Die` **_Function(exit_code)_** Exit current ServerHub process.

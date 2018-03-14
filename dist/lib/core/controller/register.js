@@ -6,9 +6,12 @@ const index_2 = require("../wrapper/index");
 const fs = require("fs");
 const path = require("path");
 const database_1 = require("../database");
+const index_3 = require("../helper/index");
+const os = require("os");
+let initFileHelper = false;
 function Register(controllerJs) {
     let file = Path2File(controllerJs);
-    let variables = global['EnvironmentVariables'];
+    const variables = global['EnvironmentVariables'];
     let filepath = path.resolve(variables.ServerBaseDir, variables.ControllerDir, controllerJs);
     if (!fs.existsSync(filepath))
         throw error_1.ErrorManager.RenderError(error_1.CompileTimeError.SH010102, file.FullName, variables.ControllerDir);
@@ -46,8 +49,26 @@ function Register(controllerJs) {
         case 'mysql': ;
         default: provider = config !== null ? new database_1.DBMySQL(config) : new database_1.DBMySQL();
     }
+    if (!initFileHelper) {
+        new index_3.FileHelper();
+        initFileHelper = true;
+    }
     exp['Runtime'] = {
-        DBProvider: provider
+        DBProvider: provider,
+        FileHelper: index_3.FileHelper
+    };
+    exp['System'] = {
+        Version: variables.PackageData['version'].toString(),
+        NodeVersion: process.version.toString(),
+        Platform: process.platform.toString(),
+        Die: (exitCode = 1) => {
+            process.exit(exitCode);
+        },
+        Hardware: {
+            TotalMemory: os.totalmem(),
+            FreeMemory: os.freemem(),
+            NetworkInterfaces: os.networkInterfaces()
+        }
     };
     let bundle = {
         Name: file.FileName,

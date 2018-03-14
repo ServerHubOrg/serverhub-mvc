@@ -13,8 +13,10 @@ import Wrapper from '../wrapper/index';
 import * as fs from 'fs';
 import * as path from 'path';
 import { DBMySQL } from "../database";
+import { FileHelper } from "../helper/index";
+import * as os from 'os';
 
-
+let initFileHelper = false;
 /**
  * COntains information of a custom controller.
  */
@@ -32,7 +34,7 @@ export interface ControllerBundle {
 export function Register(controllerJs: string): ControllerBundle {
     // console.log(global['EnvironmentVariables'].ServerBaseDir);
     let file = Path2File(controllerJs);
-    let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
+    const variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
     let filepath = path.resolve(variables.ServerBaseDir, variables.ControllerDir, controllerJs);
     if (!fs.existsSync(filepath))
         throw ErrorManager.RenderError(CompileTimeError.SH010102, file.FullName, variables.ControllerDir);
@@ -71,9 +73,31 @@ export function Register(controllerJs: string): ControllerBundle {
         default: provider = config !== null ? new DBMySQL(config) : new DBMySQL();
     }
 
+    if (!initFileHelper) {
+        new FileHelper(); // set up FileHelper private variables.
+        initFileHelper = true;
+    }
+
+
     exp['Runtime'] = {
-        DBProvider: provider
+        DBProvider: provider,
+        FileHelper: FileHelper
     };
+
+    exp['System'] = {
+        Version: variables.PackageData['version'].toString(),
+        NodeVersion: process.version.toString(),
+        Platform: process.platform.toString(),
+        Die: (exitCode = 1) => {
+            process.exit(exitCode);
+        },
+        Hardware: {
+            TotalMemory: os.totalmem(),
+            FreeMemory: os.freemem(),
+            NetworkInterfaces: os.networkInterfaces()
+        }
+    }
+
     let bundle = {
         Name: file.FileName,
         FileName: file.FullName,
