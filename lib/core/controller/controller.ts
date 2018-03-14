@@ -50,22 +50,15 @@ class ControllerCollection {
                         return context;
                     };
 
-                    controller['Console'] = global.console;
-
-                    controller['Runtime'] = {
-                        branch: 'beta'
-                    };
-                    
                     try {
                         context = controller[action](dispatch.Request, dispatch.Response, dispatch.Method);
                     } catch (e) {
                         if ((e as Error).message.match(/.*not.*define/i))
-                            console.error('Undefined function called. Did you missed a "this" reference while calling "View()"?')
+                            console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
+                        else throw e;
                     }
 
-                    PlantableVariables.forEach((variable) => {
-                        delete controller[variable];
-                    });
+                    delete controller['View'];
 
                     dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
                     dispatch.Response.write(ApplyModel(controllerName, context));

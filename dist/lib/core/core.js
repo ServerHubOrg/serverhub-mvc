@@ -16,6 +16,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     PageNotFound: '404.html',
     WebDir: 'www',
     MaxCacheSize: 200,
+    DBProvider: 'mysql',
+    DBConnectionString: null
 };
 const core_env = {
     platform: process.platform,

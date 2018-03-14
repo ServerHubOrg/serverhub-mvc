@@ -28,6 +28,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     PageNotFound: '404.html',
     WebDir: 'www',
     MaxCacheSize: 200, // MB
+    DBProvider: 'mysql',
+    DBConnectionString: null
 } as GlobalEnvironmentVariables;
 
 /**

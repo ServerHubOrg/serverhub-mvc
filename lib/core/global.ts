@@ -21,4 +21,6 @@ export interface GlobalEnvironmentVariables {
     Controllers: Array<string>;
     WebDir: string;
     MaxCacheSize: number; // unit byte
+    DBProvider: string;
+    DBConnectionString: string;
 };

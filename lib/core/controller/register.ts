@@ -12,6 +12,7 @@ import { ControllerValidation } from '../validate/index';
 import Wrapper from '../wrapper/index';
 import * as fs from 'fs';
 import * as path from 'path';
+import { DBMySQL } from "../database";
 
 
 /**
@@ -45,6 +46,34 @@ export function Register(controllerJs: string): ControllerBundle {
     } catch (error) {
         throw ErrorManager.RenderError(CompileTimeError.SH010103);
     }
+
+    exp['Console'] = global.console;
+
+    let provider = void 0;
+    let config = null;
+    if (variables.DBConnectionString) {
+        let secs = variables.DBConnectionString.split(';');
+        config = { Host: 'local', Username: 'username', Password: 'password' };
+        secs.forEach(sec => {
+            if (sec.match(/^host=/i)) {
+                config['Host'] = sec.match(/^host=(.*)$/i)[1];
+            }
+            if (sec.match(/^(?:usr)|(?:user(?:name)?)=/i)) {
+                config['Username'] = sec.match(/^(?:(?:usr)|(?:user(?:name)?))=(.*)$/i)[1];
+            }
+            if (sec.match(/^(?:password)|(?:pwd)=/i)) {
+                config['Password'] = sec.match(/^(?:(?:password)|(?:pwd))=(.+)$/i)[1];
+            }
+        })
+    }
+    switch (variables.DBProvider) {
+        case 'mysql': ;
+        default: provider = config !== null ? new DBMySQL(config) : new DBMySQL();
+    }
+
+    exp['Runtime'] = {
+        DBProvider: provider
+    };
     let bundle = {
         Name: file.FileName,
         FileName: file.FullName,

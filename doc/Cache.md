@@ -71,7 +71,7 @@ But what will happen when the models or views are updated after server started? 
 
 ### What Will Happen If Cache Size Exceeded Limitation
 
-If the exception occurs while ServerHub starting, there will be an error thrown and ServerHub will terminate immediately. But if it occurs while ServerHub running, and with the growth of dynamic resources, RCS has to unload some files that have lower `weight`. And that is called **WCS**.
+If the exception occurs while ServerHub starting, there will be an error thrown and ServerHub will terminate immediately. But if it occurs while ServerHub running, and with the growth of dynamic resources, RCS has to unload some files that have lower `caculated weight`. And that is called **WCS**.
 
 ## When to Cache
 
@@ -219,3 +219,19 @@ What is this scenario? Imagine you have one file which is pretty large, let's se
 
 ## WCS (Weight-based Caching Strategy)
 
+Let's talk about **WCS** in ServerHub caching system.
+
+Caching system is designed to provide better I/O performance for HTTP request. For frequently used and smaller files, they usually have higher priorities while caching.
+
+There are three factors that been used to calculate final resource weight in WCS: `size`, `time` (frequency) and `weight`.
+
+WCS automatically sort cached resources with each factor and get each influence with different constant:
+
+```
+SIZE = size * size_order_index * 0.2;
+TIME = time * time_order_index * 0.1;
+WEIGHT = weight * weight_order_index * 0.7;
+CACULATED_WEIGHT = SIZE + TIME + WEIGHT
+```
+
+All cached resources will be judged with the operations above and re-sort under caculated weight. The last resources will be removed from cache until memory is avaliable for new cache items.

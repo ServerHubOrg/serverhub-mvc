@@ -1,13 +1,14 @@
 {
     "name": "serverhub-mvc",
-    "version": "0.0.3",
+    "version": "0.0.5",
     "description": "Pure nodejs mvc framework",
     "main": "index.js",
     "scripts": {
         "test": "node test/app.js",
         "unit_test": "node unit_test/index.js",
-        "prepublish": "gulp",
-        "play": "node playground/index.js"
+        "prepare": "gulp",
+        "play": "node playground/index.js",
+        "prepublishOnly": "gulp"
     },
     "keywords": [
         "mvc",
@@ -27,5 +28,8 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/DevChache/serverhub-mvc.git"
+    },
+    "dependencies": {
+        "mysql": "^2.15.0"
     }
 }

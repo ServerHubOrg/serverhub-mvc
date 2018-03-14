@@ -14,7 +14,8 @@ serverhub.Run({
     BaseDir: __dirname,
     WebDir: 'www/',
     Controllers: ['see.js', 'home.js'],
-    MaxCacheSize: 350
+    MaxCacheSize: 350,
+    DBConnectionString: 'host=localhost;user=zhongdongy;password=yang'
 }, (route) => {
     route.MapRoute('default', '{controller}/{action}/{id}', {
         Controller: 'home',

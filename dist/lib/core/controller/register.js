@@ -5,6 +5,7 @@ const index_1 = require("../validate/index");
 const index_2 = require("../wrapper/index");
 const fs = require("fs");
 const path = require("path");
+const database_1 = require("../database");
 function Register(controllerJs) {
     let file = Path2File(controllerJs);
     let variables = global['EnvironmentVariables'];
@@ -23,6 +24,31 @@ function Register(controllerJs) {
     catch (error) {
         throw error_1.ErrorManager.RenderError(error_1.CompileTimeError.SH010103);
     }
+    exp['Console'] = global.console;
+    let provider = void 0;
+    let config = null;
+    if (variables.DBConnectionString) {
+        let secs = variables.DBConnectionString.split(';');
+        config = { Host: 'local', Username: 'username', Password: 'password' };
+        secs.forEach(sec => {
+            if (sec.match(/^host=/i)) {
+                config['Host'] = sec.match(/^host=(.*)$/i)[1];
+            }
+            if (sec.match(/^(?:usr)|(?:user(?:name)?)=/i)) {
+                config['Username'] = sec.match(/^(?:(?:usr)|(?:user(?:name)?))=(.*)$/i)[1];
+            }
+            if (sec.match(/^(?:password)|(?:pwd)=/i)) {
+                config['Password'] = sec.match(/^(?:(?:password)|(?:pwd))=(.+)$/i)[1];
+            }
+        });
+    }
+    switch (variables.DBProvider) {
+        case 'mysql': ;
+        default: provider = config !== null ? new database_1.DBMySQL(config) : new database_1.DBMySQL();
+    }
+    exp['Runtime'] = {
+        DBProvider: provider
+    };
     let bundle = {
         Name: file.FileName,
         FileName: file.FullName,

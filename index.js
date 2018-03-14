@@ -31,6 +31,12 @@ exports.Run = (config, appstart) => {
         // libcore.SetGlobalVariable('PageNotFound', config['PageNotFound']);
         throw new Error('Not implemented!');
 
+    if (config['DBConnectionString']) {
+        let dbs = config['DBConnectionString'];
+        if (dbs.length > 0)
+            libcore.SetGlobalVariable('DBConnectionString', dbs);
+        else throw new Error('Unrecognized database connection string');
+    }
     if (config['Controllers']) {
         config['Controllers'].forEach(ele => {
             libcore.RegisterController(ele);
@@ -62,6 +68,14 @@ exports.Run = (config, appstart) => {
             console.error('Configuration property "MaxCacheSize" is not a valid number');
         }
     }
+
+    if (config['DBProvider']) {
+        let dbp = config['DBProvider'];
+        if (['mysql'].indexOf(dbp.trim()) !== -1)
+            libcore.SetGlobalVariable('DBProvider', dbp.trim());
+        else throw new Error('Unsupported database provider', dbp);
+    }
+
 
     if (appstart)
         appstart(libroute.Route.GetRoute());

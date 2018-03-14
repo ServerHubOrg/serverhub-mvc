@@ -12,4 +12,6 @@ export declare interface ServerHubConfig {
     ModelDir: string;
     Controllers: Array<string>;
     MaxCacheSize: number;
+    DBProvider: string;
+    DBConnectionString: string;
 }

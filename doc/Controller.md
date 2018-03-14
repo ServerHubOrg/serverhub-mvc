@@ -38,3 +38,5 @@ So, never try to change controller files during ServerHub running.
 ## Controller Scope Variables
 
 There are several variables that can be accessed inside controller actions. In order to use them, you must explicitly use pointer **_this_** as a reference to the controller instance. Or, there will be an error message displayed.
+
+You are suggested to use **arrow functions** that accessible since ECMAScript 2015. Or, you may use some workaround to access to those variables (closure or something else).
