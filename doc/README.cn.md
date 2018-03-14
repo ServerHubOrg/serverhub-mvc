@@ -8,6 +8,10 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是
 
 其 CLI 部分的介绍，请参见 [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) 或是直接查看我个人仓库列表里的 serverhub-cli。
 
+## 最近更新
+
+现在，ServerHub 提供了在控制器内连接数据库和使用控制器作用域变量的方式，可以到 Database.md 和 Controller.md 一探究竟。所有重要更新都列举在根目录 CHANGELOG.md 内。
+
 ## 它能做这些工作
 
 当前，ServerHub 可以配置自定义路由、注册自定义控制器、绑定视图与模型。

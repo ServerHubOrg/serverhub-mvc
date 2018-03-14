@@ -10,7 +10,11 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) is 
 
 For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) or serverhub-cli under my public repositories.
 
-## What can ServerHub do
+## Latest Update
+
+With several weeks' development, I'm glad to announce that database support has been added to ServerHub. And with the version 0.0.5+ in npm, you can now use controller scope variables and several new features. Detailed update could be found on CHANGELOG.md
+
+## What Can ServerHub Do
 
 Currently, ServerHub support custom routing, view binding and controller registering.
 
@@ -90,7 +94,7 @@ serverhub.Run({
 
     This function will have one parameter that refers to server route object, you can register custom route rule or ignore certain matches (I've not finished developing that feature).
 
-## Feel free to contact
+## Feel Free to Contact
 
 Ask me through [yangzd1996@outlook.com](mailto:yangzd1996@outlook.com) or on [twitter](https://twitter.com/SrMoriaty).
 

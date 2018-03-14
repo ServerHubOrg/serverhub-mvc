@@ -9,6 +9,7 @@
 const libcore = require('./dist/lib/core/core');
 const libroute = require('./dist/lib/route/route');
 const http = require('http');
+const package = require('./package.json');
 
 
 var server;
@@ -22,6 +23,8 @@ exports.Run = (config, appstart) => {
     if (!config['BaseDir'])
         throw new Error("Must specify server base dir at least.");
     libcore.UpdateGlobalVariable('ServerBaseDir', config['BaseDir']);
+
+    libcore.SetGlobalVariable('PackageData', package);
 
     let port = 926; // Birthday of my beloved friend, Changrui.
     if (config['Port'])

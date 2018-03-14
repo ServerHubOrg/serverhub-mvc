@@ -16,7 +16,7 @@ import { ContentType } from './content-type';
 import { Route } from '../route/route';
 import { RCS } from './cache/rcs';
 
-const package_version = process.env.npm_package_version;
+
 const node_version = process.version;
 
 // Export initial values to global object of Node.
@@ -37,8 +37,7 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
  */
 const core_env = {
     platform: process.platform,
-    version: '0.0.2',
-    node_version: process.version
+    node_version: node_version
 }
 
 /**
@@ -96,29 +95,19 @@ export function SetGlobalVariable(variable: string, value: Object): void {
  */
 export function RoutePath(path: string, req: IncomingMessage, res: ServerResponse): void {
 
-    res.setHeader('server', `ServerHub/${package_version} (${process.platform}) Node.js/${node_version}`);
-
 
     // TODO: Should be removed.
     if (path.indexOf('changrui0926') !== -1)
         return RCS.Service().GetCacheReport(res);
 
-
     let routeResult = ROUTE.RunRoute(path);
-    res.setHeader('server', `ServerHub/${core_env.version} (${core_env.platform}) Node.js ${core_env.node_version}`);
-    // console.log(routeResult); // TODO, remove when release
+    res.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
+
     if (!routeResult)
         return NoRoute(path, req, res);
-    // TODO
-    // Map route to custom controllers.
-    // let pathMatch = path.match(/(\/[a-z0-9._]*)/g);
 
     let method = req.method.toLowerCase();
     if (routeResult.Controller && routeResult.Action) {
-        // if (pathMatch[0].indexOf('.') !== -1) {
-        //     // no dot allowed in controller names.
-        //     return NoRoute(path, req, res);
-        // }
         try {
             return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
         } catch (error) {
