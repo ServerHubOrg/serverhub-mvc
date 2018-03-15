@@ -4,7 +4,7 @@
 
 [中文版](doc/README.cn.md)
 
-**ServerHub** is a collection of both Nodejs framework and its CLI tool.
+**ServerHub** is a collection of both Nodejs framework and its CLI tool. GitHub pages can be viewed on [ServerHub](https://devchache.github.io/serverhub-mvc/).
 
 ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) is a fast and light MVC web server framework that runs on Nodejs.
 
