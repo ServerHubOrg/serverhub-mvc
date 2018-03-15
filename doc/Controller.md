@@ -59,3 +59,37 @@ Usage of these variables are avaliable at `doc/variables/{VariableName}.md`. Som
         - `this.System.Hardware.FreeMemory` **_number_** Free memory size (byte).
         - `this.System.Hardware.NetworkInterfaces` **_Object_** Returns interfaces that have been assigned a network address.
     1. `this.System.Die` **_Function(exit_code)_** Exit current ServerHub process.
+
+## Actions in Controller
+
+Actions are methods that been invoked when the HTTP request matches a certain route path. And it handles the request and operates on the response. In this chapter, we will discuss about actions in controller and help you learn more about ServerHub controllers.
+
+### How to compose an action
+
+```js
+index: function (request, response, method){
+    // do something
+    return this.View();
+}
+```
+
+See, this is a very simple 'index' action. You need to declare the action as a function member of an object and return the object as the controller instance. One more thing, as we've mentioned a lot, you should always use 'this' pointer while referencing controller scope variables.
+
+There are three parameters and they are all required. If you want to manually control server response by calling methods like `res.write()`, then ServerHub will ignore default render process, which means:
+
+```js
+index: function (request, response, method){
+    response.write('Hello, XWZ');
+    return this.View();
+}
+```
+
+will only output 'Hello, XWZ' and the return value of 'index' action gonna be ignored.
+
+The `request` parameter is the vanilla Node.js request (aka `IncomingMessage` object) (at version 0.0.7). But the `response` parameter is a virtual `ServerResponse` object. Several methods and properties are wrapped on that object, which are not exactly the same as the original one. Read the document before invoking. `Method` is a string that tells the current HTTP method (like GET, POST, etc).
+
+### Action name convention
+
+Action names are all written in lower cases. Characters from 'a' to 'z', with numbers and '_' (underscore) are allowed. There are several reserved action names that you cannot use: Runtime, System, Console, View.
+
+The best practice are using single words as action names, and verbs are prefered. An action name with more 20 characters are pretty bad. And you should know that in later versions of ServerHub, maybe there will be an limitation of action name length, which might not run functional normally with your old-fashioned code.

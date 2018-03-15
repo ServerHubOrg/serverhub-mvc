@@ -23,8 +23,16 @@ function Register(controllerJs) {
             exp = output;
         else
             throw new Error();
+        Object.keys(exp).forEach(action => {
+            if (['System', 'Console', 'Runtime', 'View'].indexOf(action) !== -1)
+                throw new Error('Warning! Reserved action name detected. Please read the document and try again.');
+            else if (action.match(/[a-z\d_]+/) === null)
+                throw new Error('Warning! Invalid characters detected in action names. Check and retry!');
+        });
     }
     catch (error) {
+        if (error.message.indexOf('Warning') > -1)
+            throw error;
         throw error_1.ErrorManager.RenderError(error_1.CompileTimeError.SH010103);
     }
     exp['Console'] = global.console;

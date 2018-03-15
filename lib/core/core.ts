@@ -111,13 +111,16 @@ export function RoutePath(path: string, req: IncomingMessage, res: ServerRespons
         try {
             return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
         } catch (error) {
-            res.setHeader('content-type', 'text/html');
-            res.write(ErrorManager.RenderErrorAsHTML(error));
+            console.error(error);
+            if (!res.headersSent)
+                res.setHeader('content-type', 'text/html');
+            if (!res.writable)
+                res.write(ErrorManager.RenderErrorAsHTML(error));
             res.end();
         }
 
-    }
-    return NoRoute(path, req, res);
+    } else
+        return NoRoute(path, req, res);
 }
 
 function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void {
@@ -126,7 +129,6 @@ function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void 
     // if cacheable, do not fetch from file system.
     if (RCS.Service().Cacheable(path))
         return RCS.Service().GetUri(path, res);
-
 
     let filepath = nodepath.resolve(variables.ServerBaseDir, variables.WebDir, path.substr(1));
     if (fs.existsSync(filepath)) {

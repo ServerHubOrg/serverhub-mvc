@@ -2,19 +2,9 @@
 
 return {
     index: function (req, res, method) {
-        this.Console.log('Hello, I\'m from Home controller and index action');
-
-        // You need to set up your personal database connection configuration.
-
-        // let db = this.Runtime.DBProvider;
-        // let conn = db.GetConnection();
-
-        // conn.connect(err => {
-        //     if (err) throw err;
-        //     this.Console.log("Connected!");
-        // });
-        this.Console.log(this.Runtime);
-        this.Console.log(this.System);
+        res.setHeader('Content-Type','text/html')
+        res.write('<p>Hello ServerHub</p>');
+        res.write('This is another string sending to browsers.');
 
         return this.View();
     },

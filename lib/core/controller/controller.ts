@@ -7,12 +7,13 @@
  */
 
 import { GlobalEnvironmentVariables } from "../global";
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingMessage, ServerResponse, OutgoingHttpHeaders } from "http";
 import { ControllerBundle, Register } from "./register";
 import { RuntimeError, ErrorManager } from "../error/error";
 import { ApplyModel } from '../view/view';
 import { ReadModel } from '../model/model';
 import { Route, RouteValue } from "../../route/route";
+import { SHResponse } from "./response";
 
 const PlantableVariables = ["View", "Runtime", "Console"];
 
@@ -51,7 +52,11 @@ class ControllerCollection {
                     };
 
                     try {
-                        context = controller[action](dispatch.Request, dispatch.Response, dispatch.Method);
+                        let shResponse = new SHResponse();
+                        context = controller[action](dispatch.Request, shResponse, dispatch.Method);
+                        // context = controller[action](dispatch.Request, dispatch.Response, dispatch.Method);
+                        dispatch.Response.writeHead(shResponse.statusCode,shResponse.getHeaders() as OutgoingHttpHeaders);
+                        dispatch.Response.write(shResponse.getContent());
                     } catch (e) {
                         if ((e as Error).message.match(/.*not.*define/i))
                             console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
@@ -60,8 +65,12 @@ class ControllerCollection {
 
                     delete controller['View'];
 
-                    dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
-                    dispatch.Response.write(ApplyModel(controllerName, context));
+                    if (!dispatch.Response.headersSent) {
+                        dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
+
+                        if (!dispatch.Response.writable)
+                            dispatch.Response.write(ApplyModel(controllerName, context));
+                    }
                     dispatch.Response.end();
                     matched = true;
                 }

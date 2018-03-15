@@ -234,4 +234,4 @@ WEIGHT = weight * weight_order_index * 0.7;
 CACULATED_WEIGHT = SIZE + TIME + WEIGHT
 ```
 
-All cached resources will be judged with the operations above and re-sort under caculated weight. The last resources will be removed from cache until memory is avaliable for new cache items.
+All cached resources will be judged with the operations above and re-sorted under caculated weight. The last resources will be removed from cache until memory is avaliable for new cache items.

@@ -12,7 +12,9 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 
 ## Latest Update
 
-With several weeks' development, I'm glad to announce that database support has been added to ServerHub. And with the version 0.0.5+ in npm, you can now use controller scope variables and several new features. Detailed update could be found on CHANGELOG.md
+Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse.
+
+With several weeks' development, I'm glad to announce that database support has been added to ServerHub. And with the version 0.0.5+ in npm, you can now use controller scope variables and several new features. Detailed update could be found on CHANGELOG.md.
 
 ## What Can ServerHub Do
 

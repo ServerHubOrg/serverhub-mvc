@@ -51,12 +51,16 @@ function RoutePath(path, req, res) {
             return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
         }
         catch (error) {
-            res.setHeader('content-type', 'text/html');
-            res.write(error_1.ErrorManager.RenderErrorAsHTML(error));
+            console.error(error);
+            if (!res.headersSent)
+                res.setHeader('content-type', 'text/html');
+            if (!res.writable)
+                res.write(error_1.ErrorManager.RenderErrorAsHTML(error));
             res.end();
         }
     }
-    return NoRoute(path, req, res);
+    else
+        return NoRoute(path, req, res);
 }
 exports.RoutePath = RoutePath;
 function NoRoute(path, req, res) {

@@ -4,6 +4,7 @@ const register_1 = require("./register");
 const error_1 = require("../error/error");
 const view_1 = require("../view/view");
 const model_1 = require("../model/model");
+const response_1 = require("./response");
 const PlantableVariables = ["View", "Runtime", "Console"];
 class ControllerCollection {
     constructor() {
@@ -37,7 +38,10 @@ class ControllerCollection {
                         return context;
                     };
                     try {
-                        context = controller[action](dispatch.Request, dispatch.Response, dispatch.Method);
+                        let shResponse = new response_1.SHResponse();
+                        context = controller[action](dispatch.Request, shResponse, dispatch.Method);
+                        dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders());
+                        dispatch.Response.write(shResponse.getContent());
                     }
                     catch (e) {
                         if (e.message.match(/.*not.*define/i))
@@ -46,8 +50,11 @@ class ControllerCollection {
                             throw e;
                     }
                     delete controller['View'];
-                    dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
-                    dispatch.Response.write(view_1.ApplyModel(controllerName, context));
+                    if (!dispatch.Response.headersSent) {
+                        dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
+                        if (!dispatch.Response.writable)
+                            dispatch.Response.write(view_1.ApplyModel(controllerName, context));
+                    }
                     dispatch.Response.end();
                     matched = true;
                 }
