@@ -69,7 +69,7 @@ mkdir server && serverhub-cli init server -d #be sure to keep your files before 
 Like the example given by serverhub-cli or under `test` directory, the file app.js has some requirements:
 
 ```js
-const serverhub = require('../index');
+const serverhub = require('../index'); // In your project, please change to require('serverhub-mvc');
 
 serverhub.Run({
     BaseDir: __dirname // BaseDir is required.

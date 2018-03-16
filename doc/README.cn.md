@@ -68,7 +68,7 @@ mkdir server && serverhub-cli init server -d #在最后加上 -h 参数之前一
 参见 serverhub-cli 工具给出的 demo 或者 `test` 目录，`app.js` 文件里有下述要求：
 
 ```js
-const serverhub = require('../index');
+const serverhub = require('../index'); // 在你自己的项目中，应该修改为 require('serverhub-mvc');
 
 serverhub.Run({
     BaseDir: __dirname // BaseDir is required.
