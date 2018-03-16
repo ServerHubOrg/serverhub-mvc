@@ -34,7 +34,7 @@ export class RCS {
 
 
     /**
-     * Check whether a resource is cacheable for ServerHub. Detailed information, please refer to doc/Cache.
+     * Check whether a resource is cacheable for ServerHub. Detailed information, please refer to doc/Cache. Can only be used on HTTP request.
      * @param uri URI of target resource.
      */
     public Cacheable(uri: string): boolean {

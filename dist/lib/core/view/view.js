@@ -11,7 +11,7 @@ function ApplyModel(view, model) {
     let htmlFile = fs.readFileSync(htmlpath).toString();
     let result = '';
     if (!model || Object.keys(model).length === 0)
-        result = htmlFile.replace(/\$\$\{[a-z.]*\}/ig, '');
+        result = htmlFile.replace(/\$\$\{[a-z.\d_$]*\}/ig, '');
     else if (htmlFile && htmlFile.length > 0) {
         try {
             let keys = Object.keys(model);

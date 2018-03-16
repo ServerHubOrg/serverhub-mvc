@@ -37,11 +37,13 @@ class ControllerCollection {
                     controller['View'] = () => {
                         return context;
                     };
+                    let shResponse = new response_1.SHResponse();
                     try {
-                        let shResponse = new response_1.SHResponse();
                         context = controller[action](dispatch.Request, shResponse, dispatch.Method);
-                        dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders());
-                        dispatch.Response.write(shResponse.getContent());
+                        if (shResponse.headersSent)
+                            dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders());
+                        if (shResponse.finished)
+                            dispatch.Response.write(shResponse.getContent());
                     }
                     catch (e) {
                         if (e.message.match(/.*not.*define/i))
@@ -52,7 +54,7 @@ class ControllerCollection {
                     delete controller['View'];
                     if (!dispatch.Response.headersSent) {
                         dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
-                        if (!dispatch.Response.writable)
+                        if (!shResponse.finished)
                             dispatch.Response.write(view_1.ApplyModel(controllerName, context));
                     }
                     dispatch.Response.end();

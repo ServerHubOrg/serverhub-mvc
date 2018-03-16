@@ -51,12 +51,13 @@ class ControllerCollection {
                         return context;
                     };
 
+                    let shResponse = new SHResponse();
                     try {
-                        let shResponse = new SHResponse();
                         context = controller[action](dispatch.Request, shResponse, dispatch.Method);
-                        // context = controller[action](dispatch.Request, dispatch.Response, dispatch.Method);
-                        dispatch.Response.writeHead(shResponse.statusCode,shResponse.getHeaders() as OutgoingHttpHeaders);
-                        dispatch.Response.write(shResponse.getContent());
+                        if (shResponse.headersSent)
+                            dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders() as OutgoingHttpHeaders);
+                        if (shResponse.finished)
+                            dispatch.Response.write(shResponse.getContent());
                     } catch (e) {
                         if ((e as Error).message.match(/.*not.*define/i))
                             console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
@@ -68,7 +69,7 @@ class ControllerCollection {
                     if (!dispatch.Response.headersSent) {
                         dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
 
-                        if (!dispatch.Response.writable)
+                        if (!shResponse.finished)
                             dispatch.Response.write(ApplyModel(controllerName, context));
                     }
                     dispatch.Response.end();
