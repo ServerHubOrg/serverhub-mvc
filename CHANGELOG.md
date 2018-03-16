@@ -2,6 +2,12 @@
 
 ## Developing
 
+### 0.0.9 March 16, 2018
+
+#### Add
+
+- Auto caching feature for views.
+
 ### 0.0.8 March 16, 2018
 
 #### Add

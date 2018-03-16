@@ -11,7 +11,6 @@
 
 import { GlobalEnvironmentVariables } from "../global";
 import { ErrorManager, CompileTimeError, RuntimeError } from "../error/error";
-import { RCS } from "../cache/rcs";
 import * as path from 'path';
 import * as fs from 'fs';
 

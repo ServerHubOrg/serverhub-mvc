@@ -14,7 +14,7 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 
 ## Latest Update
 
-Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse. Auto caching feature has been added to model module. Detailed update could be found on CHANGELOG.md.
+Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse. Auto caching feature has been added to model/view module. Detailed update could be found on CHANGELOG.md.
 
 ## What Can ServerHub Do
 
