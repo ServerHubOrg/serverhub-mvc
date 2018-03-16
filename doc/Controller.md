@@ -93,3 +93,55 @@ The `request` parameter is the vanilla Node.js request (aka `IncomingMessage` ob
 Action names are all written in lower cases. Characters from 'a' to 'z', with numbers and '_' (underscore) are allowed. There are several reserved action names that you cannot use: Runtime, System, Console, View.
 
 The best practice are using single words as action names, and verbs are prefered. An action name with more 20 characters are pretty bad. And you should know that in later versions of ServerHub, maybe there will be an limitation of action name length, which might not run functional normally with your old-fashioned code.
+
+## About Syntax
+
+If you use some lint tools, ServerHub's controller file may report syntax errors. It could tell that "_return statement outside function_". But actually they are valid **partial** JavaScript files.
+
+Controllers scripts are all **functions**, they are not independent JavaScript files. When you try to execute controller files directly, it is not gonna work.
+
+Here is an example. We have a controller file like this (`home.js`):
+
+```js
+"use strict";
+
+return {
+    index: function(req, res, method) {
+        return this.View();
+    }
+}
+```
+
+If you treat this `home.js` as a plain JavaScript file, there should be curly braces surrounding the return statement. Check this:
+
+```js
+"use strict";
+
+function (){
+    return {
+        index: function(req, res, method) {
+            return this.View();
+        }
+    }
+}
+```
+
+Now, it is an absolute JavaScript file. 
+
+**But, do you remember that our controllers are all _functions_**? What does this mean? Your whole controller file is a function, and it has invisible boundries which are curly braces. So, if we manually add function definition to controller file, the loaded controller will be like:
+
+```js
+function (){
+    "use strict";
+
+    function (){
+        return {
+            index: function(req, res, method) {
+                return this.View();
+            }
+        };
+    }
+}
+```
+
+As you can see, there is a redundant pair of function braces that should be removed. And this is why we call ServerHub controllers "partial JavaScript files".
