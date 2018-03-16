@@ -2,7 +2,9 @@
 
 ![](assets/serverhub-compact.png)
 
-**ServerHub** 同时包含了 MVC 框架和一个相应的 CLI 应用程序。你可以在 [ServerHub](https://devchache.github.io/serverhub-mvc/index.html) 察看其 GitHub pages。
+项目介绍、技术文档和教程，请访问 [ServerHub](https://devchache.github.io/serverhub-mvc/index.html)
+
+**ServerHub** 同时包含了 MVC 框架和一个相应的 CLI 应用程序。
 
 ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是一个轻量的 Nodejs MVC 框架。
 
