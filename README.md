@@ -4,7 +4,7 @@
 
 [中文版](doc/README.cn.md)
 
-**ServerHub** is a collection of both Nodejs framework and its CLI tool. GitHub pages can be viewed on [ServerHub](https://devchache.github.io/serverhub-mvc/).
+**ServerHub** is a collection of both Nodejs framework and its CLI tool. GitHub pages can be viewed on [ServerHub](https://devchache.github.io/serverhub-mvc/index.html).
 
 ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) is a fast and light MVC web server framework that runs on Nodejs.
 
@@ -12,9 +12,7 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 
 ## Latest Update
 
-Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse.
-
-With several weeks' development, I'm glad to announce that database support has been added to ServerHub. And with the version 0.0.5+ in npm, you can now use controller scope variables and several new features. Detailed update could be found on CHANGELOG.md.
+Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse. Auto caching feature has been added to model module. Detailed update could be found on CHANGELOG.md.
 
 ## What Can ServerHub Do
 

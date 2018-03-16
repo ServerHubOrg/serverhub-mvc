@@ -2,7 +2,7 @@
 
 ![](assets/serverhub-compact.png)
 
-**ServerHub** 同时包含了 MVC 框架和一个相应的 CLI 应用程序。你可以在 [ServerHub](https://devchache.github.io/serverhub-mvc/) 察看其 GitHub pages。
+**ServerHub** 同时包含了 MVC 框架和一个相应的 CLI 应用程序。你可以在 [ServerHub](https://devchache.github.io/serverhub-mvc/index.html) 察看其 GitHub pages。
 
 ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是一个轻量的 Nodejs MVC 框架。
 
@@ -10,7 +10,7 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是
 
 ## 最近更新
 
-现在，ServerHub 提供了在控制器内连接数据库和使用控制器作用域变量的方式，可以到 Database.md 和 Controller.md 一探究竟。所有重要更新都列举在根目录 CHANGELOG.md 内。
+现在，ServerHub 提供了在控制器内连接数据库和使用控制器作用域变量的方式，可以到 Database.md 和 Controller.md 一探究竟。而且 model 已经可以被自动缓存了，这将会加速你的服务器渲染进程，并有效减少磁盘 IO。所有重要更新都列举在根目录 CHANGELOG.md 内。
 
 ## 它能做这些工作
 
