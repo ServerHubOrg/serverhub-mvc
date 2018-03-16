@@ -69,30 +69,19 @@ mkdir server && serverhub-cli init server -d #be sure to keep your files before 
 Like the example given by serverhub-cli or under `test` directory, the file app.js has some requirements:
 
 ```js
-const serverhub = require('serverhub-mvc');
-const fs = require('fs');
-const path = require('path');
+const serverhub = require('../index');
 
 serverhub.Run({
-    BaseDir: __dirname,
-    WebDir: 'www/',
-    Controllers: ['home.js'],
-    MaxCacheSize: 256 // unit: MB
-}, (route) => {
-    route.MapRoute('default', '{controller}/{action}/{id}', {
-        Controller: 'home',
-        Action: 'index',
-        id: ''
-    });
+    BaseDir: __dirname // BaseDir is required.
 });
 ```
 
-`Run()` method has two required parameters:
+`Run()` method has two parameters (the second one is not required since v0.0.91):
 
 1. config
 
     The config file defines base directory of the server, which is current of `app.js`. There's a `Controller` property that specifies which controller to register. And then ServerHub will try to search and parse under controller file. When you are writing, you may check this document or search under `node_modules/serverhub-mvc/index.d.ts` file along with all your dependecies, which I've already provided the type definitions there.
-1. route (callback function)
+1. route (callback function) (before v0.0.91)
 
     This function will have one parameter that refers to server route object, you can register custom route rule or ignore certain matches (I've not finished developing that feature).
 

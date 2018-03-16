@@ -10,6 +10,8 @@ const libcore = require('./dist/lib/core/core');
 const libroute = require('./dist/lib/route/route');
 const http = require('http');
 const package = require('./package.json');
+const path = require('path');
+const fs = require('fs');
 
 
 var server;
@@ -40,11 +42,6 @@ exports.Run = (config, appstart) => {
             libcore.SetGlobalVariable('DBConnectionString', dbs);
         else throw new Error('Unrecognized database connection string');
     }
-    if (config['Controllers']) {
-        config['Controllers'].forEach(ele => {
-            libcore.RegisterController(ele);
-        });
-    }
     if (config['WebDir']) {
         libcore.SetGlobalVariable('WebDir', config['WebDir']);
     }
@@ -56,6 +53,20 @@ exports.Run = (config, appstart) => {
     }
     if (config['ModelDir']) {
         libcore.SetGlobalVariable('ModelDir', config['ModelDir']);
+    }
+    if (config['Controllers']) {
+        config['Controllers'].forEach(ele => {
+            libcore.RegisterController(ele);
+        });
+    } else {
+        let variables = global['EnvironmentVariables'];
+        let controllerPath = path.resolve(variables.ServerBaseDir, variables.ControllerDir);
+        let controllers = fs.readdirSync(controllerPath);
+        if (controllers) {
+            controllers.forEach(con => {
+                libcore.RegisterController(con);
+            })
+        }
     }
 
     if (config['MaxCacheSize']) {
@@ -82,7 +93,13 @@ exports.Run = (config, appstart) => {
 
     if (appstart)
         appstart(libroute.Route.GetRoute());
-    else throw new Error("Error SH020701: Missing appstart method");
+    else {
+        libroute.Route.GetRoute().MapRoute('default', '{controller}/{action}/{id}', {
+            Controller: 'home',
+            Action: 'index',
+            id: ''
+        });
+    }
 
     libcore.RegisterRouter(libroute.Route.GetRoute());
 

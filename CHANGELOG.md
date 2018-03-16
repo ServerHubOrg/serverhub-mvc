@@ -2,6 +2,12 @@
 
 ## Developing
 
+### 0.0.91 March 16, 2018
+
+#### Update
+
+- Update entry point, simplified parameters. Thanks to Yuyang Mao's advice.
+
 ### 0.0.9 March 16, 2018
 
 #### Add

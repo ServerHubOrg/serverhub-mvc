@@ -26,8 +26,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     ViewDir: 'view/',
     ModelDir: 'model/',
     PageNotFound: '404.html',
-    WebDir: 'www',
-    MaxCacheSize: 200, // MB
+    WebDir: 'www/',
+    MaxCacheSize: 350, // MB
     DBProvider: 'mysql',
     DBConnectionString: null
 } as GlobalEnvironmentVariables;

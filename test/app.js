@@ -7,19 +7,10 @@
  */
 
 const serverhub = require('../index');
-const fs = require('fs');
-const path = require('path');
 
 serverhub.Run({
-    BaseDir: __dirname,
-    WebDir: 'www/',
-    Controllers: ['see.js', 'home.js'],
-    MaxCacheSize: 350,
-    DBConnectionString: 'host=localhost;user=zhongdongy;password=yang'
-}, (route) => {
-    route.MapRoute('default', '{controller}/{action}/{id}', {
-        Controller: 'home',
-        Action: 'index',
-        id: ''
-    });
+    BaseDir: __dirname // BaseDir is required.
 });
+
+// Contributions:
+// Yuyang Mao: Simplify this test entry.

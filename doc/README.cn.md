@@ -68,30 +68,19 @@ mkdir server && serverhub-cli init server -d #在最后加上 -h 参数之前一
 参见 serverhub-cli 工具给出的 demo 或者 `test` 目录，`app.js` 文件里有下述要求：
 
 ```js
-const serverhub = require('serverhub-mvc');
-const fs = require('fs');
-const path = require('path');
+const serverhub = require('../index');
 
 serverhub.Run({
-    BaseDir: __dirname,
-    WebDir: 'www/',
-    Controllers: ['home.js'],
-    MaxCacheSize: 256 // 单位：MB
-}, (route) => {
-    route.MapRoute('default', '{controller}/{action}/{id}', {
-        Controller: 'home',
-        Action: 'index',
-        id: ''
-    });
+    BaseDir: __dirname // BaseDir is required.
 });
 ```
 
-`Run()` 方法需要两个参数（都不可以省略）
+`Run()` 方法需要两个参数（自 0.0.91 开始，第二个参数不再是必须的，请阅读 route 相关文档）
 
 1. config
 
     此参数中定义了一些诸如服务器根地址、Web 根目录、controller 目录等等信息的 config 配置文件。它的 `Controller` 属性指定了服务器需要解析和加载的控制器文件。当你写这个 config 的时候，请参照我给出的文档或者到你的依赖项中找到 `node_modules/serverhub-mvc/index.d.ts` 文件，其中我已经用 TypeScript 类型声明做好了使用的准备，非常方便你使用 IntelliSense。
-1. route （运行时回调）
+1. route （运行时回调）（0.0.9 及以前的版本必须加上此参数，否则无法启动）
 
     这个函数接受一个参数（必须），此参数指向服务器所使用的 route 对象，你可以在此回调中写注册路由或者忽略特定路由的一些语句（特定路由仍在开发中）。
 
