@@ -23,7 +23,7 @@ export function ApplyModel(view: string, model: Object): string {
         let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
         let htmlpath = path.resolve(variables.ServerBaseDir, variables.ViewDir, view + '.html');
         if (!fs.existsSync(htmlpath))
-            throw ErrorManager.RenderError(RuntimeError.SH020201, view + '.html', variables.ViewDir);
+            return '';
         htmlFile = fs.readFileSync(htmlpath).toString();
         let tempcache = {
             ViewName: view,

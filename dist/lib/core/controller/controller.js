@@ -27,6 +27,10 @@ class ControllerCollection {
         }
         return false;
     }
+    HasAction(controllerName, actionName) {
+        actionName = actionName.toLowerCase();
+        return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].hasOwnProperty(actionName));
+    }
     DispatchController(controllerName, actionName, idString, search, dispatch) {
         if (this.Has(controllerName)) {
             let controller = this.Controllers[controllerName].Controller;
@@ -63,8 +67,15 @@ class ControllerCollection {
             });
             return matched;
         }
-        else
-            throw new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020101, controllerName));
+        else {
+            if (Object.keys(this.Controllers).length === 0) {
+                dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
+                dispatch.Response.write('No controller registered, empty route dispatched.');
+                dispatch.Response.end();
+            }
+            else
+                throw new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020101, controllerName));
+        }
     }
 }
 class Controller {
@@ -80,6 +91,13 @@ class Controller {
             Request: request,
             Response: response
         });
+    }
+    static Dispatchable(controllerName, actionName) {
+        if (Controller.Collection.Has(controllerName)) {
+            if (Controller.Collection.HasAction(controllerName, actionName))
+                return true;
+        }
+        return false;
     }
 }
 Controller.Collection = new ControllerCollection();

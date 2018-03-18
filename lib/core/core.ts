@@ -29,7 +29,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     WebDir: 'www/',
     MaxCacheSize: 350, // MB
     DBProvider: 'mysql',
-    DBConnectionString: null
+    DBConnectionString: null,
+    DefaultPages: ['index.html', 'default.html', 'page.html']
 } as GlobalEnvironmentVariables;
 
 /**
@@ -107,7 +108,7 @@ export function RoutePath(path: string, req: IncomingMessage, res: ServerRespons
         return NoRoute(path, req, res);
 
     let method = req.method.toLowerCase();
-    if (routeResult.Controller && routeResult.Action) {
+    if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
         try {
             return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
         } catch (error) {
@@ -125,6 +126,23 @@ export function RoutePath(path: string, req: IncomingMessage, res: ServerRespons
 
 function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void {
     let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
+
+    if (path === '/') {
+        let hasmatch = false;
+        variables.DefaultPages.forEach(ele => {
+            if (hasmatch)
+                return;
+            let temppath = '';
+            if (ele.indexOf('/') === 0)
+                temppath = ele.slice(1);
+            else temppath = ele;
+            let checkPath = nodepath.resolve(variables.ServerBaseDir, variables.WebDir, temppath);
+            if (fs.existsSync(checkPath)) {
+                path = '/' + temppath;
+                hasmatch = true;
+            }
+        })
+    }
 
     // if cacheable, do not fetch from file system.
     if (RCS.Service().Cacheable(path))

@@ -23,5 +23,6 @@ export interface GlobalEnvironmentVariables {
     MaxCacheSize: number; // unit byte
     DBProvider: string;
     DBConnectionString: string;
-    PackageData: Object
+    PackageData: Object;
+    DefaultPages: Array<string>;
 };

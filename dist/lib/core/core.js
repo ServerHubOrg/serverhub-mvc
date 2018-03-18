@@ -16,7 +16,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     WebDir: 'www/',
     MaxCacheSize: 350,
     DBProvider: 'mysql',
-    DBConnectionString: null
+    DBConnectionString: null,
+    DefaultPages: ['index.html', 'default.html', 'page.html']
 };
 const core_env = {
     platform: process.platform,
@@ -46,7 +47,7 @@ function RoutePath(path, req, res) {
     if (!routeResult)
         return NoRoute(path, req, res);
     let method = req.method.toLowerCase();
-    if (routeResult.Controller && routeResult.Action) {
+    if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
         try {
             return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
         }
@@ -65,6 +66,23 @@ function RoutePath(path, req, res) {
 exports.RoutePath = RoutePath;
 function NoRoute(path, req, res) {
     let variables = global['EnvironmentVariables'];
+    if (path === '/') {
+        let hasmatch = false;
+        variables.DefaultPages.forEach(ele => {
+            if (hasmatch)
+                return;
+            let temppath = '';
+            if (ele.indexOf('/') === 0)
+                temppath = ele.slice(1);
+            else
+                temppath = ele;
+            let checkPath = nodepath.resolve(variables.ServerBaseDir, variables.WebDir, temppath);
+            if (fs.existsSync(checkPath)) {
+                path = '/' + temppath;
+                hasmatch = true;
+            }
+        });
+    }
     if (rcs_1.RCS.Service().Cacheable(path))
         return rcs_1.RCS.Service().GetUri(path, res);
     let filepath = nodepath.resolve(variables.ServerBaseDir, variables.WebDir, path.substr(1));

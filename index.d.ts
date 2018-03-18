@@ -14,4 +14,5 @@ export declare interface ServerHubConfig {
     MaxCacheSize: number;
     DBProvider: string;
     DBConnectionString: string;
+    DefaultPages: Array<string>;
 }

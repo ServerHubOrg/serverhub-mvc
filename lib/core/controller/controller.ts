@@ -39,6 +39,12 @@ class ControllerCollection {
         }
         return false;
     }
+
+    public HasAction(controllerName: string, actionName: string): boolean {
+        actionName = actionName.toLowerCase();
+        return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].hasOwnProperty(actionName));
+    }
+
     public DispatchController(controllerName: string, actionName: string, idString: string, search: string, dispatch: ControllDispatch): boolean {
         if (this.Has(controllerName)) {
             let controller = (this.Controllers[controllerName] as ControllerBundle).Controller as Object;
@@ -77,7 +83,14 @@ class ControllerCollection {
                 }
             });
             return matched;
-        } else throw new Error(ErrorManager.RenderError(RuntimeError.SH020101, controllerName));
+        } else {
+            if (Object.keys(this.Controllers).length === 0) {
+                dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
+                dispatch.Response.write('No controller registered, empty route dispatched.');
+                dispatch.Response.end();
+            } else
+                throw new Error(ErrorManager.RenderError(RuntimeError.SH020101, controllerName));
+        }
     }
 }
 
@@ -119,6 +132,13 @@ export class Controller {
         } as ControllDispatch);
     }
 
+    public static Dispatchable(controllerName: string, actionName: string): boolean {
+        if (Controller.Collection.Has(controllerName)) {
+            if (Controller.Collection.HasAction(controllerName, actionName))
+                return true;
+        }
+        return false;
+    }
 }
 
 /**

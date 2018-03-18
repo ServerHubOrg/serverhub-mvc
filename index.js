@@ -36,6 +36,16 @@ exports.Run = (config, appstart) => {
         // libcore.SetGlobalVariable('PageNotFound', config['PageNotFound']);
         throw new Error('Not implemented!');
 
+    if (config['DefaultPages']) {
+        let defaultpages = config['DefaultPages'];
+        if (typeof (defaultpages) === 'string')
+            defaultpages = [defaultpages];
+        else if (defaultpages instanceof Array)
+            libcore.UpdateGlobalVariable('DefaultPages', defaultpages);
+            else console.error(`'DefaultPages' in your configuration parameter is not a valid array.`);
+    }
+
+
     if (config['DBConnectionString']) {
         let dbs = config['DBConnectionString'];
         if (dbs.length > 0)
@@ -61,11 +71,17 @@ exports.Run = (config, appstart) => {
     } else {
         let variables = global['EnvironmentVariables'];
         let controllerPath = path.resolve(variables.ServerBaseDir, variables.ControllerDir);
-        let controllers = fs.readdirSync(controllerPath);
-        if (controllers) {
-            controllers.forEach(con => {
-                libcore.RegisterController(con);
-            })
+        let controllerDirExist = fs.existsSync(controllerPath);
+        if (!controllerDirExist) {
+            console.error(`Controller directory ${controllerPath} does not exist, ServerHub will not register any controller and your route rules will not take effect.`);
+        }
+        else {
+            let controllers = fs.readdirSync(controllerPath);
+            if (controllers) {
+                controllers.forEach(con => {
+                    libcore.RegisterController(con);
+                })
+            }
         }
     }
 

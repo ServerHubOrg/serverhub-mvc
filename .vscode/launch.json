@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "name": "Playground",
-            "program": "${workspaceFolder}/playground/index.js"
+            "program": "${workspaceFolder}/playground/app.js"
         },
         {
             "type": "node",

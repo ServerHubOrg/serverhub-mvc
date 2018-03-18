@@ -15,7 +15,7 @@ function ApplyModel(view, model) {
         let variables = global['EnvironmentVariables'];
         let htmlpath = path.resolve(variables.ServerBaseDir, variables.ViewDir, view + '.html');
         if (!fs.existsSync(htmlpath))
-            throw error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020201, view + '.html', variables.ViewDir);
+            return '';
         htmlFile = fs.readFileSync(htmlpath).toString();
         let tempcache = {
             ViewName: view,

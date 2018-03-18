@@ -49,6 +49,7 @@ function WatchModelChange(): void {
                     ContentCache: '',
                     ParsedCache: {}
                 };
+                UpdateModelCache(tempcache);
                 return;
             }
             let modelFile = fs.readFileSync(modelpath).toString();
@@ -119,10 +120,14 @@ export function ReadModel(model: string): Object {
         let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
         let modelpath = path.resolve(variables.ServerBaseDir, variables.ModelDir, model + '.json');
 
-        if (!fs.existsSync(modelpath))
-            throw ErrorManager.RenderError(RuntimeError.SH020401, model + '.json', variables.ModelDir);
-        if (!fs.existsSync(modelpath))
+        if (!fs.existsSync(modelpath)) {
+            UpdateModelCache({
+                ModelName: model,
+                ContentCache: '',
+                ParsedCache: {}
+            });
             return {};
+        }
         let modelFile = fs.readFileSync(modelpath).toString();
         let result = '';
         if (modelFile && modelFile.length > 0) {
