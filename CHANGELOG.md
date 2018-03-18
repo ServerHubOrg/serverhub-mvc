@@ -2,6 +2,12 @@
 
 ## Developing
 
+### 0.0.92-patch-1 March 18, 2018
+
+#### Update
+
+- Fix issue of unable to dispatch registered controllers in v0.0.92.
+
 ### 0.0.92 March 18, 2018
 
 #### Add

@@ -42,7 +42,7 @@ class ControllerCollection {
 
     public HasAction(controllerName: string, actionName: string): boolean {
         actionName = actionName.toLowerCase();
-        return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].hasOwnProperty(actionName));
+        return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].Controller.hasOwnProperty(actionName));
     }
 
     public DispatchController(controllerName: string, actionName: string, idString: string, search: string, dispatch: ControllDispatch): boolean {
@@ -133,11 +133,7 @@ export class Controller {
     }
 
     public static Dispatchable(controllerName: string, actionName: string): boolean {
-        if (Controller.Collection.Has(controllerName)) {
-            if (Controller.Collection.HasAction(controllerName, actionName))
-                return true;
-        }
-        return false;
+        return Controller.Collection.HasAction(controllerName, actionName);
     }
 }
 

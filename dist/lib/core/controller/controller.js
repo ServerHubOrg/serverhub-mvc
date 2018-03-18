@@ -29,7 +29,7 @@ class ControllerCollection {
     }
     HasAction(controllerName, actionName) {
         actionName = actionName.toLowerCase();
-        return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].hasOwnProperty(actionName));
+        return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].Controller.hasOwnProperty(actionName));
     }
     DispatchController(controllerName, actionName, idString, search, dispatch) {
         if (this.Has(controllerName)) {
@@ -93,11 +93,7 @@ class Controller {
         });
     }
     static Dispatchable(controllerName, actionName) {
-        if (Controller.Collection.Has(controllerName)) {
-            if (Controller.Collection.HasAction(controllerName, actionName))
-                return true;
-        }
-        return false;
+        return Controller.Collection.HasAction(controllerName, actionName);
     }
 }
 Controller.Collection = new ControllerCollection();
