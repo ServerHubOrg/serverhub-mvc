@@ -1,13 +1,13 @@
 {
     "name": "serverhub-mvc",
-    "version": "0.0.91",
-    "description": "Pure nodejs mvc framework",
+    "version": "0.0.92",
+    "description": "Fast and stable Node.js MVC framework",
     "main": "index.js",
     "scripts": {
         "test": "node test/app.js",
         "unit_test": "node unit_test/index.js",
         "prepare": "gulp",
-        "play": "node playground/index.js",
+        "play": "node playground/app.js",
         "prepublishOnly": "gulp"
     },
     "keywords": [

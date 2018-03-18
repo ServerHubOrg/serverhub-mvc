@@ -2,6 +2,16 @@
 
 ## Developing
 
+### 0.0.92 March 18, 2018
+
+#### Add
+
+- Support default page configuration.
+
+#### Update
+
+- Allow omit controller/model/view path in your website now. pretty easy to start a static website.
+
 ### 0.0.91 March 16, 2018
 
 #### Update

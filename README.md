@@ -14,6 +14,8 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 
 ## Latest Update
 
+Support default page configuration under WebDir directory.
+
 Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse. Auto caching feature has been added to model/view module. Detailed update could be found on CHANGELOG.md.
 
 ## What Can ServerHub Do
