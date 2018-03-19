@@ -6,7 +6,7 @@ Project intro, docs and tutorials, see [ServerHub](https://devchache.github.io/s
 
 我们为中国大陆，中国香港、澳门和中国台湾使用简体中文的开发者提供了[中文说明文档](doc/README.cn.md)。
 
-For developers using simplified Chinese in Mainland China, Hongkong and Macao Special Administrative Regions, and Taiwan, Province of China, we provide [Simplified Chinese version of README](doc/README.cn.md) as well.
+For developers using simplified Chinese in Mainland China, Hongkong and Macau Special Administrative Regions, and Taiwan, Province of China, we provide [Simplified Chinese version of README](doc/README.cn.md) as well.
 
 **ServerHub** is a collection of both Node.js framework and its CLI tool.
 
