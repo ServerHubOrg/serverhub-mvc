@@ -4,19 +4,21 @@
 
 Project intro, docs and tutorials, see [ServerHub](https://devchache.github.io/serverhub-mvc/index.html).
 
-[中文版](doc/README.cn.md)
+我们为中国大陆，中国香港、澳门和中国台湾使用简体中文的开发者提供了[中文说明文档](doc/README.cn.md)。
 
-**ServerHub** is a collection of both Nodejs framework and its CLI tool.
+For developers using simplified Chinese in Mainland China, Hongkong and Macao Special Administrative Regions, and Taiwan, Province of China, we provide [Simplified Chinese version of README](doc/README.cn.md) as well.
+
+**ServerHub** is a collection of both Node.js framework and its CLI tool.
 
 ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) is a fast and light MVC web server framework that runs on Nodejs.
 
-For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) or serverhub-cli under my public repositories.
+For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) or [serverhub-cli](https://github.com/DevChache/serverhub-cli) under my public repositories.
 
 ## Latest Update
 
 Support default page configuration under WebDir directory.
 
-Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse. Auto caching feature has been added to model/view module. Detailed update could be found on CHANGELOG.md.
+Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse. Auto caching feature has been added to model/view module. Detailed update could be found on CHANGELOG.md (English only).
 
 ## What Can ServerHub Do
 
@@ -68,10 +70,10 @@ mkdir server && serverhub-cli init server -d #be sure to keep your files before 
 
 ## Usage
 
-Like the example given by serverhub-cli or under `test` directory, the file app.js has some requirements:
+In your entry script:
 
 ```js
-const serverhub = require('../index'); // In your project, please change to require('serverhub-mvc');
+const serverhub = require('serverhub-mvc');
 
 serverhub.Run({
     BaseDir: __dirname // BaseDir is required.
@@ -86,6 +88,10 @@ serverhub.Run({
 1. route (callback function) (before v0.0.91)
 
     This function will have one parameter that refers to server route object, you can register custom route rule or ignore certain matches (I've not finished developing that feature).
+
+## Documents
+
+We've provided documents/tutorials for both [English](https://devchache.github.io/serverhub-mvc/docs/docs.html) and [Chinese](https://devchache.github.io/serverhub-mvc/zh_cn/docs/docs.html)
 
 ## Feel Free to Contact
 

@@ -2,7 +2,9 @@
 
 ![](assets/serverhub-compact.png)
 
-项目介绍、技术文档和教程，请访问 [ServerHub](https://devchache.github.io/serverhub-mvc/index.html)
+项目介绍、技术文档和教程，请访问 [ServerHub](https://devchache.github.io/serverhub-mvc/index.html)（GitHub Pages）。
+
+欢迎阅读我们为所有使用中文的开发者提供的说明文档。
 
 **ServerHub** 同时包含了 MVC 框架和一个相应的 CLI 应用程序。
 
@@ -67,10 +69,10 @@ mkdir server && serverhub-cli init server -d #在最后加上 -h 参数之前一
 
 ## 调用方法
 
-参见 serverhub-cli 工具给出的 demo 或者 `test` 目录，`app.js` 文件里有下述要求：
+请在你的启动脚本中配置：
 
 ```js
-const serverhub = require('../index'); // 在你自己的项目中，应该修改为 require('serverhub-mvc');
+const serverhub = require('serverhub-mvc');
 
 serverhub.Run({
     BaseDir: __dirname // BaseDir is required.
@@ -85,6 +87,10 @@ serverhub.Run({
 1. route （运行时回调）（0.0.9 及以前的版本必须加上此参数，否则无法启动）
 
     这个函数接受一个参数（必须），此参数指向服务器所使用的 route 对象，你可以在此回调中写注册路由或者忽略特定路由的一些语句（特定路由仍在开发中）。
+
+## 文档
+
+我为你准备了详尽的文档，虽然目前还在完善中，但是也建议读一读：[英文版](https://devchache.github.io/serverhub-mvc/docs/docs.html和[中文版](https://devchache.github.io/serverhub-mvc/zh_cn/docs/docs.html)。
 
 ## 老铁要联系我了？
 
