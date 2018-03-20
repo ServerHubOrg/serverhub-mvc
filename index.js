@@ -6,12 +6,19 @@
  * Yang Zhongdong (yangzd1996@outlook.com)
  */
 
+
+/**
+ * Notice, although packages like callsite can help to get the BaseDir parameter property.
+ * But we will not use it. Because it is better to let users feel involved in configuring ServerHub
+ * start up function. And it reminds them to customize ServerHub as they wanted.
+ */
 const libcore = require('./dist/lib/core/core');
 const libroute = require('./dist/lib/route/route');
 const http = require('http');
 const package = require('./package.json');
 const path = require('path');
 const fs = require('fs');
+// const callsite = require('callsite'); // Will not be used.
 
 
 var server;
@@ -22,6 +29,7 @@ var server;
  * @param {function} appstart Callback when ServerHub starts.
  */
 exports.Run = (config, appstart) => {
+    // let appJsPath = callsite()[1].getFileName(); // Will not be used because I want developers to feel involved in configuration process.
     if (!config['BaseDir'])
         throw new Error("Must specify server base dir at least.");
     libcore.UpdateGlobalVariable('ServerBaseDir', config['BaseDir']);
@@ -42,7 +50,7 @@ exports.Run = (config, appstart) => {
             defaultpages = [defaultpages];
         else if (defaultpages instanceof Array)
             libcore.UpdateGlobalVariable('DefaultPages', defaultpages);
-            else console.error(`'DefaultPages' in your configuration parameter is not a valid array.`);
+        else console.error(`'DefaultPages' in your configuration parameter is not a valid array.`);
     }
 
 
