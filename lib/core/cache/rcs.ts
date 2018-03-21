@@ -12,6 +12,8 @@ import { ErrorManager, RuntimeError } from '../error/error';
 import { StorageService, FileInfo } from '../storage/storage';
 import { GlobalEnvironmentVariables } from '../global';
 import { ContentType } from '../content-type';
+import { CacheHelper } from '../helper';
+import * as npath from 'path';
 export class RCS {
     private constructor() { }
     private static Instance = new RCS();
@@ -73,7 +75,10 @@ export class RCS {
                     info = StorageService.Service((global['EnvironmentVariables'] as GlobalEnvironmentVariables).WebDir).FileInfo(uri.substr(1));
                 } catch (error) {
                     res.writeHead(404, 'content-type: text/html');
-                    res.write(ErrorManager.RenderErrorAsHTML(error));
+                    if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+                        res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
+                    else
+                        res.write(ErrorManager.RenderErrorAsHTML(error));
                     res.end();
                     return;
                 }
@@ -98,7 +103,10 @@ export class RCS {
                     }
                 } catch (error) {
                     res.writeHead(404, 'content-type: text/html');
-                    res.write(ErrorManager.RenderErrorAsHTML(new Error(ErrorManager.RenderError(RuntimeError.SH020706, uri))));
+                    if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+                        res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
+                    else
+                        res.write(ErrorManager.RenderErrorAsHTML(new Error(ErrorManager.RenderError(RuntimeError.SH020706, uri))));
                     res.end();
                     return;
                 }

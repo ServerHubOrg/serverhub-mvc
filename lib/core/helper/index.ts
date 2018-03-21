@@ -7,5 +7,6 @@
  */
 
 import { FileHelper } from "./file-helper";
+import CacheHelper from "./cache-helper";
 
-export { FileHelper };
+export { FileHelper, CacheHelper };

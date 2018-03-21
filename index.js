@@ -40,9 +40,16 @@ exports.Run = (config, appstart) => {
     if (config['Port'])
         port = config['Port'];
 
-    if (config['PageNotFound'])
-        // libcore.SetGlobalVariable('PageNotFound', config['PageNotFound']);
-        throw new Error('Not implemented!');
+    if (config['PageNotFound']) {
+        let pageNotFound = config['PageNotFound'];
+        let variables = global['EnvironmentVariables'];
+        let paths = path.resolve(variables.ServerBaseDir, pageNotFound);
+        if (pageNotFound && pageNotFound.length > 0) {
+            if (fs.existsSync(paths)) {
+                libcore.SetGlobalVariable('PageNotFound', config['PageNotFound']);
+            } else new Error('File not exist');
+        } else throw new Error('Not a valid path. PageNotFound should be relative to BaseDir.');
+    }
 
     if (config['DefaultPages']) {
         let defaultpages = config['DefaultPages'];

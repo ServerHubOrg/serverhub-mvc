@@ -14,9 +14,9 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是
 
 ## 最近更新
 
-你已经可以自定义默认页了，默认页会在无路由匹配时被加载。即当你以 `hostname:926/` 的形式访问时，可以直接按照自己的默认页配置进行。此配置项具有默认值，你可以缺省（以 index.html 为默认页）。
+你已经可以自定义默认页了，默认页会在无路由匹配时被加载。并且你可以自定义错误页，在没有路由或资源匹配时会渲染错误页。如果你不指定，会由 ServerHub 的错误控制来接管渲染工作。
 
-现在，ServerHub 提供了在控制器内连接数据库和使用控制器作用域变量的方式，可以到 Database.md 和 Controller.md 一探究竟。而且 model 和 view 已经可以被自动缓存了，这将会加速你的服务器渲染进程，并有效减少磁盘 IO。所有重要更新都列举在根目录 CHANGELOG.md 内。
+所有重要更新都列举在根目录 CHANGELOG.md 内。
 
 ## 它能做这些工作
 

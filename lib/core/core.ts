@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import { ContentType } from './content-type';
 import { Route } from '../route/route';
 import { RCS } from './cache/rcs';
+import { CacheHelper } from "./helper/index";
 
 
 const node_version = process.version;
@@ -25,7 +26,7 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     ControllerDir: 'controller/',
     ViewDir: 'view/',
     ModelDir: 'model/',
-    PageNotFound: '404.html',
+    PageNotFound: '', // relative to ServerBaseDir.
     WebDir: 'www/',
     MaxCacheSize: 350, // MB
     DBProvider: 'mysql',
@@ -156,7 +157,11 @@ function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void 
     } else {
         res.setHeader('content-type', 'text/html');
         res.writeHead(404);
-        res.write(fs.readFileSync(nodepath.resolve(__dirname, '404.html')).toString());
+        let pageNotFound = '';
+        if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+            pageNotFound = CacheHelper.Cache(nodepath.resolve(__dirname, '404.html')).Content;
+        else pageNotFound = CacheHelper.Cache(nodepath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content;
+        res.write(pageNotFound);
         res.end();
     }
 }

@@ -2,6 +2,12 @@
 
 ## Developing
 
+### 0.0.93 March 21, 2018
+
+#### Add
+
+- Full support for custom 404 error page.
+
 ### 0.0.92-patch-1 March 18, 2018
 
 #### Update

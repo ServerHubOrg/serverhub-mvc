@@ -16,9 +16,9 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 
 ## Latest Update
 
-Support default page configuration under WebDir directory.
+Support default page configuration under WebDir directory. And fully support for custom 404 pages.
 
-Original ServerResponse parameter in actions has been replaced with a wrapper SHResponse. Auto caching feature has been added to model/view module. Detailed update could be found on CHANGELOG.md (English only).
+Detailed update could be found on CHANGELOG.md (English only).
 
 ## What Can ServerHub Do
 

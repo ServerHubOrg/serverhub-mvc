@@ -6,13 +6,14 @@ const nodepath = require("path");
 const fs = require("fs");
 const content_type_1 = require("./content-type");
 const rcs_1 = require("./cache/rcs");
+const index_1 = require("./helper/index");
 const node_version = process.version;
 global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['EnvironmentVariables'] : {
     ServerBaseDir: __dirname,
     ControllerDir: 'controller/',
     ViewDir: 'view/',
     ModelDir: 'model/',
-    PageNotFound: '404.html',
+    PageNotFound: '',
     WebDir: 'www/',
     MaxCacheSize: 350,
     DBProvider: 'mysql',
@@ -94,7 +95,12 @@ function NoRoute(path, req, res) {
     else {
         res.setHeader('content-type', 'text/html');
         res.writeHead(404);
-        res.write(fs.readFileSync(nodepath.resolve(__dirname, '404.html')).toString());
+        let pageNotFound = '';
+        if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+            pageNotFound = index_1.CacheHelper.Cache(nodepath.resolve(__dirname, '404.html')).Content;
+        else
+            pageNotFound = index_1.CacheHelper.Cache(nodepath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content;
+        res.write(pageNotFound);
         res.end();
     }
 }

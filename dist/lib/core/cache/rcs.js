@@ -4,6 +4,8 @@ const cache_1 = require("./cache");
 const error_1 = require("../error/error");
 const storage_1 = require("../storage/storage");
 const content_type_1 = require("../content-type");
+const helper_1 = require("../helper");
+const npath = require("path");
 class RCS {
     constructor() {
         this.CacheManager = new cache_1.CacheStorage();
@@ -54,7 +56,10 @@ class RCS {
                 }
                 catch (error) {
                     res.writeHead(404, 'content-type: text/html');
-                    res.write(error_1.ErrorManager.RenderErrorAsHTML(error));
+                    if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+                        res.write(helper_1.CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
+                    else
+                        res.write(error_1.ErrorManager.RenderErrorAsHTML(error));
                     res.end();
                     return;
                 }
@@ -80,7 +85,10 @@ class RCS {
                 }
                 catch (error) {
                     res.writeHead(404, 'content-type: text/html');
-                    res.write(error_1.ErrorManager.RenderErrorAsHTML(new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020706, uri))));
+                    if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+                        res.write(helper_1.CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
+                    else
+                        res.write(error_1.ErrorManager.RenderErrorAsHTML(new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020706, uri))));
                     res.end();
                     return;
                 }
