@@ -63,7 +63,8 @@ class ControllerCollection {
                         if (shResponse.headersSent)
                             dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders() as OutgoingHttpHeaders);
                         // if (shResponse.finished)
-                        dispatch.Response.write(shResponse.getContent());
+                        if (shResponse.getContent())
+                            dispatch.Response.write(shResponse.getContent());
                     } catch (e) {
                         if ((e as Error).message.match(/.*not.*define/i))
                             console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
@@ -72,7 +73,8 @@ class ControllerCollection {
 
                     delete controller['View'];
 
-                    if (!dispatch.Response.headersSent) {
+                    if (!shResponse.headersSent) {
+                        // if (!dispatch.Response.headersSent) {
                         dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
 
                         if (!shResponse.finished)

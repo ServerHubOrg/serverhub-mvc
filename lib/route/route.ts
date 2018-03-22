@@ -25,7 +25,7 @@ export class Route {
         };
         this.IgnoredRules = new Array<string>(0);
     }
-    
+
     public MapRoute(routeName: string, routeRule: string, defaultValue: RouteValue) {
         this.Name = routeName;
         this.Rule = routeRule;
@@ -72,7 +72,10 @@ export class Route {
         let regexp = new RegExp(reg_str);
         let match = path.match(regexp);
         if (match === null) {
-            return void 0;
+            path += '/';
+            match = path.match(regexp);
+            if (match === null)
+                return void 0;
         }
         let result: RouteValue;
         result = {

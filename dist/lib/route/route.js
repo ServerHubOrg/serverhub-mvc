@@ -51,7 +51,10 @@ class Route {
         let regexp = new RegExp(reg_str);
         let match = path.match(regexp);
         if (match === null) {
-            return void 0;
+            path += '/';
+            match = path.match(regexp);
+            if (match === null)
+                return void 0;
         }
         let result;
         result = {

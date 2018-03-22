@@ -14,7 +14,8 @@ import { JSONX } from "../helper";
 class SHResponse {
     private _Headers = {};
     private _StatusCode = 0;
-    private _Content = new Buffer('', 'utf8');
+    private _Content = null;
+    // private _Content = new Buffer('', 'utf8');
     private _HeaderSent = false;
     private _WriteHeadCalled = false;
     private _Finished = false;
@@ -47,7 +48,7 @@ class SHResponse {
     }
 
     public getContent(encoding = 'utf8'): String {
-        return this._Content.toString(encoding);
+        return this._Content ? this._Content.toString(encoding) : void 0;
     }
 
     public getHeader(name: string): any {
@@ -79,7 +80,7 @@ class SHResponse {
         if (this._Finished)
             throw new Error('Response is already finished.')
         let value = (typeof (chunk) === 'string' || Buffer.isBuffer(chunk)) ? chunk : JSONX(chunk);
-        if (this._Content.length > 0) {
+        if (this._Content && this._Content.length > 0) {
             if (Buffer.isBuffer(value)) {
                 this._Content = Buffer.concat([this._Content, value], this._Content.length + (value as Buffer).length);
             } else {

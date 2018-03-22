@@ -89,6 +89,8 @@ serverhub.Run({
 
     This function will have one parameter that refers to server route object, you can register custom route rule or ignore certain matches (I've not finished developing that feature).
 
+Notice: If you are using macOS, then port under 1024 are supposed to be listened with administrator privilege.
+
 ## Documents
 
 We've provided documents/tutorials for both [English](https://devchache.github.io/serverhub-mvc/docs/docs.html) and [Chinese](https://devchache.github.io/serverhub-mvc/zh_cn/docs/docs.html)

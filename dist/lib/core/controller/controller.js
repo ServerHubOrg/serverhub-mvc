@@ -46,7 +46,8 @@ class ControllerCollection {
                         context = controller[action](dispatch.Request, shResponse, dispatch.Method);
                         if (shResponse.headersSent)
                             dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders());
-                        dispatch.Response.write(shResponse.getContent());
+                        if (shResponse.getContent())
+                            dispatch.Response.write(shResponse.getContent());
                     }
                     catch (e) {
                         if (e.message.match(/.*not.*define/i))
@@ -55,7 +56,7 @@ class ControllerCollection {
                             throw e;
                     }
                     delete controller['View'];
-                    if (!dispatch.Response.headersSent) {
+                    if (!shResponse.headersSent) {
                         dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
                         if (!shResponse.finished)
                             dispatch.Response.write(view_1.ApplyModel(controllerName, context));

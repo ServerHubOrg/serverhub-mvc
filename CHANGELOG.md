@@ -2,6 +2,16 @@
 
 ## Developing
 
+### 0.0.94 March 22, 2018
+
+#### Add
+
+- Custom route rules can use prefix. Last slash can be ignored.
+
+#### Fix
+
+- Controllers with empty response may cause render function not working.
+
 ### 0.0.94 March 21, 2018
 
 #### Patch
