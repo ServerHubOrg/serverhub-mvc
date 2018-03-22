@@ -135,7 +135,11 @@ exports.Run = (config, appstart) => {
     libcore.RegisterRouter(libroute.Route.GetRoute());
 
     server = http.createServer((req, res) => {
-        libcore.RoutePath(req.url, req, res);
+        try {
+            libcore.RoutePath(req.url, req, res);
+        } catch (error) {
+            console.error(error);
+        }
     });
 
     try {

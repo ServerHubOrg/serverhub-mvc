@@ -35,14 +35,14 @@ class CacheHelper {
         if (_CachedFiles.indexOf(mappedPath) !== -1) {
             return _CachedCollection[mappedPath];
         } else {
-            if (!fs.existsSync(path)) return void 0;
+            if (fs.statSync(path).isDirectory() || !fs.existsSync(path)) return { FullPath: path, Content: '' } as CacheResult;
             _CachedCollection[mappedPath] = {
                 FullPath: path
                 , Content: fs.readFileSync(path).toString()
             };
 
             fs.watchFile(path, () => {
-                if (!fs.existsSync(path)) {
+                if (fs.statSync(path).isDirectory() || !fs.existsSync(path)) {
                     delete _CachedCollection[mappedPath]; _CachedFiles.splice(_CachedFiles.indexOf(mappedPath), 1)
                 }
                 else

@@ -31,9 +31,7 @@ function Register(controllerJs) {
         });
     }
     catch (error) {
-        if (error.message.indexOf('Warning') > -1)
-            throw error;
-        throw error_1.ErrorManager.RenderError(error_1.CompileTimeError.SH010103);
+        throw error;
     }
     exp['Console'] = global.console;
     let provider = void 0;

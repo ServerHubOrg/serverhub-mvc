@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const helper_1 = require("../helper");
 class SHResponse {
     constructor() {
         this._Headers = {};
@@ -61,19 +62,20 @@ class SHResponse {
     write(chunk, encoding = 'utf8') {
         if (this._Finished)
             throw new Error('Response is already finished.');
+        let value = (typeof (chunk) === 'string' || Buffer.isBuffer(chunk)) ? chunk : helper_1.JSONX(chunk);
         if (this._Content.length > 0) {
-            if (Buffer.isBuffer(chunk)) {
-                this._Content = Buffer.concat([this._Content, chunk], this._Content.length + chunk.length);
+            if (Buffer.isBuffer(value)) {
+                this._Content = Buffer.concat([this._Content, value], this._Content.length + value.length);
             }
             else {
-                let tempBuf = Buffer.from(chunk);
+                let tempBuf = Buffer.from(value);
                 this._Content = Buffer.concat([this._Content, tempBuf], this._Content.length + tempBuf.length);
             }
         }
-        else if (Buffer.isBuffer(chunk))
-            this._Content = chunk;
+        else if (Buffer.isBuffer(value))
+            this._Content = value;
         else
-            this._Content = Buffer.from(chunk.toString());
+            this._Content = Buffer.from(value.toString());
         this._HeaderSent = true;
         return true;
     }

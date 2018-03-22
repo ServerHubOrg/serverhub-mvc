@@ -1,6 +1,6 @@
 {
     "name": "serverhub-mvc",
-    "version": "0.0.93",
+    "version": "0.0.94",
     "description": "Fast and stable Node.js MVC framework",
     "main": "index.js",
     "scripts": {
@@ -30,6 +30,8 @@
         "url": "https://github.com/DevChache/serverhub-mvc.git"
     },
     "dependencies": {
-        "mysql": "^2.15.0"
+        "js-beautify": "^1.7.5",
+        "mysql": "^2.15.0",
+        "object2jsstr": "^0.1.0"
     }
 }

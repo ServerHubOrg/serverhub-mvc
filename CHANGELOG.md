@@ -2,6 +2,12 @@
 
 ## Developing
 
+### 0.0.94 March 21, 2018
+
+#### Patch
+
+- Fix JSON string format issue.
+
 ### 0.0.93 March 21, 2018
 
 #### Add

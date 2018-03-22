@@ -8,5 +8,6 @@
 
 import { FileHelper } from "./file-helper";
 import CacheHelper from "./cache-helper";
+import { Convert as JSONX } from "./jsonx-helper";
 
-export { FileHelper, CacheHelper };
+export { FileHelper, CacheHelper, JSONX };

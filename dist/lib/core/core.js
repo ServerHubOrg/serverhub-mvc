@@ -96,7 +96,7 @@ function NoRoute(path, req, res) {
         res.setHeader('content-type', 'text/html');
         res.writeHead(404);
         let pageNotFound = '';
-        if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+        if (variables.PageNotFound !== null && variables.PageNotFound.length === 0)
             pageNotFound = index_1.CacheHelper.Cache(nodepath.resolve(__dirname, '404.html')).Content;
         else
             pageNotFound = index_1.CacheHelper.Cache(nodepath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content;

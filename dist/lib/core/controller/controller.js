@@ -46,8 +46,7 @@ class ControllerCollection {
                         context = controller[action](dispatch.Request, shResponse, dispatch.Method);
                         if (shResponse.headersSent)
                             dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders());
-                        if (shResponse.finished)
-                            dispatch.Response.write(shResponse.getContent());
+                        dispatch.Response.write(shResponse.getContent());
                     }
                     catch (e) {
                         if (e.message.match(/.*not.*define/i))
