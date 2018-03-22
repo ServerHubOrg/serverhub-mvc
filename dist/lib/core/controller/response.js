@@ -5,7 +5,7 @@ class SHResponse {
     constructor() {
         this._Headers = {};
         this._StatusCode = 0;
-        this._Content = new Buffer('', 'utf8');
+        this._Content = null;
         this._HeaderSent = false;
         this._WriteHeadCalled = false;
         this._Finished = false;
@@ -34,7 +34,7 @@ class SHResponse {
         return this._Headers.hasOwnProperty(name);
     }
     getContent(encoding = 'utf8') {
-        return this._Content.toString(encoding);
+        return this._Content ? this._Content.toString(encoding) : void 0;
     }
     getHeader(name) {
         if (this._HeaderSent)
@@ -63,7 +63,7 @@ class SHResponse {
         if (this._Finished)
             throw new Error('Response is already finished.');
         let value = (typeof (chunk) === 'string' || Buffer.isBuffer(chunk)) ? chunk : helper_1.JSONX(chunk);
-        if (this._Content.length > 0) {
+        if (this._Content && this._Content.length > 0) {
             if (Buffer.isBuffer(value)) {
                 this._Content = Buffer.concat([this._Content, value], this._Content.length + value.length);
             }

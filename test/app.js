@@ -9,7 +9,9 @@
 const serverhub = require('../index');
 
 serverhub.Run({
-    BaseDir: __dirname // BaseDir is required.
+	BaseDir: __dirname, // BaseDir is required.
+}, (route) => {
+	route.MapRoute('default', 'v1/{controller}/{action}/{id}');
 });
 
 // Contributions:
