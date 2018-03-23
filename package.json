@@ -1,6 +1,6 @@
 {
     "name": "serverhub-mvc",
-    "version": "0.0.96",
+    "version": "0.0.96-b",
     "description": "Fast and stable Node.js MVC framework",
     "main": "index.js",
     "scripts": {

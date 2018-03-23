@@ -7,6 +7,7 @@
 #### Add
 
 - `this.Runtime.WAIT` signal.
+- id and search string contained during dispatch.
 
 ### 0.0.95 March 22, 2018
 

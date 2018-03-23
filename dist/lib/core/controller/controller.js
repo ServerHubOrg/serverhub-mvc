@@ -14,6 +14,8 @@ const view_1 = require("../view/view");
 const model_1 = require("../model/model");
 const response_1 = require("./response");
 const PlantableVariables = ["View", "Runtime", "Console"];
+const SearchRegex = /(((?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@&=])+)/i;
+const QueryRegex = /((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)=((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)/i;
 class ControllerCollection {
     constructor() {
         this.Controllers = {};
@@ -41,6 +43,20 @@ class ControllerCollection {
     }
     DispatchController(controllerName, actionName, idString, search, dispatch) {
         return __awaiter(this, void 0, void 0, function* () {
+            let searchGroup = new Map();
+            if (search && search.length > 2) {
+                if (!SearchRegex.test(search))
+                    console.error('search not valid:', search);
+                else {
+                    let all = search.match(SearchRegex)[1];
+                    all.split('&').forEach(query => {
+                        let match = query.match(QueryRegex);
+                        if (match && match.length === 3) {
+                            searchGroup.set(match[1], match[2]);
+                        }
+                    });
+                }
+            }
             const __innerOperations = () => __awaiter(this, void 0, void 0, function* () {
                 if (this.Has(controllerName)) {
                     let controller = this.Controllers[controllerName].Controller;
@@ -53,7 +69,7 @@ class ControllerCollection {
                             };
                             let shResponse = new response_1.SHResponse();
                             try {
-                                context = yield controller[action](dispatch.Request, shResponse, dispatch.Method);
+                                context = yield controller[action](dispatch.Request, shResponse, dispatch.Method, idString, searchGroup);
                             }
                             catch (e) {
                                 if (e.message.match(/.*not.*define/i))

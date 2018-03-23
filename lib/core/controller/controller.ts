@@ -16,7 +16,8 @@ import { Route, RouteValue } from "../../route/route";
 import { SHResponse } from "./response";
 
 const PlantableVariables = ["View", "Runtime", "Console"];
-
+const SearchRegex = /(((?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@&=])+)/i;
+const QueryRegex = /((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)=((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)/i;
 /**
  * Controller storage service provider
  */
@@ -46,6 +47,43 @@ class ControllerCollection {
     }
 
     public async DispatchController(controllerName: string, actionName: string, idString: string, search: string, dispatch: ControllDispatch): Promise<boolean> {
+        /* handling search
+         *
+         * According to RFC 1738 (https://tools.ietf.org/html/rfc1738):
+         * search         = *[ uchar | ";" | ":" | "@" | "&" | "=" ]
+         * uchar          = unreserved | escape
+         * unreserved     = alpha | digit | safe | extra
+         * alpha          = lowalpha | hialpha
+         * lowalpha       = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" |
+         *                  "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" |
+         *                  "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" |
+         *                  "y" | "z"
+         * hialpha        = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" |
+         *                  "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" |
+         *                  "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+         * digit          = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" |
+         *                  "8" | "9"
+         * safe           = "$" | "-" | "_" | "." | "+"
+         * extra          = "!" | "*" | "'" | "(" | ")" | ","
+         * escape         = "%" hex hex
+         * hex            = digit | "A" | "B" | "C" | "D" | "E" | "F" |
+         *                  "a" | "b" | "c" | "d" | "e" | "f"
+         */
+        let searchGroup = new Map<string, string>();
+        if (search && search.length > 2) {
+            if (!SearchRegex.test(search))
+                console.error('search not valid:', search);
+            else {
+                let all = search.match(SearchRegex)[1];
+                all.split('&').forEach(query => {
+                    let match = query.match(QueryRegex);
+                    if (match && match.length === 3) {
+                        searchGroup.set(match[1], match[2]);
+                    }
+                })
+            }
+        }
+
         const __innerOperations = async () => {
             if (this.Has(controllerName)) {
                 let controller = (this.Controllers[controllerName] as ControllerBundle).Controller as Object;
@@ -60,7 +98,7 @@ class ControllerCollection {
 
                         let shResponse = new SHResponse();
                         try {
-                            context = await controller[action](dispatch.Request, shResponse, dispatch.Method);
+                            context = await controller[action](dispatch.Request, shResponse, dispatch.Method, idString, searchGroup);
                         } catch (e) {
                             if ((e as Error).message.match(/.*not.*define/i))
                                 console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
