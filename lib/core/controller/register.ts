@@ -88,7 +88,8 @@ export function Register(controllerJs: string): ControllerBundle {
 
     exp['Runtime'] = {
         DBProvider: provider,
-        FileHelper: FileHelper
+        FileHelper: FileHelper,
+        WAIT: false
     };
 
     exp['System'] = {

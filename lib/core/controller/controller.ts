@@ -45,54 +45,68 @@ class ControllerCollection {
         return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].Controller.hasOwnProperty(actionName));
     }
 
-    public DispatchController(controllerName: string, actionName: string, idString: string, search: string, dispatch: ControllDispatch): boolean {
-        if (this.Has(controllerName)) {
-            let controller = (this.Controllers[controllerName] as ControllerBundle).Controller as Object;
-            let matched = false;
-            Object.keys(controller).map(action => {
-                if (action === actionName.toLowerCase()) {
-                    let context = ReadModel(controllerName);
+    public async DispatchController(controllerName: string, actionName: string, idString: string, search: string, dispatch: ControllDispatch): Promise<boolean> {
+        const __innerOperations = async () => {
+            if (this.Has(controllerName)) {
+                let controller = (this.Controllers[controllerName] as ControllerBundle).Controller as Object;
+                let matched = false;
+                Object.keys(controller).map(async action => {
+                    if (action === actionName.toLowerCase()) {
+                        let context = ReadModel(controllerName);
 
-                    controller['View'] = () => {
-                        return context;
-                    };
+                        controller['View'] = () => {
+                            return context;
+                        };
 
-                    let shResponse = new SHResponse();
-                    try {
-                        context = controller[action](dispatch.Request, shResponse, dispatch.Method);
-                        if (shResponse.headersSent)
-                            dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders() as OutgoingHttpHeaders);
-                        // if (shResponse.finished)
-                        if (shResponse.getContent())
-                            dispatch.Response.write(shResponse.getContent());
-                    } catch (e) {
-                        if ((e as Error).message.match(/.*not.*define/i))
-                            console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
-                        else throw e;
+                        let shResponse = new SHResponse();
+                        try {
+                            context = await controller[action](dispatch.Request, shResponse, dispatch.Method);
+                        } catch (e) {
+                            if ((e as Error).message.match(/.*not.*define/i))
+                                console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
+                            else throw e;
+                        }
+                        (function wait(_wait) {
+                            if (_wait)
+                                setTimeout(wait, 10, controller['Runtime']['WAIT']);
+                            else {
+                                if (shResponse.headersSent)
+                                    dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders() as OutgoingHttpHeaders);
+                                // if (shResponse.finished)
+                                if (shResponse.getContent())
+                                    dispatch.Response.write(shResponse.getContent());
+
+                                delete controller['View'];
+
+                                if (!shResponse.headersSent) {
+                                    // if (!dispatch.Response.headersSent) {
+                                    dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
+
+                                    if (!shResponse.finished)
+                                        dispatch.Response.write(ApplyModel(controllerName, context));
+                                }
+                                dispatch.Response.end();
+                                matched = true;
+                            }
+                        })(controller['Runtime']['WAIT']);
                     }
-
-                    delete controller['View'];
-
-                    if (!shResponse.headersSent) {
-                        // if (!dispatch.Response.headersSent) {
-                        dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
-
-                        if (!shResponse.finished)
-                            dispatch.Response.write(ApplyModel(controllerName, context));
-                    }
+                });
+                return matched;
+            } else {
+                if (Object.keys(this.Controllers).length === 0) {
+                    dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
+                    dispatch.Response.write('No controller registered, empty route dispatched.');
                     dispatch.Response.end();
-                    matched = true;
-                }
-            });
-            return matched;
-        } else {
-            if (Object.keys(this.Controllers).length === 0) {
-                dispatch.Response.setHeader('content-type', 'text/html; charset=utf-8');
-                dispatch.Response.write('No controller registered, empty route dispatched.');
-                dispatch.Response.end();
-            } else
-                throw new Error(ErrorManager.RenderError(RuntimeError.SH020101, controllerName));
+                } else
+                    throw new Error(ErrorManager.RenderError(RuntimeError.SH020101, controllerName));
+            }
         }
+
+        return __innerOperations().then(() => {
+            return true;
+        }).catch(() => {
+            return false;
+        })
     }
 }
 
@@ -126,12 +140,12 @@ export class Controller {
      * @param request HTTP request info
      * @param response Server response
      */
-    public static Dispatch(method: string, route: RouteValue, request: IncomingMessage, response: ServerResponse): boolean {
+    public static async Dispatch(method: string, route: RouteValue, request: IncomingMessage, response: ServerResponse): Promise<boolean> {
         return Controller.Collection.DispatchController(route.Controller, route.Action, route.Id, route.Search, {
             Method: method,
             Request: request,
             Response: response
-        } as ControllDispatch);
+        } as ControllDispatch).then(() => true).catch(() => false);
     }
 
     public static Dispatchable(controllerName: string, actionName: string): boolean {

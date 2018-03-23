@@ -61,7 +61,8 @@ function Register(controllerJs) {
     }
     exp['Runtime'] = {
         DBProvider: provider,
-        FileHelper: index_3.FileHelper
+        FileHelper: index_3.FileHelper,
+        WAIT: false
     };
     exp['System'] = {
         Version: variables.PackageData['version'].toString(),

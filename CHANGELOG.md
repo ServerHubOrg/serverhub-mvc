@@ -2,7 +2,13 @@
 
 ## Developing
 
-### 0.0.94 March 22, 2018
+### 0.0.96 March 23, 2018
+
+#### Add
+
+- `this.Runtime.WAIT` signal.
+
+### 0.0.95 March 22, 2018
 
 #### Add
 

@@ -26,11 +26,11 @@ gulp.task('default', function() {
 	return gulp.src('./lib/**/*.ts')
 		.pipe(f)
 		.pipe(ts({
-			target: 'es6',
+			target: 'es2016',
 			noEmitOnError: true,
 			module: 'commonJs',
 			removeComments: true,
-			allowJs: false,
+			allowJs: false
 		}))
 		.pipe(gulp.dest('./dist/lib/'));
 });

@@ -49,6 +49,7 @@ Usage of these variables are avaliable at `doc/variables/{VariableName}.md`. Som
 - `this.Runtime` **_Object_** Contains bunch of other runtime features.
     1. `this.Runtime.DBProvider` **_Object_** A reference to initialized database provider instanced (default MySQL).
     1. `this.Runtime.FileHelper` **_Object_** A reference to FileHelper object.
+    1. `this.Runtime.WAIT` **_boolean_** Force to hold connection until asynchronous operations done.
 
 - `this.System` **_Object_** Provide bunch of readonly constants inside ServerHub instance.
     1. `this.System.Version` **_string_** ServerHub version.
