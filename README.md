@@ -89,7 +89,7 @@ serverhub.Run({
 
     This function will have one parameter that refers to server route object, you can register custom route rule or ignore certain matches (I've not finished developing that feature).
 
-Notice: If you are using macOS, then port under 1024 are supposed to be listened with administrator privilege.
+Notice: If you are using macOS or Linux systems like Ubuntu or Debian, then port under 1024 needs privilege. So you may need `sudo` to run the `node app.js` command.
 
 ## Documents
 

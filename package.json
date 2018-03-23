@@ -31,7 +31,6 @@
     },
     "dependencies": {
         "js-beautify": "^1.7.5",
-        "mysql": "^2.15.0",
-        "object2jsstr": "^0.1.0"
+        "mysql": "^2.15.0"
     }
 }

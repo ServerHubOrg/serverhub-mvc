@@ -88,11 +88,11 @@ serverhub.Run({
 
     这个函数接受一个参数（必须），此参数指向服务器所使用的 route 对象，你可以在此回调中写注册路由或者忽略特定路由的一些语句（特定路由仍在开发中）。
 
-特别提醒：如果你使用的是 macOS，那么对于小于（等于）1024 的端口号，需要通过 `sudo` 提权后再执行。
+特别提醒：如果你使用的是 macOS或 Ubuntu、Debian 一类的操作系统，那么对于小于（等于）1024 的端口号，需要通过 `sudo` 提权后再执行 `node app.js` 命令。
 
 ## 文档
 
-我为你准备了详尽的文档，虽然目前还在完善中，但是也建议读一读：[英文版](https://devchache.github.io/serverhub-mvc/docs/docs.html和[中文版](https://devchache.github.io/serverhub-mvc/zh_cn/docs/docs.html)。
+我计划为开发者提供详尽的文档，虽然目前还在完善中，但是也建议读一读：[英文版](https://devchache.github.io/serverhub-mvc/docs/docs.html和[中文版](https://devchache.github.io/serverhub-mvc/zh_cn/docs/docs.html)。
 
 ## 老铁要联系我了？
 
