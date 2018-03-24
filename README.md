@@ -16,6 +16,8 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 
 ## Latest Update
 
+Extra parameters added to controller actions (id and search string extracted from URL).
+
 Support default page configuration under WebDir directory. And fully support for custom 404 pages.
 
 Detailed update could be found on CHANGELOG.md (English only).
