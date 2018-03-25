@@ -2,7 +2,7 @@
 
 ![](doc/assets/serverhub-compact.png)
 
-Project intro, docs and tutorials, see [ServerHub](https://devchache.github.io/serverhub-mvc/index.html).
+Project introductions, documents and tutorials, please see [ServerHub](https://devchache.github.io/serverhub-mvc/index.html).
 
 我们为中国大陆，中国香港、澳门和中国台湾和其他国家地区使用简体中文的开发者提供了[中文说明文档](doc/README.cn.md)。
 
@@ -26,7 +26,7 @@ Detailed update could be found on CHANGELOG.md (English only).
 
 Currently, ServerHub support custom routing, view binding and controller registering.
 
-Here is how the example workspace directory looks like (you can use `serverhub-cli init . -d` with serverhub-cli to get such a demo.)
+Here is how the example workspace directory looks like (you can use `serverhub-cli init . -d` with serverhub-cli to get such a demo)
 
 ```plain
 demo_directory/
