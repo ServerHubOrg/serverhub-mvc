@@ -20,11 +20,46 @@ class Route {
             Id: (defaultValue && defaultValue.Id) ? defaultValue.Id : ''
         };
     }
-    IgnoreRoute(...routes) {
-        routes.forEach(route => {
-            if (route && route.startsWith('/'))
+    IgnoreRoute(routes) {
+        let rs = [];
+        if (!(routes instanceof Array))
+            rs.push(routes);
+        else
+            rs = routes;
+        rs.forEach((route) => {
+            if (typeof route === 'string') {
+                if (route && route.startsWith('/')) {
+                    if (!route.endsWith('/'))
+                        route += '/';
+                    this.IgnoredRules.push(route);
+                }
+            }
+            else if (route instanceof RegExp) {
                 this.IgnoredRules.push(route);
+            }
+            else
+                throw new Error('Should be either string or RegExp object.');
         });
+    }
+    Ignored(p) {
+        if (!p.endsWith('/'))
+            p += '/';
+        if (!p.startsWith('/'))
+            p = '/' + p;
+        let ignored = false;
+        if (!ignored && this.IgnoredRules)
+            this.IgnoredRules.forEach(rule => {
+                if (ignored)
+                    return;
+                if (typeof rule === 'string') {
+                    if (rule.indexOf(p) === 0)
+                        ignored = true;
+                }
+                else if (rule.test(p) === true) {
+                    ignored = true;
+                }
+            });
+        return ignored;
     }
     RunRoute(path) {
         if (path.startsWith('/'))
@@ -37,6 +72,8 @@ class Route {
                 Search: ''
             };
         }
+        if (this.Ignored(path))
+            return void 0;
         let check = path.split('/');
         if (check && check.length === 2) {
             if (!check[1].endsWith('/'))

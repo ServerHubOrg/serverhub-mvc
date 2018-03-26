@@ -14,7 +14,7 @@ export class Route {
     private Name: string;
     private Rule: string;
     private Default: RouteValue;
-    private IgnoredRules: Array<string>;
+    private IgnoredRules: Array<string | RegExp>;
     constructor() {
         this.Name = 'default';
         this.Rule = '{controller}/{action}/{id}';
@@ -36,11 +36,43 @@ export class Route {
         } as RouteValue;
     }
 
-    public IgnoreRoute(...routes: string[]) {
-        routes.forEach(route => {
-            if (route && route.startsWith('/'))
+    public IgnoreRoute(routes: (string | RegExp)[]) {
+        let rs = [];
+        if (!(routes instanceof Array))
+            rs.push(routes);
+        else rs = routes;
+        rs.forEach((route: string | RegExp) => {
+            if (typeof route === 'string') {
+                if (route && route.startsWith('/')) {
+                    if (!route.endsWith('/'))
+                        route += '/';
+                    this.IgnoredRules.push(route);
+                }
+            } else if (route instanceof RegExp) {
                 this.IgnoredRules.push(route);
+            }
+            else throw new Error('Should be either string or RegExp object.');
         });
+    }
+
+    private Ignored(p: string) {
+        if (!p.endsWith('/'))
+            p += '/';
+        if (!p.startsWith('/'))
+            p = '/' + p;
+        let ignored = false;
+        if (!ignored && this.IgnoredRules)
+            this.IgnoredRules.forEach(rule => {
+                if (ignored) return;
+                if (typeof rule === 'string') {
+                    if (rule.indexOf(p) === 0)
+                        ignored = true;
+                }
+                else if ((rule as RegExp).test(p) === true) {
+                    ignored = true;
+                }
+            })
+        return ignored;
     }
 
     public RunRoute(path: string): RouteValue {
@@ -54,6 +86,9 @@ export class Route {
                 Search: ''
             } as RouteValue;
         }
+
+        if (this.Ignored(path))
+            return void 0;
 
         let check = path.split('/');
         if (check && check.length === 2) {

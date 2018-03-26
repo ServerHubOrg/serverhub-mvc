@@ -27,6 +27,6 @@ function FunctionWrapper(obj_string: string): Object {
 /**
  * A regular expression object that help interpolate "use strict"; to the input string.
  */
-const strict_mode_check = new RegExp(`^(?:'use strict';)|(?:"use strict";).*$`);
+const strict_mode_check = new RegExp(`^(?:'use strict';)|(?:"use strict";).*`);
 
 export default FunctionWrapper;
