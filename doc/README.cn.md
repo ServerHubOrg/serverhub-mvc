@@ -2,7 +2,7 @@
 
 ![](assets/serverhub-compact.png)
 
-项目介绍、技术文档和教程，请访问 [ServerHub](https://devchache.github.io/serverhub-mvc/index.html)（GitHub Pages）。
+项目介绍、技术文档和教程，请访问 [ServerHub](https://serverhuborg.github.io/serverhub-mvc/index.html)（GitHub Pages）。
 
 欢迎阅读我们为所有使用中文的开发者提供的说明文档。
 
