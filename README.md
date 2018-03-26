@@ -2,7 +2,7 @@
 
 ![](doc/assets/serverhub-compact.png)
 
-Project introductions, documents and tutorials, please see [ServerHub](https://devchache.github.io/serverhub-mvc/index.html).
+Project introductions, documents and tutorials, see [ServerHub](https://serverhuborg.github.io/serverhub-mvc/index.html).
 
 我们为中国大陆，中国香港、澳门和中国台湾和其他国家地区使用简体中文的开发者提供了[中文说明文档](doc/README.cn.md)。
 
@@ -12,13 +12,13 @@ For developers using simplified Chinese in China (including Mainland China, Hong
 
 ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) is a fast and light MVC web server framework that runs on Nodejs.
 
-For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) or [serverhub-cli](https://github.com/DevChache/serverhub-cli) under my public repositories.
+For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) or [serverhub-cli](https://github.com/ServerHubOrg/serverhub-cli) under my public repositories.
 
 ## Latest Update
 
-Extra parameters added to controller actions (id and search string extracted from URL).
+You can now ignore specific route rules by using **ignore route rules**. They can be either string or RegExp objects.
 
-Support default page configuration under WebDir directory. And fully support for custom 404 pages.
+Extra parameters added to controller actions (id and search string extracted from URL).
 
 Detailed update could be found on CHANGELOG.md (English only).
 

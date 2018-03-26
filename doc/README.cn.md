@@ -2,7 +2,7 @@
 
 ![](assets/serverhub-compact.png)
 
-项目介绍、技术文档和教程，请访问 [ServerHub](https://devchache.github.io/serverhub-mvc/index.html)（GitHub Pages）。
+项目介绍、技术文档和教程，请访问 [ServerHub](https://serverhuborg.github.io/serverhub-mvc/index.html)（GitHub Pages）。
 
 欢迎阅读我们为所有使用中文的开发者提供的说明文档。
 
@@ -14,7 +14,7 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是
 
 ## 最近更新
 
-你已经可以自定义默认页了，默认页会在无路由匹配时被加载。并且你可以自定义错误页，在没有路由或资源匹配时会渲染错误页。如果你不指定，会由 ServerHub 的错误控制来接管渲染工作。
+你可以轻松根据现有路由规则形成特定的忽略规则。这样就算是某个请求匹配了既定路由协议，但是如果同时匹配了忽略规则，也会被重路由到你的 Web 目录下。
 
 所有重要更新都列举在根目录 CHANGELOG.md 内。
 
@@ -92,7 +92,7 @@ serverhub.Run({
 
 ## 文档
 
-我计划为开发者提供详尽的文档，虽然目前还在完善中，但是也建议读一读：[英文版](https://devchache.github.io/serverhub-mvc/docs/docs.html和[中文版](https://devchache.github.io/serverhub-mvc/zh_cn/docs/docs.html)。
+我计划为开发者提供详尽的文档，虽然目前还在完善中，但是也建议读一读：[英文版](https://ServerHubOrg.github.io/serverhub-mvc/docs/docs.html)和[中文版](https://ServerHubOrg.github.io/serverhub-mvc/zh_cn/docs/docs.html)。
 
 ## 老铁要联系我了？
 

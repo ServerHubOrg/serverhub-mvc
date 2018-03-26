@@ -15,4 +15,5 @@ export declare interface ServerHubConfig {
     DBProvider: string;
     DBConnectionString: string;
     DefaultPages: Array<string>;
+    AsyncOperationTimeout: number;
 }

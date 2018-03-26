@@ -68,19 +68,17 @@ class ControllerCollection {
                                 return context;
                             };
                             let shResponse = new response_1.SHResponse();
-                            try {
-                                context = yield controller[action](dispatch.Request, shResponse, dispatch.Method, idString, searchGroup);
-                            }
-                            catch (e) {
-                                if (e.message.match(/.*not.*define/i))
-                                    console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?');
-                                else
-                                    throw e;
-                            }
-                            (function wait(_wait) {
-                                if (_wait)
-                                    setTimeout(wait, 10, controller['Runtime']['WAIT']);
+                            let variables = global['EnvironmentVariables'];
+                            let timeout = variables.AsyncOperationTimeout;
+                            const wait_loop = (_wait) => {
+                                if (_wait && timeout > 0) {
+                                    timeout = timeout ? timeout - 10 : 10;
+                                    setTimeout(wait_loop, 10, controller['Runtime']['WAIT']);
+                                }
                                 else {
+                                    if (timeout <= 0) {
+                                        console.error('Request to:', dispatch.Request.url, 'timeout because current timeout limit is', variables.AsyncOperationTimeout, 'milliseconds');
+                                    }
                                     if (shResponse.headersSent)
                                         dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders());
                                     if (shResponse.getContent())
@@ -92,9 +90,20 @@ class ControllerCollection {
                                             dispatch.Response.write(view_1.ApplyModel(controllerName, context));
                                     }
                                     dispatch.Response.end();
+                                    shResponse = void 0;
                                     matched = true;
                                 }
-                            })(controller['Runtime']['WAIT']);
+                            };
+                            try {
+                                context = yield controller[action](dispatch.Request, shResponse, dispatch.Method, idString, searchGroup);
+                            }
+                            catch (e) {
+                                if (e.message.match(/.*not.*define/i))
+                                    console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?');
+                                else
+                                    throw e;
+                            }
+                            wait_loop(controller['Runtime']['WAIT']);
                         }
                     }));
                     return matched;

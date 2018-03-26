@@ -31,7 +31,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     MaxCacheSize: 350, // MB
     DBProvider: 'mysql',
     DBConnectionString: null,
-    DefaultPages: ['index.html', 'default.html', 'page.html']
+    DefaultPages: ['index.html', 'default.html', 'page.html'],
+    AsyncOperationTimeout: 10000 // default 10s
 } as GlobalEnvironmentVariables;
 
 /**
