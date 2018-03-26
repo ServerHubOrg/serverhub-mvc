@@ -92,7 +92,7 @@ serverhub.Run({
 
 ## 文档
 
-我计划为开发者提供详尽的文档，虽然目前还在完善中，但是也建议读一读：[英文版](https://devchache.github.io/serverhub-mvc/docs/docs.html和[中文版](https://devchache.github.io/serverhub-mvc/zh_cn/docs/docs.html)。
+我计划为开发者提供详尽的文档，虽然目前还在完善中，但是也建议读一读：[英文版](https://ServerHubOrg.github.io/serverhub-mvc/docs/docs.html)和[中文版](https://ServerHubOrg.github.io/serverhub-mvc/zh_cn/docs/docs.html)。
 
 ## 老铁要联系我了？
 
