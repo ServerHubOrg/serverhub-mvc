@@ -25,4 +25,5 @@ export interface GlobalEnvironmentVariables {
     DBConnectionString: string;
     PackageData: Object;
     DefaultPages: Array<string>;
+    AsyncOperationTimeout: number; // milliseconds
 };

@@ -60,6 +60,9 @@ exports.Run = (config, appstart) => {
         else console.error(`'DefaultPages' in your configuration parameter is not a valid array.`);
     }
 
+    if (config['AsyncOperationTimeout']) {
+        libcore.UpdateGlobalVariable('AsyncOperationTimeout', parseInt(config['AsyncOperationTimeout']));
+    }
 
     if (config['DBConnectionString']) {
         let dbs = config['DBConnectionString'];
