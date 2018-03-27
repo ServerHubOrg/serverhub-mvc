@@ -72,26 +72,6 @@ export function SetGlobalVariable(variable: string, value: Object): void {
     global['EnvironmentVariables'][variable] = value;
 }
 
-
-// var PreOrderMiddleware = new Array<(req: IncomingMessage, res: ServerResponse, next: any) => void>(0);
-// var PostOrderMiddleware = new Array<(req: IncomingMessage, res: ServerResponse, next: any) => void>(0);
-
-
-// export enum MiddlewareType {
-//     POST = 1,
-//     PRE = 0
-// };
-// export function Use(type: MiddlewareType, middleware: (req: IncomingMessage, res: ServerResponse, next: any) => void): void {
-//     if (!middleware)
-//         return;
-//     if (type === MiddlewareType.POST) {
-//         PostOrderMiddleware.push(middleware);
-//     } else if (type === MiddlewareType.PRE) {
-//         PreOrderMiddleware.push(middleware);
-//     }
-// }
-
-
 /**
  * Route a specific path.
  * @param path Path to be routed.
@@ -100,15 +80,12 @@ export function SetGlobalVariable(variable: string, value: Object): void {
  */
 export function RoutePath(path: string, request: IncomingMessage, response: ServerResponse): void {
 
-
-    // // TODO: Should be removed.
-    // if (path.indexOf('changrui0926') !== -1)
-    //     return RCS.Service().GetCacheReport(res);
     response.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
 
     BeforeRoute(request, response, (requ, resp) => {
         let routeResult = ROUTE.RunRoute(path);
         AfterRoute(requ, resp, routeResult, (req, res) => {
+
             if (!routeResult)
                 return NoRoute(path, req, res);
 

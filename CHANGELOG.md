@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.0.0-alpha` March 27, 2018
+
+### Add
+
+- Full support for plugins before route start and after routed. Now you can easily write your own plugins to handle every possible requests.
+
 ## `0.0.97` March 26, 2018
 
 ### Add

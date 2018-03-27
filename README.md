@@ -16,9 +16,9 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 
 ## Latest Update
 
-You can now ignore specific route rules by using **ignore route rules**. They can be either string or RegExp objects.
+Plugin support finished. Now under alpha test.
 
-Extra parameters added to controller actions (id and search string extracted from URL).
+You can now ignore specific route rules by using **ignore route rules**. They can be either string or RegExp objects.
 
 Detailed update could be found on CHANGELOG.md (English only).
 

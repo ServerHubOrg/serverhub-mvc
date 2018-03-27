@@ -14,6 +14,8 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是
 
 ## 最近更新
 
+插件系统加入 ServerHub，现在你可以轻松使用自建 Plugin 或者外部 Plugin 来个性化你的服务器。
+
 你可以轻松根据现有路由规则形成特定的忽略规则。这样就算是某个请求匹配了既定路由协议，但是如果同时匹配了忽略规则，也会被重路由到你的 Web 目录下。
 
 所有重要更新都列举在根目录 CHANGELOG.md 内。
