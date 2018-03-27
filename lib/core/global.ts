@@ -26,4 +26,5 @@ export interface GlobalEnvironmentVariables {
     PackageData: Object;
     DefaultPages: Array<string>;
     AsyncOperationTimeout: number; // milliseconds
+    PluginDir: string;
 };

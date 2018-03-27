@@ -7,6 +7,7 @@ const fs = require("fs");
 const content_type_1 = require("./content-type");
 const rcs_1 = require("./cache/rcs");
 const index_1 = require("./helper/index");
+const plugin_1 = require("./plugin");
 const node_version = process.version;
 global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['EnvironmentVariables'] : {
     ServerBaseDir: __dirname,
@@ -19,7 +20,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     DBProvider: 'mysql',
     DBConnectionString: null,
     DefaultPages: ['index.html', 'default.html', 'page.html'],
-    AsyncOperationTimeout: 10000
+    AsyncOperationTimeout: 10000,
+    PluginDir: 'plugin/'
 };
 const core_env = {
     platform: process.platform,
@@ -41,29 +43,31 @@ function SetGlobalVariable(variable, value) {
     global['EnvironmentVariables'][variable] = value;
 }
 exports.SetGlobalVariable = SetGlobalVariable;
-function RoutePath(path, req, res) {
-    if (path.indexOf('changrui0926') !== -1)
-        return rcs_1.RCS.Service().GetCacheReport(res);
-    let routeResult = ROUTE.RunRoute(path);
-    res.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
-    if (!routeResult)
-        return NoRoute(path, req, res);
-    let method = req.method.toLowerCase();
-    if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
-        try {
-            return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
-        }
-        catch (error) {
-            console.error(error);
-            if (!res.headersSent)
-                res.setHeader('content-type', 'text/html');
-            if (!res.writable)
-                res.write(error_1.ErrorManager.RenderErrorAsHTML(error));
-            res.end();
-        }
-    }
-    else
-        return NoRoute(path, req, res);
+function RoutePath(path, request, response) {
+    response.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
+    plugin_1.BeforeRoute(request, response, (requ, resp) => {
+        let routeResult = ROUTE.RunRoute(path);
+        plugin_1.AfterRoute(requ, resp, routeResult, (req, res) => {
+            if (!routeResult)
+                return NoRoute(path, req, res);
+            let method = req.method.toLowerCase();
+            if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
+                try {
+                    return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
+                }
+                catch (error) {
+                    console.error(error);
+                    if (!res.headersSent)
+                        res.setHeader('content-type', 'text/html');
+                    if (!res.writable)
+                        res.write(error_1.ErrorManager.RenderErrorAsHTML(error));
+                    res.end();
+                }
+            }
+            else
+                return NoRoute(path, req, res);
+        });
+    });
 }
 exports.RoutePath = RoutePath;
 function NoRoute(path, req, res) {

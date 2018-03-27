@@ -23,7 +23,7 @@
         "gulp-filter": "^5.1.0",
         "gulp-typescript": "^3.2.3",
         "minimatch": "^3.0.4",
-        "typescript": "^2.6.2"
+        "typescript": "^2.7.2"
     },
     "repository": {
         "type": "git",

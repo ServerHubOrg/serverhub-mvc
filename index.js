@@ -18,6 +18,7 @@ const http = require('http');
 const package = require('./package.json');
 const path = require('path');
 const fs = require('fs');
+const AutoRegister = require('./dist/lib/core/plugin/').AutoRegister;
 // const callsite = require('callsite'); // Will not be used.
 
 
@@ -72,6 +73,9 @@ exports.Run = (config, appstart) => {
     }
     if (config['WebDir']) {
         libcore.SetGlobalVariable('WebDir', config['WebDir']);
+    }
+    if (config['PluginDir']) {
+        libcore.SetGlobalVariable('PluginDir', config['PluginDir']);
     }
     if (config['ControllerDir']) {
         libcore.SetGlobalVariable('ControllerDir', config['ControllerDir']);
@@ -134,6 +138,13 @@ exports.Run = (config, appstart) => {
             id: ''
         });
     }
+
+    plugin_info = AutoRegister();
+    if(plugin_info.done){
+        console.log(plugin_info.count,'plugins loaded with no errors');
+    }else{
+        console.log('Only',plugin_info.count,'plugins loaded.')
+    } // load all plugins.
 
     libcore.RegisterRouter(libroute.Route.GetRoute());
 

@@ -16,6 +16,7 @@ import { ContentType } from './content-type';
 import { Route } from '../route/route';
 import { RCS } from './cache/rcs';
 import { CacheHelper } from "./helper/index";
+import { BeforeRoute, AfterRoute } from './plugin';
 
 
 const node_version = process.version;
@@ -32,7 +33,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     DBProvider: 'mysql',
     DBConnectionString: null,
     DefaultPages: ['index.html', 'default.html', 'page.html'],
-    AsyncOperationTimeout: 10000 // default 10s
+    AsyncOperationTimeout: 10000, // default 10s
+    PluginDir: 'plugin/'
 } as GlobalEnvironmentVariables;
 
 /**
@@ -96,34 +98,38 @@ export function SetGlobalVariable(variable: string, value: Object): void {
  * @param req Incomming message (request)
  * @param res Server response (response)
  */
-export function RoutePath(path: string, req: IncomingMessage, res: ServerResponse): void {
+export function RoutePath(path: string, request: IncomingMessage, response: ServerResponse): void {
 
 
-    // TODO: Should be removed.
-    if (path.indexOf('changrui0926') !== -1)
-        return RCS.Service().GetCacheReport(res);
+    // // TODO: Should be removed.
+    // if (path.indexOf('changrui0926') !== -1)
+    //     return RCS.Service().GetCacheReport(res);
+    response.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
 
-    let routeResult = ROUTE.RunRoute(path);
-    res.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
+    BeforeRoute(request, response, (requ, resp) => {
+        let routeResult = ROUTE.RunRoute(path);
+        AfterRoute(requ, resp, routeResult, (req, res) => {
+            if (!routeResult)
+                return NoRoute(path, req, res);
 
-    if (!routeResult)
-        return NoRoute(path, req, res);
+            let method = req.method.toLowerCase();
+            if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
+                try {
+                    return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
+                } catch (error) {
+                    console.error(error);
+                    if (!res.headersSent)
+                        res.setHeader('content-type', 'text/html');
+                    if (!res.writable)
+                        res.write(ErrorManager.RenderErrorAsHTML(error));
+                    res.end();
+                }
 
-    let method = req.method.toLowerCase();
-    if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
-        try {
-            return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
-        } catch (error) {
-            console.error(error);
-            if (!res.headersSent)
-                res.setHeader('content-type', 'text/html');
-            if (!res.writable)
-                res.write(ErrorManager.RenderErrorAsHTML(error));
-            res.end();
-        }
+            } else
+                return NoRoute(path, req, res);
+        })
 
-    } else
-        return NoRoute(path, req, res);
+    });
 }
 
 function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void {

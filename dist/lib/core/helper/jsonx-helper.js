@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsb = require("js-beautify");
 let btf = jsb;
 function Convert(obj, options = {
-        indent_size: 4,
-        indent_char: ' '
-    }) {
+    indent_size: 4,
+    indent_char: ' '
+}) {
     return btf(Object2String(obj), options);
 }
 exports.Convert = Convert;
