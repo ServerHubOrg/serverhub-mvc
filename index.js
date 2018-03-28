@@ -22,7 +22,7 @@ const AutoRegister = require('./dist/lib/core/plugin/').AutoRegister;
 // const callsite = require('callsite'); // Will not be used.
 
 
-var server;
+const servers = [];
 
 /**
  * Call this method to start ServerHub service.
@@ -38,8 +38,11 @@ exports.Run = (config, appstart) => {
     libcore.SetGlobalVariable('PackageData', package);
 
     let port = 926; // Birthday of my beloved friend, Changrui.
-    if (config['Port'])
-        port = config['Port'];
+    if (config['Port']) {
+        if (config['Port'] instanceof Array)
+            port = config['Port'];
+        else port = [config['Port']];
+    }
 
     if (config['PageNotFound']) {
         let pageNotFound = config['PageNotFound'];
@@ -140,27 +143,32 @@ exports.Run = (config, appstart) => {
     }
 
     plugin_info = AutoRegister();
-    if(plugin_info.done){
-        console.log(plugin_info.count,'plugins loaded with no errors');
-    }else{
-        console.log('Only',plugin_info.count,'plugins loaded.')
+    if (plugin_info.done) {
+        console.log(plugin_info.count, 'plugins loaded with no errors');
+    } else {
+        console.log('Only', plugin_info.count, 'plugins loaded.')
     } // load all plugins.
 
     libcore.RegisterRouter(libroute.Route.GetRoute());
 
-    server = http.createServer((req, res) => {
-        try {
-            libcore.RoutePath(req.url, req, res);
-        } catch (error) {
-            console.error(error);
-        }
-    });
+
 
     try {
-        server.listen(port);
-        console.log('Server started on port:', port);
+        port.forEach(p => {
+            let server = http.createServer((req, res) => {
+                try {
+                    libcore.RoutePath(req.url, req, res);
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+            server.listen(p);
+            servers.push(server);
+        })
+        // server.listen(port);
+        console.log('Server started on port:', ...port);
     } catch (e) {
-        console.error('Server cannot start and listen to', port);
+        console.error('Server cannot start and listen to', ...port);
         console.error('There might be another instance process of ServerHub. Please check and attempt to start later.')
         process.exit(1);
     }

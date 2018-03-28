@@ -42,10 +42,16 @@ function AutoRegister() {
     let variables = global['EnvironmentVariables'];
     let go_through = true;
     let count = 0;
-    fs.readdirSync(path.resolve(variables.ServerBaseDir, variables.PluginDir)).forEach(plugin_name => {
+    let pluginPath = path.resolve(variables.ServerBaseDir, variables.PluginDir);
+    if (!fs.existsSync(pluginPath))
+        return {
+            done: true,
+            count: 0
+        };
+    fs.readdirSync(pluginPath).forEach(plugin_name => {
         if (!go_through)
             return;
-        let plugin_path = path.resolve(variables.ServerBaseDir, variables.PluginDir, plugin_name);
+        let plugin_path = path.resolve(pluginPath, plugin_name);
         let m = plugin_loader_1.default(plugin_path);
         if (m !== void 0) {
             if (RegisteredPlugins.indexOf(m.app_name) !== -1) {
