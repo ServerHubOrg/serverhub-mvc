@@ -12,6 +12,10 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是
 
 其 CLI 部分的介绍，请参见 [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) 或是直接查看我个人仓库列表里的 serverhub-cli。
 
+## 例子
+
+我的个人网站 [meetdong.com](https://www.meetdong.com) 就是使用 ServerHub 架设的。首页由 Controller 来渲染，页面资源（脚本、样式表）则由无路由匹配的缓存提供（由于经过 Cloudflare 的 CDN，所以请求头部被重写过）。我会将 ServerHub 的功能逐一利用起来，用此网站进行一些展示。
+
 ## 最近更新
 
 此 beta 版本新增了多端口支持，你可以通过为 Port 配置属性赋值一个数组来实现。注意，低于 1024 的端口可能需要使用 root 权限（Linux/macOS）。插件系统加入 ServerHub，现在你可以轻松使用自建 Plugin 或者外部 Plugin 来个性化你的服务器。
