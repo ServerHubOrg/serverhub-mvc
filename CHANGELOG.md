@@ -1,5 +1,16 @@
 # Changelog
 
+## `1.0.0-beta` March 28, 2018
+
+### Fix
+
+- Start up fails when no plugin folder found.
+
+### Add
+
+- Multiple port number support added.
+
+
 ## `1.0.0-alpha` March 27, 2018
 
 ### Add
