@@ -41,7 +41,7 @@ class RCS {
             return void 0;
         }
     }
-    GetUri(uri, res) {
+    GetUri(uri, res, req) {
         let variables = global['EnvironmentVariables'];
         if (this.Cacheable(uri)) {
             if (uri.endsWith('?'))
@@ -103,15 +103,84 @@ class RCS {
                 }
                 else {
                     try {
-                        let rstream = nfs.createReadStream(info.Path);
-                        res.setHeader('Content-Type', content_type_1.ContentType.GetContentType(info.Extension));
-                        rstream.on('data', data => {
-                            res.write(data);
-                        });
-                        rstream.on('close', () => {
-                            res.end();
-                        });
-                        rstream.read();
+                        let rangestring = req ? (req.headers['range'] ? req.headers['range'] : req.headers['Range']) : void 0;
+                        if (rangestring !== void 0) {
+                            let ranges = this.ParseRange(rangestring);
+                            let contentrangeHeader = 'bytes=';
+                            let buffers = new Array(0);
+                            let scanned = 0;
+                            ranges.forEach((range, index) => {
+                                if (range.End >= info.Size) {
+                                    res.statusCode = 416;
+                                    res.setHeader('Content-Range', '*/' + info.Size);
+                                    res.write(error_1.ErrorManager.RenderErrorAsHTML(new Error('Range Not Satisfiable')));
+                                    scanned += 1;
+                                    return;
+                                }
+                                let buff = Buffer.from('');
+                                let read = range.Start;
+                                let rstream = nfs.createReadStream(info.Path, { start: range.Start, end: range.End });
+                                rstream.on('data', d => {
+                                    buff = Buffer.concat([buff, d]);
+                                });
+                                rstream.on('error', () => {
+                                    read += rstream.bytesRead;
+                                    contentrangeHeader += (range.Start + '-' + (read > 0) ? read : '') + ' ';
+                                    buffers.push(buff);
+                                    scanned += 1;
+                                });
+                                rstream.on('close', () => {
+                                    contentrangeHeader += (range.Start + '-' + (range.End > 0) ? range.End : '') + ' ';
+                                    buffers.push(buff);
+                                    scanned += 1;
+                                });
+                            });
+                            const loop = () => {
+                                if (scanned === ranges.length) {
+                                    res.statusCode = 206;
+                                    res.setHeader('Content-Range', contentrangeHeader);
+                                    res.setHeader('Accept-Ranges', 'bytes');
+                                    buffers.forEach(buf => {
+                                        res.write(buf);
+                                    });
+                                    res.end();
+                                    return;
+                                }
+                                else
+                                    setTimeout(loop, 10);
+                            };
+                            setTimeout(loop, 10);
+                        }
+                        else {
+                            let maxSize = 30 * 1024 * 1024;
+                            let rstream = nfs.createReadStream(info.Path);
+                            res.statusCode = 200;
+                            if (variables.Verbose)
+                                console.log("ready to write");
+                            res.setHeader('Content-Type', content_type_1.ContentType.GetContentType(info.Extension));
+                            res.setHeader('Accept-Ranges', 'bytes');
+                            rstream.on('data', data => {
+                                res.write(data);
+                                if (variables.Verbose)
+                                    console.log("wrote", data.length, 'bytes of data');
+                            });
+                            rstream.on('close', () => {
+                                if (variables.Verbose)
+                                    console.log('done wrote.');
+                                if (rstream.bytesRead < info.Size) {
+                                    res.setHeader('Content-Range', `bytes=0-${maxSize}`);
+                                    res.statusCode = 206;
+                                }
+                                res.end();
+                            });
+                            rstream.on('error', () => {
+                                res.setHeader('Content-Range', `bytes=0-${rstream.bytesRead}`);
+                                if (variables.Verbose)
+                                    console.log('error happended');
+                                res.statusCode = 206;
+                            });
+                            rstream.read(info.Size > maxSize ? maxSize : info.Size);
+                        }
                     }
                     catch (e) {
                         console.error(e);
@@ -121,6 +190,22 @@ class RCS {
         }
         else
             throw new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020707, uri));
+    }
+    ParseRange(rangeString) {
+        let unit = 'bytes';
+        let content = '';
+        if (rangeString.indexOf('=') !== -1) {
+            [unit, content] = rangeString.split('=');
+        }
+        else
+            content = rangeString;
+        let pairs = new Array(0);
+        content.split(',').forEach(g => {
+            g = g.trim();
+            let vals = g.split('-');
+            pairs.push({ Start: vals[0] === '' ? 0 : parseInt(vals[0]), End: vals[1] === '' ? -1 : parseInt(vals[1]) });
+        });
+        return pairs;
     }
     GetCacheReport(res) {
         res.setHeader('content-type', "text/html");

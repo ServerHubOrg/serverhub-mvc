@@ -34,7 +34,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     DBConnectionString: null,
     DefaultPages: ['index.html', 'default.html', 'page.html'],
     AsyncOperationTimeout: 10000, // default 10s
-    PluginDir: 'plugin/'
+    PluginDir: 'plugin/',
+    Verbose: true
 } as GlobalEnvironmentVariables;
 
 /**
@@ -131,7 +132,7 @@ function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void 
 
     // if cacheable, do not fetch from file system.
     if (RCS.Service().Cacheable(path))
-        return RCS.Service().GetUri(path, res);
+        return RCS.Service().GetUri(path, res, req);
 
     let filepath = nodepath.resolve(variables.ServerBaseDir, variables.WebDir, path.substr(1));
     if (fs.existsSync(filepath)) {

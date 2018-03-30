@@ -21,7 +21,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     DBConnectionString: null,
     DefaultPages: ['index.html', 'default.html', 'page.html'],
     AsyncOperationTimeout: 10000,
-    PluginDir: 'plugin/'
+    PluginDir: 'plugin/',
+    Verbose: true
 };
 const core_env = {
     platform: process.platform,
@@ -90,7 +91,7 @@ function NoRoute(path, req, res) {
         });
     }
     if (rcs_1.RCS.Service().Cacheable(path))
-        return rcs_1.RCS.Service().GetUri(path, res);
+        return rcs_1.RCS.Service().GetUri(path, res, req);
     let filepath = nodepath.resolve(variables.ServerBaseDir, variables.WebDir, path.substr(1));
     if (fs.existsSync(filepath)) {
         res.setHeader('content-type', content_type_1.ContentType.GetContentType(path.match(/\.[a-z\d]*$/i)[0]));
