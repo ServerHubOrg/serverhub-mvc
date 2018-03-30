@@ -1,5 +1,20 @@
 # Changelog
 
+## `1.0.1` March 28, 2018
+
+### Fix
+
+- Wrong value of CacheInfo generation.
+- Wrong MIME type for `.mp4` files.
+
+### Update
+
+- Buffer stream feature for large file transmitting.
+
+### Add
+
+- MIME type for `.flv` and `.avi` files.
+
 ## `1.0.0-beta` March 28, 2018
 
 ### Fix
