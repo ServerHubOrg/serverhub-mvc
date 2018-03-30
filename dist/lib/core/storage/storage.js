@@ -88,7 +88,7 @@ class StorageService {
             FileName: filePath.match(/[^?/]*\.?[^.?/]*$/i)[0],
             Size: stat.size,
             Path: filePath,
-            LogicalPath: nodepath.resolve(basedir ? basedir : this.RootDir, path),
+            LogicalPath: path,
             Extension: filePath.match(/\.[^/.?]*$/i)[0]
         };
         return info;

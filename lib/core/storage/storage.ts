@@ -137,7 +137,7 @@ export class StorageService {
             FileName: filePath.match(/[^?/]*\.?[^.?/]*$/i)[0] as string,
             Size: stat.size,
             Path: filePath,
-            LogicalPath: nodepath.resolve(basedir ? basedir : this.RootDir, path),
+            LogicalPath: path,
             Extension: filePath.match(/\.[^/.?]*$/i)[0] as string
         } as FileInfo;
         return info;
