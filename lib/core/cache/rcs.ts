@@ -14,6 +14,7 @@ import { GlobalEnvironmentVariables } from '../global';
 import { ContentType } from '../content-type';
 import { CacheHelper } from '../helper';
 import * as npath from 'path';
+import * as nfs from 'fs';
 export class RCS {
     private constructor() { }
     private static Instance = new RCS();
@@ -84,37 +85,57 @@ export class RCS {
                 }
                 let ext = info.Extension ? info.Extension : '___';
 
-                try {
-                    let file = StorageService.Service(variables.WebDir).GetFile(uri.substr(1));
-                    cache = new Cache(uri, ContentType.GetContentType(ext));
-                    cache.etags = this.GenerateEtag();
-                    cache.cache = file;
-                    cache.date_time = new Date().getTime();
-                    cache.size = info.Size;
-                    cache.expires = 72000000;
+                if (info.Size <= 10 * 1024 * 1024) {
                     try {
-                        let maxsize = variables.MaxCacheSize * 1024 * 1024;
-                        if (cache.size + this.CacheManager.CacheSize() <= maxsize)
-                            this.CacheManager.AddCache(cache);
-                        else if (cache.size <= maxsize)
-                            this.WCS(cache);
-                    } catch (err) {
-                        this.CacheManager.HitCache(uri);
+                        let file = StorageService.Service(variables.WebDir).GetFile(uri.substr(1));
+                        cache = new Cache(uri, ContentType.GetContentType(ext));
+                        cache.etags = this.GenerateEtag();
+                        cache.cache = file;
+                        cache.date_time = new Date().getTime();
+                        cache.size = info.Size;
+                        cache.expires = 72000000;
+                        try {
+                            let maxsize = variables.MaxCacheSize * 1024 * 1024;
+                            if (cache.size + this.CacheManager.CacheSize() <= maxsize)
+                                this.CacheManager.AddCache(cache);
+                            else if (cache.size <= maxsize)
+                                this.WCS(cache);
+                        } catch (err) {
+                            this.CacheManager.HitCache(uri);
+                        }
+                    } catch (error) {
+                        res.writeHead(404, 'content-type: text/html');
+                        if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+                            res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
+                        else
+                            res.write(ErrorManager.RenderErrorAsHTML(new Error(ErrorManager.RenderError(RuntimeError.SH020706, uri))));
+                        res.end();
+                        return;
                     }
-                } catch (error) {
-                    res.writeHead(404, 'content-type: text/html');
-                    if (variables.PageNotFound && variables.PageNotFound.length !== 0)
-                        res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
-                    else
-                        res.write(ErrorManager.RenderErrorAsHTML(new Error(ErrorManager.RenderError(RuntimeError.SH020706, uri))));
-                    res.end();
-                    return;
+                    if (!res.headersSent) {
+                        res.setHeader('content-type', cache.content_type);
+                        res.setHeader('etags', cache.etags);
+                        res.write(cache.cache);
+                        res.end();
+                    }
+                } else {
+                    // file too large to cache. // larger than 10MB.
+                    try {
+                        let rstream = nfs.createReadStream(info.Path);
+                        res.setHeader('Content-Type', ContentType.GetContentType(info.Extension));
+                        rstream.on('data', data => {
+                            res.write(data);
+                        });
+                        rstream.on('close', () => {
+                            res.end();
+                        });
+                        rstream.read();
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
             }
-            res.setHeader('content-type', cache.content_type);
-            res.setHeader('etags', cache.etags);
-            res.write(cache.cache);
-            res.end();
+
         } else throw new Error(ErrorManager.RenderError(RuntimeError.SH020707, uri));
     }
 

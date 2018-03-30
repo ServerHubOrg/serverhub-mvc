@@ -6,6 +6,7 @@ const storage_1 = require("../storage/storage");
 const content_type_1 = require("../content-type");
 const helper_1 = require("../helper");
 const npath = require("path");
+const nfs = require("fs");
 class RCS {
     constructor() {
         this.CacheManager = new cache_1.CacheStorage();
@@ -64,39 +65,59 @@ class RCS {
                     return;
                 }
                 let ext = info.Extension ? info.Extension : '___';
-                try {
-                    let file = storage_1.StorageService.Service(variables.WebDir).GetFile(uri.substr(1));
-                    cache = new cache_1.Cache(uri, content_type_1.ContentType.GetContentType(ext));
-                    cache.etags = this.GenerateEtag();
-                    cache.cache = file;
-                    cache.date_time = new Date().getTime();
-                    cache.size = info.Size;
-                    cache.expires = 72000000;
+                if (info.Size <= 10 * 1024 * 1024) {
                     try {
-                        let maxsize = variables.MaxCacheSize * 1024 * 1024;
-                        if (cache.size + this.CacheManager.CacheSize() <= maxsize)
-                            this.CacheManager.AddCache(cache);
-                        else if (cache.size <= maxsize)
-                            this.WCS(cache);
+                        let file = storage_1.StorageService.Service(variables.WebDir).GetFile(uri.substr(1));
+                        cache = new cache_1.Cache(uri, content_type_1.ContentType.GetContentType(ext));
+                        cache.etags = this.GenerateEtag();
+                        cache.cache = file;
+                        cache.date_time = new Date().getTime();
+                        cache.size = info.Size;
+                        cache.expires = 72000000;
+                        try {
+                            let maxsize = variables.MaxCacheSize * 1024 * 1024;
+                            if (cache.size + this.CacheManager.CacheSize() <= maxsize)
+                                this.CacheManager.AddCache(cache);
+                            else if (cache.size <= maxsize)
+                                this.WCS(cache);
+                        }
+                        catch (err) {
+                            this.CacheManager.HitCache(uri);
+                        }
                     }
-                    catch (err) {
-                        this.CacheManager.HitCache(uri);
+                    catch (error) {
+                        res.writeHead(404, 'content-type: text/html');
+                        if (variables.PageNotFound && variables.PageNotFound.length !== 0)
+                            res.write(helper_1.CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
+                        else
+                            res.write(error_1.ErrorManager.RenderErrorAsHTML(new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020706, uri))));
+                        res.end();
+                        return;
+                    }
+                    if (!res.headersSent) {
+                        res.setHeader('content-type', cache.content_type);
+                        res.setHeader('etags', cache.etags);
+                        res.write(cache.cache);
+                        res.end();
                     }
                 }
-                catch (error) {
-                    res.writeHead(404, 'content-type: text/html');
-                    if (variables.PageNotFound && variables.PageNotFound.length !== 0)
-                        res.write(helper_1.CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
-                    else
-                        res.write(error_1.ErrorManager.RenderErrorAsHTML(new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020706, uri))));
-                    res.end();
-                    return;
+                else {
+                    try {
+                        let rstream = nfs.createReadStream(info.Path);
+                        res.setHeader('Content-Type', content_type_1.ContentType.GetContentType(info.Extension));
+                        rstream.on('data', data => {
+                            res.write(data);
+                        });
+                        rstream.on('close', () => {
+                            res.end();
+                        });
+                        rstream.read();
+                    }
+                    catch (e) {
+                        console.error(e);
+                    }
                 }
             }
-            res.setHeader('content-type', cache.content_type);
-            res.setHeader('etags', cache.etags);
-            res.write(cache.cache);
-            res.end();
         }
         else
             throw new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020707, uri));

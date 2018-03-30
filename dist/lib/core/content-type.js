@@ -34,6 +34,8 @@ ContentType.types = {
     css: 'text/css',
     '7z': 'application/x-7z-compressed',
     ___: "text/plain",
-    mp4: 'application/mp4'
+    mp4: 'video/mp4',
+    flv: 'video/x-flv',
+    avi: "video/x-msvideo"
 };
 exports.ContentType = ContentType;
