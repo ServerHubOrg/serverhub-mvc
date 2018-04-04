@@ -94,6 +94,7 @@ export interface FileChunk {
  * Provide basic information of files.
  */
 export interface FileInfo {
+    Name: string;
     FileName: string;
     Size: number;
     Path: string;
@@ -134,7 +135,8 @@ export class StorageService {
 
         let stat = fs.fstatSync(fs.openSync(filePath, 'r'));
         let info = {
-            FileName: filePath.match(/[^?/]*\.?[^.?/]*$/i)[0] as string,
+            Name: filePath.match(/[^?/]*\.?[^.?/]*$/i)[0] as string,
+            FileName: filePath.match(/[^\\/:*"<>|?]+\.[^.]+$/)[0] as string,
             Size: stat.size,
             Path: filePath,
             LogicalPath: path,

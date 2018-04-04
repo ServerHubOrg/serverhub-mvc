@@ -12,7 +12,7 @@ import { ErrorManager, RuntimeError } from '../error/error';
 import { StorageService, FileInfo } from '../storage/storage';
 import { GlobalEnvironmentVariables } from '../global';
 import { ContentType } from '../content-type';
-import { CacheHelper } from '../helper';
+import { CacheHelper, RangeParser } from '../helper';
 import * as npath from 'path';
 import * as nfs from 'fs';
 
@@ -127,83 +127,52 @@ export class RCS {
                 } else {
                     // file too large to cache. // larger than 10MB.
                     try {
-                        let rangestring = req ? (req.headers['range'] ? req.headers['range'] : req.headers['Range']) as string : void 0;
-                        if (rangestring !== void 0) {
-                            let ranges = this.ParseRange(rangestring);
-                            let contentrangeHeader = 'bytes=';
-                            let buffers = new Array<Buffer>(0);
-                            let scanned = 0;
-                            ranges.forEach((range, index) => {
-                                if (range.End >= info.Size) {
-                                    res.statusCode = 416;
-                                    res.setHeader('Content-Range', '*/' + info.Size);
-                                    res.write(ErrorManager.RenderErrorAsHTML(new Error('Range Not Satisfiable')));
-                                    scanned += 1;
-                                    return;
-                                }
-                                let buff = Buffer.from('');
-                                let read = range.Start;
-                                let rstream = nfs.createReadStream(info.Path, { start: range.Start, end: range.End });
-                                rstream.on('data', d => {
-                                    buff = Buffer.concat([buff, d]);
-                                });
-                                rstream.on('error', () => {
-                                    read += rstream.bytesRead;
-                                    contentrangeHeader += (range.Start + '-' + (read > 0) ? read : '') + ' ';
-                                    buffers.push(buff);
-                                    scanned += 1;
-                                });
+                        if (req.headers.hasOwnProperty('range')) {
+                            let parsedRanges = RangeParser(req.headers['range'] as string, info.Size);
+                            if (!parsedRanges)
+                                throw new Error();
 
-                                rstream.on('close', () => {
-                                    contentrangeHeader += (range.Start + '-' + (range.End > 0) ? range.End : '') + ' ';
-                                    buffers.push(buff);
-                                    scanned += 1;
-                                });
-                            });
-                            const loop = () => {
-                                if (scanned === ranges.length) {
-                                    res.statusCode = 206;
-                                    res.setHeader('Content-Range', contentrangeHeader);
-                                    res.setHeader('Accept-Ranges', 'bytes');
-                                    buffers.forEach(buf => {
-                                        res.write(buf);
-                                    })
+                            res.statusCode = 206;
+                            res.setHeader('accept-ranges', 'bytes');
+                            let contentType = ContentType.GetContentType(info.Extension);
+                            if (parsedRanges.length === 1) {
+                                if (parsedRanges[0].start === 0 && parsedRanges[0].end === info.Size - 1)
+                                    res.statusCode = 200;
+                                res.setHeader('content-type', contentType);
+                                res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + r.end).join(', ')) + '/' + info.Size;
+                                let stream = nfs.createReadStream(info.Path, parsedRanges[0]);
+                                stream.pipe(res);
+                                stream.on('close', () => {
                                     res.end();
-                                    return;
-                                }
-                                else setTimeout(loop, 10);
+                                });
+                            } else {
+                                res.setHeader('content-type', 'multipart/byteranges; boundary=$serverhubservice');
+                                let count = parsedRanges.length;
+                                let totalLength = 0;
+                                const streamloop = (index) => {
+                                    let stream = nfs.createReadStream(info.Path, parsedRanges[index]);
+                                    res.write(`${index !== 0 ? '\n' : ''}--$serverhubservice\nContent-Type: ${contentType}\nContent-Range: bytes ${parsedRanges[index].start}-${parsedRanges[index].end}/${info.Size}\n`);
+                                    stream.pipe(res);
+                                    stream.on('close', () => {
+                                        if (index === count - 1) {
+                                            res.end();
+                                        } else {
+                                            streamloop(index + 1);
+                                        }
+                                    })
+                                };
+                                streamloop(0);
                             }
-                            setTimeout(loop, 10);
                         } else {
-                            // no range head detected, return from the start.
-                            let maxSize = 30 * 1024 * 1024;
-                            let rstream = nfs.createReadStream(info.Path);
+                            res.setHeader('accept-ranges', 'bytes');
+                            res.setHeader('content-disposition', `attachment; filename="${info.FileName}"`);
+                            res.setHeader('content-length', info.Size);
                             res.statusCode = 200;
-                            if (variables.Verbose)
-                                console.log("ready to write");
-                            res.setHeader('Content-Type', ContentType.GetContentType(info.Extension));
-                            res.setHeader('Accept-Ranges', 'bytes');
-                            rstream.on('data', data => {
-                                res.write(data);
-                                if (variables.Verbose)
-                                    console.log("wrote", data.length, 'bytes of data');
-                            });
+                            let rstream = nfs.createReadStream(info.Path, { start: 0, end: info.Size });
+                            rstream.pipe(res);
                             rstream.on('close', () => {
-                                if (variables.Verbose)
-                                    console.log('done wrote.')
-                                if (rstream.bytesRead < info.Size) {
-                                    res.setHeader('Content-Range', `bytes=0-${maxSize}`);
-                                    res.statusCode = 206;
-                                }
                                 res.end();
                             });
-                            rstream.on('error', () => {
-                                res.setHeader('Content-Range', `bytes=0-${rstream.bytesRead}`);
-                                if (variables.Verbose)
-                                    console.log('error happended');
-                                res.statusCode = 206;
-                            });
-                            rstream.read(info.Size > maxSize ? maxSize : info.Size);
                         }
                     } catch (e) {
                         console.error(e);
@@ -212,24 +181,6 @@ export class RCS {
             }
 
         } else throw new Error(ErrorManager.RenderError(RuntimeError.SH020707, uri));
-    }
-
-    private ParseRange(rangeString: string): Array<RangePair> {
-        let unit = 'bytes';
-        let content = '';
-        if (rangeString.indexOf('=') !== -1) {
-            [unit, content] = rangeString.split('=');
-        }
-        else content = rangeString;
-
-        let pairs = new Array<RangePair>(0);
-        content.split(',').forEach(g => {
-            g = g.trim();
-            let vals = g.split('-');
-
-            pairs.push({ Start: vals[0] === '' ? 0 : parseInt(vals[0]), End: vals[1] === '' ? -1 : parseInt(vals[1]) });
-        });
-        return pairs;
     }
 
     public GetCacheReport(res: ServerResponse) {

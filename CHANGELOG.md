@@ -1,5 +1,15 @@
 # Changelog
 
+## `1.0.2` April 4, 2018
+
+### Add
+
+- Range request support
+
+### Fix
+
+- Error transferring some files when too large.
+
 ## `1.0.1` March 28, 2018
 
 ### Fix

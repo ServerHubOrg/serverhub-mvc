@@ -85,7 +85,8 @@ class StorageService {
             throw new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020706, filePath));
         let stat = fs.fstatSync(fs.openSync(filePath, 'r'));
         let info = {
-            FileName: filePath.match(/[^?/]*\.?[^.?/]*$/i)[0],
+            Name: filePath.match(/[^?/]*\.?[^.?/]*$/i)[0],
+            FileName: filePath.match(/[^\\/:*"<>|?]+\.[^.]+$/)[0],
             Size: stat.size,
             Path: filePath,
             LogicalPath: path,

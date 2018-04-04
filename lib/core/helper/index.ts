@@ -9,5 +9,6 @@
 import { FileHelper } from "./file-helper";
 import CacheHelper from "./cache-helper";
 import { Convert as JSONX } from "./jsonx-helper";
+import RangeParser, { HTTPRange } from "./http-range-helper";
 
-export { FileHelper, CacheHelper, JSONX };
+export { FileHelper, CacheHelper, JSONX, RangeParser, HTTPRange };
