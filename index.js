@@ -19,6 +19,7 @@ const package = require('./package.json');
 const path = require('path');
 const fs = require('fs');
 const AutoRegister = require('./dist/lib/core/plugin/').AutoRegister;
+const { LoadModule, LoadModuleFrom } = require('./dist/lib/core/module');
 // const callsite = require('callsite'); // Will not be used.
 
 
@@ -154,6 +155,8 @@ exports.Run = (config, appstart) => {
 
 
     try {
+        if (!Array.isArray(port))
+            port = [port];
         port.forEach(p => {
             let server = http.createServer((req, res) => {
                 try {
@@ -173,3 +176,15 @@ exports.Run = (config, appstart) => {
         process.exit(1);
     }
 }
+
+exports.Module = exports.module = exports.Load = exports.load = LoadModule;
+exports.ModuleFrom = exports.moduleFrom = exports.LoadFrom = exports.loadFrom = LoadModuleFrom;
+const global_load_properties = ['shmodule', 'shload', 'importModule', 'loadModule'];
+const global_load_from_properties = ['shmoduleFrom', 'shloadFrom', 'loadModuleFrom', 'importModuleFrom'];
+
+global_load_from_properties.map(p => {
+    global[p] = LoadModuleFrom;
+})
+global_load_properties.map(p => {
+    global[p] = LoadModule;
+})

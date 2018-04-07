@@ -1,31 +1,36 @@
-/**
- * Type Definition of cache.ts
- * 
- * ServerHub MVC, MIT License
- * March 13, 2018
- * Yang Zhongdong (yangzd1996@outlook.com)
- */
-
-export class CacheStorage {
-    constructor();
-    public AddCache(cache: Cache): void;
-
-    public RemoveCache(key: string): Cache;
-
-    public UpdateCache(cache: Cache): boolean;
-
-    public HitCache(uri: string): Cache;
-
-    public ClearCache(): void;
-
-    public CacheReport(): Map<string, number>;
-}
-
-export class Cache {
-    public etags: string;
-    public cache: object;
-    public date_time: number;
-    public expires: number;
-    public weight: number;
+export declare class Cache {
+    private _id;
+    private _uri;
+    private _content_type;
+    readonly id: string;
+    readonly uri: string;
+    readonly content_type: string;
+    private GenerateId();
+    etags: string;
+    cache: object | string;
+    date_time: number;
+    expires: number;
+    weight: number;
+    size: number;
     constructor(uri: string, content_type: string);
+}
+export declare class CacheReportInfo {
+    size: number;
+    weight: number;
+    time: number;
+    id: string;
+    uri: string;
+}
+export declare class CacheStorage {
+    private Caches;
+    private TotalCache;
+    constructor();
+    AddCache(cache: Cache): void;
+    RemoveCache(key: string): Cache;
+    UpdateCache(cache: Cache): boolean;
+    CacheSize(): number;
+    HasCache(uri: string): boolean;
+    HitCache(uri: string): Cache;
+    ClearCache(): void;
+    CacheReport(): Map<string, CacheReportInfo>;
 }

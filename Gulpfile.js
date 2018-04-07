@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const filter = require('gulp-filter');
 
-gulp.task('default', function() {
+gulp.task('default', function () {
 	let f = filter(['**', '!lib/**/*.d.ts']);
 
 	if (!fs.existsSync(path.resolve(__dirname + '/dist')))
@@ -30,7 +30,8 @@ gulp.task('default', function() {
 			noEmitOnError: true,
 			module: 'commonJs',
 			removeComments: true,
-			allowJs: false
+			allowJs: false,
+			declaration: true
 		}))
 		.pipe(gulp.dest('./dist/lib/'));
 });

@@ -93,3 +93,4 @@ const Matrix = [
 ];
 
 export default CacheHelper;
+export { CacheResult };

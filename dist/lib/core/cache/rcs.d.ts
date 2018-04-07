@@ -1,13 +1,14 @@
-/**
- * Type Definition for rcs.ts
- * 
- * ServerHub MVC, MIT License
- * March 13, 2018
- * Yang Zhongdong (yangzd1996@outlook.com)
- */
-
-export class RCS {
-    public static Service(): RCS;
-    public GetUri(uri: string, res: any): void;
-    public Cacheable(uri: string): boolean
+/// <reference types="node" />
+import { Cache } from './cache';
+import { ServerResponse, IncomingMessage } from 'http';
+export declare class RCS {
+    private constructor();
+    private static Instance;
+    static Service(): RCS;
+    private CacheManager;
+    private GenerateEtag();
+    Cacheable(uri: string): boolean;
+    GetUri(uri: string, res: ServerResponse, req: IncomingMessage): void;
+    GetCacheReport(res: ServerResponse): void;
+    WCS(cache: Cache): void;
 }

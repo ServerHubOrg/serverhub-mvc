@@ -7,6 +7,7 @@
  */
 
 const serverhub = require('../index');
+// const load = require('../index').loadFrom;
 
 serverhub.Run({
 	BaseDir: __dirname, // BaseDir is required.
@@ -14,5 +15,7 @@ serverhub.Run({
 	route.MapRoute('default', 'v1/{controller}/{action}/{id}');
 });
 
+var hhh = importModuleFrom('index.js', '../');
+console.log(hhh);
 // Contributions:
 // Yuyang Mao: Simplify this test entry.

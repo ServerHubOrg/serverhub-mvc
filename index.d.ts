@@ -17,3 +17,12 @@ export declare interface ServerHubConfig {
     DefaultPages: Array<string>;
     AsyncOperationTimeout: number;
 }
+
+export declare function Module(name: string): any;
+export declare function module(name: string): any;
+export declare function Load(name: string): any;
+export declare function load(name: string): any;
+export declare function ModuleFrom(name: string, relativePath: string): any;
+export declare function moduleFrom(name: string, relativePath: string): any;
+export declare function LoadFrom(name: string, relativePath: string): any;
+export declare function loadFrom(name: string, relativePath: string): any;

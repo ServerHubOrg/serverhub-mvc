@@ -8,3 +8,5 @@ const jsonx_helper_1 = require("./jsonx-helper");
 exports.JSONX = jsonx_helper_1.Convert;
 const http_range_helper_1 = require("./http-range-helper");
 exports.RangeParser = http_range_helper_1.default;
+const stack_helper_1 = require("./stack-helper");
+exports.StackCaller = stack_helper_1.StackCaller;
