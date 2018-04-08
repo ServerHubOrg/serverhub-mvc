@@ -6,7 +6,7 @@
  * Yang Zhongdong (yangzd1996@outlook.com)
  */
 
-import { Register, ControllerBundle } from "./register";
+import { Register, RegisterM, ControllerBundle } from "./register";
 import { Controller } from "./controller";
 
-export { Controller, Register, ControllerBundle };
+export { Controller, Register, RegisterM, ControllerBundle };

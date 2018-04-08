@@ -104,8 +104,20 @@ exports.Run = (config, appstart) => {
         else {
             let controllers = fs.readdirSync(controllerPath);
             if (controllers) {
+                // moduled controllers has higher priority.
+                let hasControllerM = false;
+                controllers.map(c => {
+                    if (c.endsWith('.shc.js'))
+                        hasControllerM = true;
+                })
                 controllers.forEach(con => {
-                    libcore.RegisterController(con);
+                    if (!hasControllerM) {
+                        if (con.endsWith('.js') && !con.endsWith('.shc.js'))
+                            libcore.RegisterController(con);
+                    }else {
+                        if (con.endsWith('.shc.js'))
+                            libcore.RegisterControllerM(con);
+                    }
                 })
             }
         }

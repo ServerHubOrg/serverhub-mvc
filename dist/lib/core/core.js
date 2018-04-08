@@ -32,6 +32,10 @@ function RegisterController(controllerJs) {
     return controller.Controller.Register(controllerJs);
 }
 exports.RegisterController = RegisterController;
+function RegisterControllerM(controllerJs) {
+    return controller.Controller.RegisterM(controllerJs);
+}
+exports.RegisterControllerM = RegisterControllerM;
 function UpdateGlobalVariable(variable, value) {
     if (global['EnvironmentVariables'].hasOwnProperty(variable)) {
         global['EnvironmentVariables'][variable] = value;

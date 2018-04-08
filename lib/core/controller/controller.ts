@@ -8,7 +8,7 @@
 
 import { GlobalEnvironmentVariables } from "../global";
 import { IncomingMessage, ServerResponse, OutgoingHttpHeaders } from "http";
-import { ControllerBundle, Register } from "./register";
+import { ControllerBundle, Register, RegisterM } from "./register";
 import { RuntimeError, ErrorManager } from "../error/error";
 import { ApplyModel } from '../view/view';
 import { ReadModel } from '../model/model';
@@ -106,7 +106,7 @@ class ControllerCollection {
                             }
                             else {
                                 if (timeout <= 0) {
-                                    console.error('Request to:', dispatch.Request.url, 'timeout because current timeout limit is', variables.AsyncOperationTimeout,'milliseconds');
+                                    console.error('Request to:', dispatch.Request.url, 'timeout because current timeout limit is', variables.AsyncOperationTimeout, 'milliseconds');
                                 }
                                 if (shResponse.headersSent)
                                     dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders() as OutgoingHttpHeaders);
@@ -170,6 +170,10 @@ export class Controller {
      */
     public static Register(controller: string) {
         Controller.Collection.Add(Register(controller));
+    }
+
+    public static RegisterM(controller: string) {
+        Controller.Collection.Add(RegisterM(controller));
     }
 
     /**

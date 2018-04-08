@@ -17,6 +17,7 @@
     "license": "MIT",
     "devDependencies": {
         "@types/node": "^8.10.3",
+        "eslint": "^4.19.1",
         "graceful-fs": "^4.1.11",
         "gulp": "^3.9.1",
         "gulp-filter": "^5.1.0",
@@ -30,7 +31,6 @@
     },
     "dependencies": {
         "js-beautify": "^1.7.5",
-        "mysql": "^2.15.0",
-        "npm": "^5.8.0"
+        "mysql": "^2.15.0"
     }
 }

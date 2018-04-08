@@ -28,7 +28,7 @@ function GetCallerFilePath(depth: number = 2): string {
         }
     } catch (e) { }
     Error.prepareStackTrace = originalFunc;
-    return callerfile.replace(/[^|/\\"?*~]+$/, '');
+    return callerfile ? callerfile.replace(/[^|/\\"?*~]+$/, '') : void 0;
 }
 
 export { GetCallerFilePath as StackCaller }

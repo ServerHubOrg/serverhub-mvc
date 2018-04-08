@@ -49,6 +49,10 @@ class RCS {
             let cache;
             if (this.CacheManager.HasCache(uri)) {
                 cache = this.CacheManager.HitCache(uri);
+                res.setHeader('content-type', cache.content_type);
+                res.setHeader('etags', cache.etags);
+                res.write(cache.cache);
+                res.end();
             }
             else {
                 let info;

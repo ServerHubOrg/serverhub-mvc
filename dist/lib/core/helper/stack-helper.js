@@ -19,6 +19,6 @@ function GetCallerFilePath(depth = 2) {
     }
     catch (e) { }
     Error.prepareStackTrace = originalFunc;
-    return callerfile.replace(/[^|/\\"?*~]+$/, '');
+    return callerfile ? callerfile.replace(/[^|/\\"?*~]+$/, '') : void 0;
 }
 exports.StackCaller = GetCallerFilePath;

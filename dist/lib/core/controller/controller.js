@@ -130,6 +130,9 @@ class Controller {
     static Register(controller) {
         Controller.Collection.Add(register_1.Register(controller));
     }
+    static RegisterM(controller) {
+        Controller.Collection.Add(register_1.RegisterM(controller));
+    }
     static Unregister(controllerName) {
         Controller.Collection.Remove(controllerName);
     }

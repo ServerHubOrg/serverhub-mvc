@@ -54,6 +54,10 @@ export function RegisterController(controllerJs: string) {
     return controller.Controller.Register(controllerJs);
 }
 
+export function RegisterControllerM(controllerJs: string) {
+    return controller.Controller.RegisterM(controllerJs);
+}
+
 /**
  * Update global variable with new value.
  * @param variable Which global variable to update

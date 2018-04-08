@@ -8,7 +8,19 @@ function LoadModuleFrom(name, relativePath) {
         throw new Error('Must be relative path.');
     }
     else {
-        let modpath = path.resolve(helper_1.StackCaller(2), relativePath);
+        let stackCallerPath = helper_1.StackCaller(2);
+        let searchpath = '';
+        if (stackCallerPath)
+            searchpath = stackCallerPath;
+        else {
+            if (this['__controller_type__'] === 'partial') {
+                let variables = global['EnvironmentVariables'];
+                searchpath = path.resolve(variables.ServerBaseDir, variables.ControllerDir);
+            }
+            else
+                throw new Error('Unable to determine module type or not supported.');
+        }
+        let modpath = path.resolve(searchpath, relativePath);
         return module_loader_1.ModuleLoader(name, modpath);
     }
 }
