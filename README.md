@@ -93,7 +93,7 @@ Notice: If you are using macOS or Linux systems like Ubuntu or Debian, then port
 
 ## Documents
 
-We've provided documents/tutorials for both [English](https://devchache.github.io/serverhub-mvc/docs/docs.html) and [Chinese](https://devchache.github.io/serverhub-mvc/zh_cn/docs/docs.html)
+We've provided documents/tutorials for both [English](https://serverhuborg.github.io/serverhub-mvc/docs/docs.html) and [Chinese](https://serverhuborg.github.io/serverhub-mvc/zh_cn/docs/docs.html)
 
 ## Feel Free to Contact
 

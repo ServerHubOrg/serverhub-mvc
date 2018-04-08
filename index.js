@@ -92,7 +92,9 @@ exports.Run = (config, appstart) => {
     }
     if (config['Controllers']) {
         config['Controllers'].forEach(ele => {
-            libcore.RegisterController(ele);
+            if (ele.endsWith('.shc.js'))
+                libcore.RegisterControllerM(ele);
+            else libcore.RegisterController(ele);
         });
     } else {
         let variables = global['EnvironmentVariables'];
@@ -114,7 +116,7 @@ exports.Run = (config, appstart) => {
                     if (!hasControllerM) {
                         if (con.endsWith('.js') && !con.endsWith('.shc.js'))
                             libcore.RegisterController(con);
-                    }else {
+                    } else {
                         if (con.endsWith('.shc.js'))
                             libcore.RegisterControllerM(con);
                     }
