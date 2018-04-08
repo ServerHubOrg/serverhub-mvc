@@ -16,9 +16,7 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 
 ## Latest Update
 
-Plugin support finished. And you may specify multiple port numbers now.
-
-You can now ignore specific route rules by using **ignore route rules**. They can be either string or RegExp objects.
+Module style of ServerHub controllers now supported. You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration.
 
 Detailed update could be found on CHANGELOG.md (English only).
 

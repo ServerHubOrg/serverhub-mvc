@@ -18,9 +18,7 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是
 
 ## 最近更新
 
-此 beta 版本新增了多端口支持，你可以通过为 Port 配置属性赋值一个数组来实现。注意，低于 1024 的端口可能需要使用 root 权限（Linux/macOS）。插件系统加入 ServerHub，现在你可以轻松使用自建 Plugin 或者外部 Plugin 来个性化你的服务器。
-
-你可以轻松根据现有路由规则形成特定的忽略规则。这样就算是某个请求匹配了既定路由协议，但是如果同时匹配了忽略规则，也会被重路由到你的 Web 目录下。
+最新版本添加了模块化的 controller 创作风格支持。此后你将可以同时使用模块法和传统的脚本法来使用。相关注意事项将会更新在 controller 的文档页面，请移步阅读。
 
 所有重要更新都列举在根目录 CHANGELOG.md 内。
 

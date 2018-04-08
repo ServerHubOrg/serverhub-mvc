@@ -1,5 +1,12 @@
 # Changelog
 
+## `1.0.3` April 8, 2018
+
+### Add
+
+- Module style controller scripts support (with legacy style continues).
+- Module loader for all server scope scripts (workaround for legacy controller style).
+
 ## `1.0.2` April 4, 2018
 
 ### Add

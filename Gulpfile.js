@@ -31,7 +31,7 @@ gulp.task('default', function () {
 			module: 'commonJs',
 			removeComments: true,
 			allowJs: false,
-			declaration: true
+			declaration: true // for developers only.
 		}))
 		.pipe(gulp.dest('./dist/lib/'));
 });
