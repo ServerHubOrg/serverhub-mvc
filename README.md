@@ -1,11 +1,8 @@
-# ServerHub
-
 ![](doc/assets/serverhub-compact.png)
 
 Project introductions, documents and tutorials, see [ServerHub](https://serverhuborg.github.io/serverhub-mvc/index.html).
 
-[![Build Status](https://travis-ci.org/ServerHubOrg/serverhub-mvc.svg?branch=master)](https://travis-ci.org/ServerHubOrg/serverhub-mvc)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc?ref=badge_shield)
+[![Build Status](https://travis-ci.org/ServerHubOrg/serverhub-mvc.svg?branch=master)](https://travis-ci.org/ServerHubOrg/serverhub-mvc) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc?ref=badge_shield) [![Coverage Status](https://coveralls.io/repos/github/ServerHubOrg/serverhub-mvc/badge.svg?branch=master)](https://coveralls.io/github/ServerHubOrg/serverhub-mvc?branch=master)
 
 我们为中国大陆，中国香港、澳门和中国台湾和其他国家地区使用简体中文的开发者提供了[中文说明文档](doc/README.cn.md)。
 
@@ -103,4 +100,7 @@ Ask me through [yangzd1996@outlook.com](mailto:yangzd1996@outlook.com) or on [tw
 Leave an issue if you find any bugs. But please notice, DO comment, send pull request or anythings like that IN ENGLISH. But I do have a Chinese version of README file under `doc/`, you may check it out. Thank you very much.
 
 ## License
+
+MIT
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc?ref=badge_large)

@@ -1,5 +1,17 @@
 # Changelog
 
+## `1.0.4` April 9, 2018
+
+### Add
+
+- Test tools integration (Mocha and Coveralls)
+- Travis-CI
+- Fossa
+
+### Fix
+
+- Controller and port number bugs.
+
 ## `1.0.3` April 8, 2018
 
 ### Add
