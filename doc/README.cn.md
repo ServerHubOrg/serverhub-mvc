@@ -26,12 +26,12 @@ ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) 是
 
 当前，ServerHub 可以配置自定义路由、注册自定义控制器、绑定视图与模型。
 
-下面展示样例目录结构（你可以通过 serverhub-cli 命令行工具的 `serverhub-cli init . -d` 命令来得到下面的目录结构）。
+下面展示样例目录结构（你可以通过 serverhub-cli 命令行工具的 `serverhub-cli init [自定义项目名]` 命令来得到下面的目录结构）。
 
 ```plain
 demo_directory/
  |- controller/
- |   |- home.js
+ |   |- home.shc.js // 如果你要使用 v1.0.3 之后的新控制器语法，则需要加上“.shc”
  |- model/
  |   |- home.json
  |- view/
@@ -48,7 +48,7 @@ demo_directory/
 node app.js
 ```
 
-自此，服务器启动（默认在 926 端口运行，这是我挚友的生日）在浏览器中访问“localhost:926”会出现下面的页面：
+自此，服务器启动（默认在 926 端口运行）在浏览器中访问“localhost:926”会出现下面的页面：
 
 ![](assets/demo_homepage.png)
 
@@ -65,10 +65,7 @@ npm i --save serverhub-mvc
 ```bash
 npm i -g serverhub-cli
 cd path/to/you/workspace/
-npm init #如果你已经完成了这个操作，就忽略这一步
-
-npm i --save serverhub-mvc
-mkdir server && serverhub-cli init server -d #在最后加上 -h 参数之前一定要确定好，因为会清空整个 server 目录
+serverhub-cli init [自定义项目名]
 ```
 
 ## 调用方法

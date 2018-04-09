@@ -24,12 +24,12 @@ Detailed update could be found on CHANGELOG.md (English only).
 
 Currently, ServerHub support custom routing, view binding and controller registering.
 
-Here is how the example workspace directory looks like (you can use `serverhub-cli init . -d` with serverhub-cli to get such a demo)
+Here is how the example workspace directory looks like (you can use `serverhub-cli init [project-name]` with [serverhub-cli](https://github.com/ServerHubOrg/serverhub-cli) to get a template provided by Yuyang Mao)
 
 ```plain
 demo_directory/
  |- controller/
- |   |- home.js
+ |   |- home.shc.js // ".shc" is required if you want to use module style controller syntax provided since v1.0.3
  |- model/
  |   |- home.json
  |- view/
@@ -58,14 +58,12 @@ The content comes from default route rule: `/home/index/`. The word 'world' is d
 npm i --save serverhub-mvc
 ```
 
-or if you want to get a demo, run
+or if you want to get a template, run
 
 ```bash
 npm i -g serverhub-cli
 cd path/to/you/workspace/
-npm init #ignore if you already done this
-npm i --save serverhub-mvc
-mkdir server && serverhub-cli init server -d #be sure to keep your files before add -h option to init command.
+serverhub-cli init [project-name] # This will generate a new directory for you project.
 ```
 
 ## Usage
@@ -85,11 +83,11 @@ serverhub.Run({
 1. config
 
     The config file defines base directory of the server, which is current of `app.js`. There's a `Controller` property that specifies which controller to register. And then ServerHub will try to search and parse under controller file. When you are writing, you may check this document or search under `node_modules/serverhub-mvc/index.d.ts` file along with all your dependecies, which I've already provided the type definitions there.
-1. route (callback function) (before v0.0.91)
+1. route (callback function) (no more required since v0.0.91)
 
     This function will have one parameter that refers to server route object, you can register custom route rule or ignore certain matches (I've not finished developing that feature).
 
-Notice: If you are using macOS or Linux systems like Ubuntu or Debian, then port under 1024 needs privilege. So you may need `sudo` to run the `node app.js` command.
+Notice: If you are using macOS or Linux systems like Ubuntu or Debian, then port under 1024 needs root privilege. So you may need `sudo` (or anything like this) to run the `node app.js` command.
 
 ## Documents
 
