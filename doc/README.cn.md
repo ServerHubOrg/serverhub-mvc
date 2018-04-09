@@ -2,6 +2,8 @@
 
 项目介绍、技术文档和教程，请访问 [ServerHub](https://serverhuborg.github.io/serverhub-mvc/index.html)（GitHub Pages）。
 
+[![Build Status](https://travis-ci.org/ServerHubOrg/serverhub-mvc.svg?branch=master)](https://travis-ci.org/ServerHubOrg/serverhub-mvc) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc?ref=badge_shield) [![Coverage Status](https://coveralls.io/repos/github/ServerHubOrg/serverhub-mvc/badge.svg?branch=master)](https://coveralls.io/github/ServerHubOrg/serverhub-mvc?branch=master)
+
 欢迎阅读我们为所有使用中文的开发者提供的说明文档。
 
 **ServerHub** 同时包含了 MVC 框架和一个相应的 CLI 应用程序。
@@ -98,3 +100,8 @@ serverhub.Run({
 朝着 [yangzd1996@outlook.com](mailto:yangzd1996@outlook.com) 给我发邮件，或者到 [twitter](https://twitter.com/SrMoriaty) 上问我（你也可以找我要微信或者 QQ 号，LoL）。
 
 如果你发现了任何的 bug，不要犹豫，速到 issue 中提交，我会看到的。但是请注意，虽然我这里提供了中文文档、说明，但不代表你可以用中文来提交。整个项目未来所有与开发相关的文档、代码注释我都会保持英文，因为这样节省精力也助于全球化交流。请**务必全程使用英文**，语法错了不要紧，看得懂。多谢配合！
+
+## 开源许可
+MIT
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc?ref=badge_large)

@@ -3,15 +3,8 @@ node_js:
   - "9"
 install: true
 before_script:
-  - npm install --save-dev @types/node
-  - npm install --save-dev graceful-fs
-  - npm install --save-dev gulp-filter
-  - npm install --save-dev gulp-typescript
-  - npm install --save-dev minimatch
-  - npm install --save-dev typescript
-  - npm install --save-dev gulp-cli
-  - npm install --save mysql
-  - npm install --save js-beautify
+  - npm install
 script: gulp
 after_script:
   - npm test
+after_success: npm run coverage
