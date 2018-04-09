@@ -4,7 +4,7 @@
     "description": "Fast and stable Node.js MVC framework",
     "main": "index.js",
     "scripts": {
-        "test": "node test/app.js",
+        "test": "node test/test-client.js",
         "unit_test": "node unit_test/index.js",
         "prepare": "gulp",
         "play": "node playground/app.js"
@@ -17,12 +17,15 @@
     "license": "MIT",
     "devDependencies": {
         "@types/node": "^8.10.3",
+        "chai": "^4.1.2",
         "eslint": "^4.19.1",
         "graceful-fs": "^4.1.11",
         "gulp": "^3.9.1",
         "gulp-filter": "^5.1.0",
         "gulp-typescript": "^3.2.3",
         "minimatch": "^3.0.4",
+        "mocha": "^5.0.5",
+        "request": "^2.85.0",
         "typescript": "^2.7.2"
     },
     "repository": {

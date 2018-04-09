@@ -1,6 +1,6 @@
 "use strict";
 
-return {
+module.exports = {
     index: function (req, res, method) {
         // res.setHeader('Content-Type', 'text/html')
         // res.write('<p>Hello ServerHub</p>');
@@ -10,7 +10,7 @@ return {
     },
     primary: function (req, res, method) {
         var context = this.View();
-        context.name = 'Runtime.version -> ' + this.Runtime.branch;
+        context.name = 'Runtime.version -> ' + this.System.Version;
         return context;
     }
 };

@@ -13,3 +13,5 @@ before_script:
   - npm install --save mysql
   - npm install --save js-beautify
 script: gulp
+after_script:
+  - npm test
