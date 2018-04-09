@@ -4,6 +4,8 @@
 
 Project introductions, documents and tutorials, see [ServerHub](https://serverhuborg.github.io/serverhub-mvc/index.html).
 
+![](https://img.shields.io/badge/build-pass-brightgreen.svg) ![](https://img.shields.io/badge/release-stable-brightgreen.svg) ![](https://img.shields.io/badge/latest-v1.0.3-green.svg)
+
 我们为中国大陆，中国香港、澳门和中国台湾和其他国家地区使用简体中文的开发者提供了[中文说明文档](doc/README.cn.md)。
 
 For developers using simplified Chinese in China (including Mainland China, Hongkong and Macau Special Administrative Regions, and Taiwan, Province of China) and any other countries or regions, we provide [Simplified Chinese version of README](doc/README.cn.md) as well.
