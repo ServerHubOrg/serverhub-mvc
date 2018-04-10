@@ -9,7 +9,7 @@
 import { GlobalEnvironmentVariables } from "../global";
 export class ErrorManager {
     public static RenderError(errorEnum: CompileTimeError | RuntimeError, ...params): string {
-        if (params === void 0)
+        if (errorEnum === void 0)
             throw new Error('SH000000: Fatal error, code not correct');
         if (CompileTimeError[errorEnum] !== void 0) {
             let errortemplate = ErrorTemplate[CompileTimeError[errorEnum]] as string;
@@ -25,9 +25,11 @@ export class ErrorManager {
                     errortemplate = errortemplate.replace('$${' + idx + '}', ele);
             });
             return RuntimeError[errorEnum] + ': ' + errortemplate;
-        }
+        } else throw new Error('ErrorManager cannot determine your error');
     }
     public static RenderErrorAsHTML(error: Error): string {
+        if (!(error instanceof Error))
+            throw new Error('Error not defined');
         let stack = '';
         let stackvalue = (error.stack as string).split('\n');
         stackvalue.forEach(ele => {

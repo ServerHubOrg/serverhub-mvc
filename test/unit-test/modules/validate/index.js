@@ -6,5 +6,4 @@ module.exports = function () {
         controller();
         plugin();
     })
-
 }

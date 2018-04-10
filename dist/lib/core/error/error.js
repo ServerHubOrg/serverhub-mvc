@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class ErrorManager {
     static RenderError(errorEnum, ...params) {
-        if (params === void 0)
+        if (errorEnum === void 0)
             throw new Error('SH000000: Fatal error, code not correct');
         if (CompileTimeError[errorEnum] !== void 0) {
             let errortemplate = ErrorTemplate[CompileTimeError[errorEnum]];
@@ -20,8 +20,12 @@ class ErrorManager {
             });
             return RuntimeError[errorEnum] + ': ' + errortemplate;
         }
+        else
+            throw new Error('ErrorManager cannot determine your error');
     }
     static RenderErrorAsHTML(error) {
+        if (!(error instanceof Error))
+            throw new Error('Error not defined');
         let stack = '';
         let stackvalue = error.stack.split('\n');
         stackvalue.forEach(ele => {
