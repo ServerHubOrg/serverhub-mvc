@@ -8,49 +8,26 @@ Project introductions, documents and tutorials, see [ServerHub](https://serverhu
 
 For developers using simplified Chinese in China (including Mainland China, Hongkong and Macau Special Administrative Regions, and Taiwan, Province of China) and any other countries or regions, we provide [Simplified Chinese version of README](doc/README.cn.md) as well.
 
-**ServerHub** is a collection of both Node.js framework and its CLI tool.
+**ServerHub** is the collection of a Node.js framework, a CLI tool and a template using the latest stable features.
 
 ServerHub MVC ([serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc)) is a fast and light MVC web server framework that runs on Nodejs.
 
-For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) or [serverhub-cli](https://github.com/ServerHubOrg/serverhub-cli) under my public repositories.
-
-## Latest Update
-
-Module style of ServerHub controllers now supported. You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration.
-
-Detailed update could be found on CHANGELOG.md (English only).
+For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/package/serverhub-cli) or [serverhub-cli](https://github.com/ServerHubOrg/serverhub-cli) under our orgnization repositories.
 
 ## What Can ServerHub Do
 
-Currently, ServerHub support custom routing, view binding and controller registering.
+ServerHub can do a lot of things now. No matter you want to start a static website or build a dynamic web service, it is super convenient. Let's see some things most people would like to do with ServerHub:
 
-Here is how the example workspace directory looks like (you can use `serverhub-cli init [project-name]` with [serverhub-cli](https://github.com/ServerHubOrg/serverhub-cli) to get a template provided by Yuyang Mao)
+1. Static website: Support downloading and caching. Your frequently used resources will be cached in memory. Once they are changed, ServerHub will automatically refresh the cache and make sure they are the lastest.
+2. Dynamic website: Support MVC architecture. With custom route, all requests will be send to corresponding handlers.
+3. WebAPIs: Inspired by [ASP.NET](https://www.asp.net/), ServerHub can also be used to provide WebAPI service for your applications.
+4. Proxy*: (Still designing).
 
-```plain
-demo_directory/
- |- controller/
- |   |- home.shc.js // ".shc" is required if you want to use module style controller syntax provided since v1.0.3
- |- model/
- |   |- home.json
- |- view/
- |   |- home.html
- |- www/
- |   |- global.css
- |   |- global.js
- |- app.js
-```
+## Latest Updates
 
-Then, run
+Module style of ServerHub controllers now supported (since v1.0.4). You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration (deprecated usage).
 
-```bash
-node app.js
-```
-
-And the server started (It runs on port 926 in default, which is my BF's birthday). Go to your browser and checkout 'localhost:926', then you can see:
-
-![](doc/assets/demo_homepage.png)
-
-The content comes from default route rule: `/home/index/`. The word 'world' is defined in model file `home.json` and rendered by `home.js` controller. The sentence in blue is injected by script file `global.js` under `www/`.
+Detailed update information could be found on [CHANGELOG.md](CHANGELOG.md) (English only).
 
 ## Install
 
@@ -58,7 +35,7 @@ The content comes from default route rule: `/home/index/`. The word 'world' is d
 npm i --save serverhub-mvc
 ```
 
-or if you want to get a template, run
+or install a template with `serverhub-cli`, run
 
 ```bash
 npm i -g serverhub-cli
@@ -78,16 +55,16 @@ serverhub.Run({
 });
 ```
 
-`Run()` method has two parameters (the second one is not required since v0.0.91):
+`Run()` has 2 parameters (the 2rd one is not required since v0.0.91):
 
-1. config
+1. `config: Object`
 
     The config file defines base directory of the server, which is current of `app.js`. There's a `Controller` property that specifies which controller to register. And then ServerHub will try to search and parse under controller file. When you are writing, you may check this document or search under `node_modules/serverhub-mvc/index.d.ts` file along with all your dependecies, which I've already provided the type definitions there.
-1. route (callback function) (no more required since v0.0.91)
+1. `route?: Function` (callback) (no more required since v0.0.91)
 
     This function will have one parameter that refers to server route object, you can register custom route rule or ignore certain matches (I've not finished developing that feature).
 
-Notice: If you are using macOS or Linux systems like Ubuntu or Debian, then port under 1024 needs root privilege. So you may need `sudo` (or anything like this) to run the `node app.js` command.
+**Notice**: If you are using macOS or Linux systems like Ubuntu or Debian, then port under 1024 needs root privilege. So you may need `sudo` (or anything like this) to run the `node app.js` command.
 
 ## Documents
 
@@ -95,7 +72,7 @@ We've provided documents/tutorials for both [English](https://serverhuborg.githu
 
 ## Feel Free to Contact
 
-Ask me through [yangzd1996@outlook.com](mailto:yangzd1996@outlook.com) or on [twitter](https://twitter.com/SrMoriaty).
+Question us through [serverhub.contact@gmail.com](mailto:serverhub.contact@gmail.com) or tweet to DevChache on [twitter](https://twitter.com/SrMoriaty).
 
 Leave an issue if you find any bugs. But please notice, DO comment, send pull request or anythings like that IN ENGLISH. But I do have a Chinese version of README file under `doc/`, you may check it out. Thank you very much.
 
