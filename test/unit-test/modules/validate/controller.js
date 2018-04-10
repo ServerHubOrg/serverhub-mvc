@@ -36,7 +36,7 @@ module.exports = function () {
         it('invalid controller: didn\'t specify target', function (done) {
             let c = new ControllerValidation();
             c.Target = null;
-            expect(c.PassFunction).to.throw();
+            expect(() => c.PassFunction(void 0)).to.throw();
             done();
         })
 
