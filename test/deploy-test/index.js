@@ -18,30 +18,84 @@ module.exports = function () {
 
         describe('StatusCode and Content', function () {
             describe('status', function () {
-                it('/ - default route', function (done) {
+                it('[200] "/" should match default route', function (done) {
                     request('http://127.0.0.1:926/', function (err, res, body) {
                         expect(res.statusCode).to.equal(200);
                         done();
                     });
                 });
-                it('home/index - route without suffix "/"', function (done) {
+                it('[200] "home/index" should match default route', function (done) {
                     request('http://127.0.0.1:926/home/index', function (err, res, body) {
                         expect(res.statusCode).to.equal(200);
                         done();
                     });
                 });
-                it('/home/index/ - complete route use case', function (done) {
+                it('[200] "/home/index/" should match default route', function (done) {
                     request('http://127.0.0.1:926/home/index/', function (err, res, body) {
                         expect(res.statusCode).to.equal(200);
                         done();
                     });
                 });
-                it('/home/random/ - nonexistent route', function (done) {
+                it('[404] "/home/random/" should not match any route', function (done) {
                     request('http://127.0.0.1:926/home/random/', function (err, res, body) {
                         expect(res.statusCode).to.equal(404);
                         done();
                     });
-                })
+                });
+                it('[404] "/hello.html/" should not match any route', function (done) {
+                    request('http://127.0.0.1:926/hello.html/', function (err, res, body) {
+                        expect(res.statusCode).to.equal(404);
+                        done();
+                    });
+                });
+                it('[200] "/hello.html" should match a static page at www/', function (done) {
+                    request('http://127.0.0.1:926/hello.html', function (err, res, body) {
+                        expect(res.statusCode).to.equal(200);
+                        expect(res.body.toString().indexOf('Thanks for using ServerHub')).not.to.equal(-1);
+                        done();
+                    });
+                });
+                it('[200] "/interest/special.all" should match custom controller/action', function (done) {
+                    request('http://127.0.0.1:926/interest/special.all', function (err, res, body) {
+                        expect(res.statusCode).to.equal(200);
+                        done();
+                    });
+                });
+
+                it('[200] "/interest/special-_" should match custom controller/action', function (done) {
+                    request('http://127.0.0.1:926/interest/special-_', function (err, res, body) {
+                        expect(res.statusCode).to.equal(200);
+                        done();
+                    });
+                });
+                it('[404] "/interest.svg" should not match any custom controller/action', function (done) {
+                    request('http://127.0.0.1:926/interest.svg', function (err, res, body) {
+                        expect(res.statusCode).to.equal(404);
+                        done();
+                    });
+                });
+
+                it('[200] "/interest.svg/" should match custom controller/action', function (done) {
+                    request('http://127.0.0.1:926/interest.svg/', function (err, res, body) {
+                        expect(res.statusCode).to.equal(200);
+                        done();
+                    });
+                });
+
+                it('[404] "/interest.svg//1" should not match any custom controller/action', function (done) {
+                    request('http://127.0.0.1:926/interest.svg//1', function (err, res, body) {
+                        expect(res.statusCode).to.equal(404);
+                        done();
+                    });
+                });
+
+                
+                it('[404] "/interest.svg//" should not match any custom controller/action', function (done) {
+                    request('http://127.0.0.1:926/interest.svg//', function (err, res, body) {
+                        expect(res.statusCode).to.equal(404);
+                        done();
+                    });
+                });
             });
         });
         after(function () {
