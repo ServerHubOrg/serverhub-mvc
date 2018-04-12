@@ -62,6 +62,8 @@ class Route {
         return ignored;
     }
     RunRoute(path) {
+        if (!path)
+            path = '';
         if (path.startsWith('/'))
             path = path.substr(1);
         if (path.length === 0) {

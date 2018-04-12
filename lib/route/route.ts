@@ -43,6 +43,7 @@ export class Route {
         else rs = routes;
         rs.forEach((route: string | RegExp) => {
             if (typeof route === 'string') {
+                // must start with '/'
                 if (route && route.startsWith('/')) {
                     if (!route.endsWith('/'))
                         route += '/';
@@ -76,6 +77,8 @@ export class Route {
     }
 
     public RunRoute(path: string): RouteValue {
+        if (!path)
+            path = '';
         if (path.startsWith('/'))
             path = path.substr(1);
         if (path.length === 0) {
