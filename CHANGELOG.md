@@ -1,5 +1,15 @@
 # Changelog
 
+## `1.0.5` April 12, 2018
+
+### Add
+
+- Support "." and "-" in controller and action names.
+
+### Update
+
+- Route rule updated, see docs later.
+
 ## `1.0.4` April 9, 2018
 
 ### Add
