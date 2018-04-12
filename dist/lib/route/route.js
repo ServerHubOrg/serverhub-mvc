@@ -28,11 +28,13 @@ class Route {
             rs = routes;
         rs.forEach((route) => {
             if (typeof route === 'string') {
-                if (route && route.startsWith('/')) {
+                if (route.length > 0 && route.startsWith('/')) {
                     if (!route.endsWith('/'))
                         route += '/';
                     this.IgnoredRules.push(route);
                 }
+                else
+                    this.IgnoredRules.push('/' + route);
             }
             else if (route instanceof RegExp) {
                 this.IgnoredRules.push(route);
@@ -42,23 +44,24 @@ class Route {
         });
     }
     Ignored(p) {
+        if (!p)
+            return true;
         if (!p.endsWith('/'))
             p += '/';
         if (!p.startsWith('/'))
             p = '/' + p;
         let ignored = false;
-        if (!ignored && this.IgnoredRules)
-            this.IgnoredRules.forEach(rule => {
-                if (ignored)
-                    return;
-                if (typeof rule === 'string') {
-                    if (rule.indexOf(p) === 0)
-                        ignored = true;
-                }
-                else if (rule.test(p) === true) {
+        this.IgnoredRules.forEach(rule => {
+            if (ignored)
+                return;
+            if (typeof rule === 'string') {
+                if (rule.indexOf(p) === 0)
                     ignored = true;
-                }
-            });
+            }
+            else if (rule.test(p) === true) {
+                ignored = true;
+            }
+        });
         return ignored;
     }
     RunRoute(path) {
@@ -76,13 +79,16 @@ class Route {
         }
         if (this.Ignored(path))
             return void 0;
+        if (path.match(/\/\/+$/))
+            return void 0;
+        let endsWithSlash = path.endsWith('/');
         let check = path.split('/');
-        if (check && check.length === 2) {
-            if (!check[1].endsWith('/'))
+        if (check && check.length === this.Rule.split('/').length - 1) {
+            if (!endsWithSlash && !check[1].endsWith('/'))
                 path = path + '/';
         }
-        let regstr_controller = '([a-z\\d_]{1,32})';
-        let regstr_action = '([a-z\\d_]{0,32})';
+        let regstr_controller = '([a-z][a-z\\d_\.\-]{0,30}[a-z\\d_])';
+        let regstr_action = '([a-z][a-z\\d_\.\-]{0,30}[a-z\\d_])?';
         let regstr_id = '([^\\\\/*?:"<>|\\n]{0,128})';
         let reg_str = this.Rule.replace(/\//g, '\\/').replace('{controller}', regstr_controller);
         reg_str = reg_str.replace('{action}', regstr_action);
@@ -97,10 +103,10 @@ class Route {
         }
         let result;
         result = {
-            Controller: match[1] ? match[1] : this.Default.Controller,
-            Action: match[2] ? match[2] : this.Default.Action,
-            Id: match[3] ? match[3] : this.Default.Id,
-            Search: match[4] ? match[4] : ''
+            Controller: match[1],
+            Action: match[2] || this.Default.Action,
+            Id: match[2] ? (match[3] || this.Default.Id) : this.Default.Id,
+            Search: match[4] || ''
         };
         return result;
     }

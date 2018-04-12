@@ -27,7 +27,7 @@ function Register(controllerJs) {
         Object.keys(exp).forEach(action => {
             if (['System', 'Console', 'Runtime', 'View'].indexOf(action) !== -1)
                 throw new Error('Warning! Reserved action name detected. Please read the document and try again.');
-            else if (action.match(/[a-z\d_]+/) === null)
+            else if (action.match(/[a-z][a-z\d_.-]+[a-z\d_]/) === null)
                 throw new Error('Warning! Invalid characters detected in action names. Check and retry!');
         });
     }
@@ -112,7 +112,7 @@ function RegisterM(controllerJs) {
         Object.keys(exp).forEach(action => {
             if (['System', 'Console', 'Runtime', 'View'].indexOf(action) !== -1)
                 throw new Error('Warning! Reserved action name detected. Please read the document and try again.');
-            else if (action.match(/[a-z\d_]+/) === null)
+            else if (action.match(/[a-z][a-z\d_.-]+[a-z\d_]/) === null)
                 throw new Error('Warning! Invalid characters detected in action names. Check and retry!');
         });
     }
