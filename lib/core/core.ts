@@ -134,7 +134,7 @@ function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void 
         })
     }
 
-    // if cacheable, do not fetch from file system.
+    // if cacheable, let cache system decide whether load as cache or stream.
     if (RCS.Service().Cacheable(path))
         return RCS.Service().GetUri(path, res, req);
 
