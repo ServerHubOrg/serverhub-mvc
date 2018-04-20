@@ -15,7 +15,7 @@ export class ContentType {
         jpg: 'image/jpeg',
         jpeg: 'image/jpeg',
         gif: 'image/gif',
-        svg: 'image/svg',
+        svg: 'image/svg+xml',
         webp: 'image/webp',
         weba: 'audio/weba',
         webm: 'video/webm',
@@ -36,7 +36,8 @@ export class ContentType {
         ___: "text/plain",
         mp4: 'video/mp4',
         flv: 'video/x-flv',
-        avi: "video/x-msvideo"
+        avi: "video/x-msvideo",
+        xhtml: "application/xml+html"
     };
 
     /**
