@@ -15,6 +15,7 @@
 const libcore = require('./dist/lib/core/core');
 const libroute = require('./dist/lib/route/route');
 const http = require('http');
+const https = require('https');
 const package = require('./package.json');
 const path = require('path');
 const fs = require('fs');
@@ -41,8 +42,8 @@ exports.Run = (config, appstart) => {
     let port = 926; // Birthday of my beloved friend, Changrui.
     if (config['Port']) {
         if (config['Port'] instanceof Array)
-            port = config['Port'];
-        else port = [config['Port']];
+            port = config['Port'].map(p => parseInt(p));
+        else port = [parseInt(config['Port'])];
     }
 
     if (config['PageNotFound']) {
@@ -171,16 +172,43 @@ exports.Run = (config, appstart) => {
     try {
         if (!Array.isArray(port))
             port = [port];
+        let tls = config['TLSOption'] || config['SSLOption'];
+        if (tls && tls.hasOwnProperty('Port') && tls.hasOwnProperty('Cert') && tls.hasOwnProperty('Key')) {
+            if (!(tls.Port instanceof Array))
+                tls.Port = [parseInt(tls.Port)];
+            else {
+                tls.Port = tls.Port.map(p => parseInt(p));
+            }
+            tls.Port.map(p => {
+                if (port.indexOf(p) === -1)
+                    throw new Error(`${tls.Port} is not defined in given ports: [${port.join(', ')}]`);
+            })
+        }
         port.forEach(p => {
-            let server = http.createServer((req, res) => {
-                try {
-                    libcore.RoutePath(req.url, req, res);
-                } catch (error) {
-                    console.error(error);
-                }
-            });
-            server.listen(p);
-            servers.push(server);
+            if (tls && tls.Port.indexOf(p) !== -1) {
+                let server = https.createServer({
+                    cert: tls.Cert,
+                    key: tls.Key
+                }, (req, res) => {
+                    try {
+                        libcore.RoutePath(req.url, req, res);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                });
+                server.listen(p);
+                servers.push(server);
+            } else {
+                let server = http.createServer((req, res) => {
+                    try {
+                        libcore.RoutePath(req.url, req, res);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                });
+                server.listen(p);
+                servers.push(server);
+            }
         })
         // server.listen(port);
         console.log('Server started on port:', ...port);

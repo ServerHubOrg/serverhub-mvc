@@ -22,7 +22,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     DefaultPages: ['index.html', 'default.html', 'page.html'],
     AsyncOperationTimeout: 10000,
     PluginDir: 'plugin/',
-    Verbose: true
+    Verbose: true,
+    TLSOptions: void 0
 };
 const core_env = {
     platform: process.platform,

@@ -15,4 +15,10 @@ export interface GlobalEnvironmentVariables {
     AsyncOperationTimeout: number;
     PluginDir: string;
     Verbose: boolean;
+    TLSOptions: TLSConfiguration;
+}
+export interface TLSConfiguration {
+    Port: number;
+    Cert: string;
+    Key: string;
 }

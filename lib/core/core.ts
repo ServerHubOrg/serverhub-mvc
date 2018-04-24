@@ -7,7 +7,7 @@
  */
 
 import * as controller from './controller/index';
-import { GlobalEnvironmentVariables } from './global';
+import { GlobalEnvironmentVariables, TLSConfiguration } from './global';
 import { IncomingMessage, ServerResponse } from 'http';
 import { ErrorManager, RuntimeError } from './error/error';
 import * as nodepath from 'path';
@@ -35,7 +35,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     DefaultPages: ['index.html', 'default.html', 'page.html'],
     AsyncOperationTimeout: 10000, // default 10s
     PluginDir: 'plugin/',
-    Verbose: true
+    Verbose: true,
+    TLSOptions: void 0
 } as GlobalEnvironmentVariables;
 
 /**
