@@ -23,7 +23,7 @@ ServerHub MVC ([npm/serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc))
 
 ## 最近更新
 
-最新版本添加了模块化的 controller 创作风格支持。此后你将可以同时使用模块法和传统的脚本法来使用。相关注意事项将会更新在 controller 的文档页面，请移步阅读。
+自 `v1.0.6` 开始，TLS 已经被纳入支持范围，你可以使用自主签名的证书（可能被浏览器标识为不被信任的连接）或第三方颁布的证书（详情阅读文档）。近期添加了模块化的 controller 创作风格支持。此后你将可以同时使用模块法和传统的脚本法来使用。相关注意事项将会更新在 controller 的文档页面，请移步阅读。
 
 所有重要更新都列举在根目录 CHANGELOG.md 内。
 

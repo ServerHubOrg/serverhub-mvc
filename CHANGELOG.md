@@ -1,5 +1,15 @@
 # Changelog
 
+## `1.0.6` April 24, 2018
+
+### Add
+
+- Support TLS and HTTPS connection.
+
+### Fix
+
+- Fix wrong MIME type for `image/svg+xml`.
+
 ## `1.0.5` April 12, 2018
 
 ### Add
