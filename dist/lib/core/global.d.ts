@@ -21,4 +21,5 @@ export interface TLSConfiguration {
     Port: number;
     Cert: string;
     Key: string;
+    CA: string;
 }
