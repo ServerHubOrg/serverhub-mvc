@@ -189,7 +189,7 @@ exports.Run = (config, appstart) => {
                 let server = https.createServer({
                     cert: tls.Cert,
                     key: tls.Key,
-                    ca: tsl.CA
+                    ca: tls.CA
                 }, (req, res) => {
                     try {
                         libcore.RoutePath(req.url, req, res);
@@ -216,6 +216,8 @@ exports.Run = (config, appstart) => {
     } catch (e) {
         console.error('Server cannot start and listen to', ...port);
         console.error('There might be another instance process of ServerHub. Please check and attempt to start later.')
+        console.error('Detailed error information:');
+        console.error(e);
         process.exit(1);
     }
 }
