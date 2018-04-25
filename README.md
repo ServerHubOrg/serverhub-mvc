@@ -76,7 +76,7 @@ Question us through [serverhub.contact@gmail.com](mailto:serverhub.contact@gmail
 
 Leave an issue if you find any bugs. But please notice, DO comment, send pull request or anythings like that IN ENGLISH. But I do have a Chinese version of README file under `doc/`, you may check it out. Thank you very much.
 
-If you are willing to receive more information, stories, tutorials and release information, please [subscribe our newsletter with your favorite mail address](mailto:serverhub.contact@gmail.com?subject=serverhub-news-52b3f7de&body=hello,%20serverhub!).
+If you are willing to receive more information, stories, tutorials and release information, please [subscribe our newsletter with your favorite mail address](mailto:serverhub.contact@gmail.com?subject=serverhub-news-52b3f7de&body=Hello,%20ServerHub!).
 
 ## License
 
