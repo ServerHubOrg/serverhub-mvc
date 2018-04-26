@@ -1,3 +1,7 @@
+import { StorageService, FileInfo } from "../storage/storage";
+import { GlobalEnvironmentVariables } from "../global";
+import { ContentType } from "../content-type";
+
 /**
  * Cache Manage Library
  * 
@@ -55,7 +59,15 @@ export class CacheReportInfo {
     uri: string;
     modify_time: Date
 }
-
+function GenerateEtag(): string {
+    let n = 16;
+    let tag = '';
+    while (n > 0) {
+        tag += ['a', 'b', 'c', 'd', 'e', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'][Math.floor(Math.random() * 10)];
+        n--;
+    }
+    return tag;
+}
 export class CacheStorage {
     private Caches: Map<string, Cache>;
 
@@ -114,8 +126,40 @@ export class CacheStorage {
             let cache = this.Caches.get(uri);
             cache.weight++;
             this.Caches.set(uri, cache);
+            setTimeout(() => {
+                this.SelfUpdate(cache);
+            }, 0)
             return cache;
         }
+    }
+
+    private SelfUpdate(cache: Cache) {
+        let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
+        let uri = cache.uri.startsWith('/') ? cache.uri.substr(1) : cache.uri;
+        let info: FileInfo;
+        try {
+            info = StorageService.Service((global['EnvironmentVariables'] as GlobalEnvironmentVariables).WebDir).FileInfo(uri);
+            let file = StorageService.Service(variables.WebDir).GetFile(uri);
+            let ext = info.Extension ? info.Extension : '___';
+            let ncache = new Cache(cache.uri, ContentType.GetContentType(ext));
+            ncache.etags = GenerateEtag();
+            ncache.cache = file;
+            ncache.date_time = new Date().getTime();
+            ncache.modify_time = info.ModifiedTime;
+            ncache.size = info.Size;
+            ncache.expires = 604800;
+            if (ncache.size !== info.Size) {
+                let templateTotal = this.TotalCache - ncache.size + info.Size;
+                let maxsize = variables.MaxCacheSize * 1024 * 1024;
+                if (templateTotal > maxsize) {
+                    throw new Error('Cache too large');
+                }
+            }
+            this.UpdateCache(ncache);
+        } catch (error) {
+            this.RemoveCache(cache.uri);
+        }
+
     }
 
     public ClearCache(): void {

@@ -33,6 +33,7 @@ export declare class CacheStorage {
     CacheSize(): number;
     HasCache(uri: string): boolean;
     HitCache(uri: string): Cache;
+    private SelfUpdate(cache);
     ClearCache(): void;
     CacheReport(): Map<string, CacheReportInfo>;
 }
