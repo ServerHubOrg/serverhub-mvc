@@ -1,7 +1,7 @@
 {
     "name": "serverhub-mvc",
-    "version": "1.0.6",
-    "description": "Fast and stable Node.js MVC framework",
+    "version": "1.0.7",
+    "description": "Fast, secure and stable Node.js MVC framework",
     "main": "index.js",
     "scripts": {
         "test": "nyc --reporter=html --reporter=text mocha",

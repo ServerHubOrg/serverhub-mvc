@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.0.7` April 24, 2018
+
+### Fix
+
+- Fix cache module issues.
+
 ## `1.0.6` April 24, 2018
 
 ### Add
