@@ -76,10 +76,16 @@ export class RCS {
 
             if (this.CacheManager.HasCache(uri)) {
                 cache = this.CacheManager.HitCache(uri);
-                res.setHeader('content-type', cache.content_type);
-                res.setHeader('etags', cache.etags);
-                res.setHeader('date', Head.FormatDate());
-                res.setHeader('last-modified', Head.FormatDate(cache.modify_time));
+                if (req.headers['cache-control'] && req.headers['cache-control'] === 'no-cache') {
+                    res.setHeader('content-type', cache.content_type);
+                    res.setHeader('date', Head.FormatDate());
+                } else {
+                    res.setHeader('content-type', cache.content_type);
+                    res.setHeader('etags', cache.etags);
+                    res.setHeader('date', Head.FormatDate());
+                    res.setHeader('last-modified', Head.FormatDate(cache.modify_time));
+                    res.setHeader('cache-control', 'max-age=604800'); // default for 7 days
+                }
                 res.write(cache.cache);
                 res.end();
             }
@@ -107,7 +113,7 @@ export class RCS {
                         cache.date_time = new Date().getTime();
                         cache.modify_time = info.ModifiedTime;
                         cache.size = info.Size;
-                        cache.expires = 72000000;
+                        cache.expires = 604800;
                         try {
                             let maxsize = variables.MaxCacheSize * 1024 * 1024;
                             if (cache.size + this.CacheManager.CacheSize() <= maxsize)
@@ -127,12 +133,18 @@ export class RCS {
                         return;
                     }
                     if (!res.headersSent) {
-                        res.setHeader('content-type', cache.content_type);
-                        res.setHeader('etags', cache.etags);
-                        res.setHeader('date', Head.FormatDate());
-                        res.setHeader('last-modified', Head.FormatDate(cache.modify_time));
-                        res.write(cache.cache);
-                        res.end();
+                        if (req.headers['cache-control'] && req.headers['cache-control'] === 'no-cache') {
+                            res.setHeader('content-type', cache.content_type);
+                            res.setHeader('date', Head.FormatDate());
+                        } else {
+                            res.setHeader('content-type', cache.content_type);
+                            res.setHeader('etags', cache.etags);
+                            res.setHeader('date', Head.FormatDate());
+                            res.setHeader('last-modified', Head.FormatDate(cache.modify_time));
+                            res.setHeader('cache-control', 'max-age=604800'); // default for 7 days
+                            res.write(cache.cache);
+                            res.end();
+                        }
                     }
                 } else {
                     // file too large to cache. // larger than 10MB.
