@@ -100,6 +100,8 @@ export interface FileInfo {
     Path: string;
     LogicalPath: string; // relative to server_root_dir
     Extension: string;
+    ModifiedTime: Date;
+    BirthTime: Date;
 }
 
 /**
@@ -140,7 +142,9 @@ export class StorageService {
             Size: stat.size,
             Path: filePath,
             LogicalPath: path,
-            Extension: filePath.match(/\.[^/.?]*$/i)[0] as string
+            Extension: filePath.match(/\.[^/.?]*$/i)[0] as string,
+            BirthTime: stat.birthtime,
+            ModifiedTime: stat.mtime
         } as FileInfo;
         return info;
     }

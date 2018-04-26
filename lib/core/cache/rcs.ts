@@ -15,6 +15,7 @@ import { ContentType } from '../content-type';
 import { CacheHelper, RangeParser } from '../helper';
 import * as npath from 'path';
 import * as nfs from 'fs';
+import { Head } from '../server';
 
 interface RangePair {
     Start: number;
@@ -77,6 +78,8 @@ export class RCS {
                 cache = this.CacheManager.HitCache(uri);
                 res.setHeader('content-type', cache.content_type);
                 res.setHeader('etags', cache.etags);
+                res.setHeader('date', Head.FormatDate());
+                res.setHeader('last-modified', Head.FormatDate(cache.modify_time));
                 res.write(cache.cache);
                 res.end();
             }
@@ -102,6 +105,7 @@ export class RCS {
                         cache.etags = this.GenerateEtag();
                         cache.cache = file;
                         cache.date_time = new Date().getTime();
+                        cache.modify_time = info.ModifiedTime;
                         cache.size = info.Size;
                         cache.expires = 72000000;
                         try {
@@ -125,6 +129,8 @@ export class RCS {
                     if (!res.headersSent) {
                         res.setHeader('content-type', cache.content_type);
                         res.setHeader('etags', cache.etags);
+                        res.setHeader('date', Head.FormatDate());
+                        res.setHeader('last-modified', Head.FormatDate(cache.modify_time));
                         res.write(cache.cache);
                         res.end();
                     }
@@ -143,6 +149,7 @@ export class RCS {
                                 if (parsedRanges[0].start === 0 && parsedRanges[0].end === info.Size - 1)
                                     res.statusCode = 200;
                                 res.setHeader('content-type', contentType);
+                                res.setHeader('date', Head.FormatDate());
                                 res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + r.end).join(', ')) + '/' + info.Size;
                                 let stream = nfs.createReadStream(info.Path, parsedRanges[0]);
                                 stream.pipe(res);
@@ -169,6 +176,7 @@ export class RCS {
                             }
                         } else {
                             res.setHeader('accept-ranges', 'bytes');
+                            res.setHeader('date', Head.FormatDate());
                             res.setHeader('content-disposition', `attachment; filename="${info.FileName}"`);
                             res.setHeader('content-length', info.Size);
                             res.statusCode = 200;

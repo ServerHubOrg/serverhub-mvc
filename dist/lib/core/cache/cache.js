@@ -102,7 +102,8 @@ class CacheStorage {
                 uri: ele.uri,
                 id: ele.id,
                 weight: ele.weight,
-                time: ele.date_time
+                time: ele.date_time,
+                modify_time: ele.modify_time
             };
             arr.set(ele.uri, obj);
         });

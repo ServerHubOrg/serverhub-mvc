@@ -38,6 +38,7 @@ export class Cache {
     public expires: number;
     public weight: number;
     public size: number;
+    public modify_time: Date;
     constructor(uri: string, content_type: string) {
         if (!uri || !content_type)
             throw new Error("Required parameters not satisfied.");
@@ -52,6 +53,7 @@ export class CacheReportInfo {
     time: number;
     id: string;
     uri: string;
+    modify_time: Date
 }
 
 export class CacheStorage {
@@ -129,7 +131,8 @@ export class CacheStorage {
                 uri: ele.uri,
                 id: ele.id,
                 weight: ele.weight,
-                time: ele.date_time
+                time: ele.date_time,
+                modify_time: ele.modify_time
             } as CacheReportInfo;
             arr.set(ele.uri, obj);
         });

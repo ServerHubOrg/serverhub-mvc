@@ -90,7 +90,9 @@ class StorageService {
             Size: stat.size,
             Path: filePath,
             LogicalPath: path,
-            Extension: filePath.match(/\.[^/.?]*$/i)[0]
+            Extension: filePath.match(/\.[^/.?]*$/i)[0],
+            BirthTime: stat.birthtime,
+            ModifiedTime: stat.mtime
         };
         return info;
     }

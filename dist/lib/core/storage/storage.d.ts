@@ -23,6 +23,8 @@ export interface FileInfo {
     Path: string;
     LogicalPath: string;
     Extension: string;
+    ModifiedTime: Date;
+    BirthTime: Date;
 }
 export declare class StorageService {
     private static Instance;

@@ -7,6 +7,7 @@ const content_type_1 = require("../content-type");
 const helper_1 = require("../helper");
 const npath = require("path");
 const nfs = require("fs");
+const server_1 = require("../server");
 class RCS {
     constructor() {
         this.CacheManager = new cache_1.CacheStorage();
@@ -51,6 +52,8 @@ class RCS {
                 cache = this.CacheManager.HitCache(uri);
                 res.setHeader('content-type', cache.content_type);
                 res.setHeader('etags', cache.etags);
+                res.setHeader('date', server_1.Head.FormatDate());
+                res.setHeader('last-modified', server_1.Head.FormatDate(cache.modify_time));
                 res.write(cache.cache);
                 res.end();
             }
@@ -76,6 +79,7 @@ class RCS {
                         cache.etags = this.GenerateEtag();
                         cache.cache = file;
                         cache.date_time = new Date().getTime();
+                        cache.modify_time = info.ModifiedTime;
                         cache.size = info.Size;
                         cache.expires = 72000000;
                         try {
@@ -101,6 +105,8 @@ class RCS {
                     if (!res.headersSent) {
                         res.setHeader('content-type', cache.content_type);
                         res.setHeader('etags', cache.etags);
+                        res.setHeader('date', server_1.Head.FormatDate());
+                        res.setHeader('last-modified', server_1.Head.FormatDate(cache.modify_time));
                         res.write(cache.cache);
                         res.end();
                     }
@@ -118,6 +124,7 @@ class RCS {
                                 if (parsedRanges[0].start === 0 && parsedRanges[0].end === info.Size - 1)
                                     res.statusCode = 200;
                                 res.setHeader('content-type', contentType);
+                                res.setHeader('date', server_1.Head.FormatDate());
                                 res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + r.end).join(', ')) + '/' + info.Size;
                                 let stream = nfs.createReadStream(info.Path, parsedRanges[0]);
                                 stream.pipe(res);
@@ -147,6 +154,7 @@ class RCS {
                         }
                         else {
                             res.setHeader('accept-ranges', 'bytes');
+                            res.setHeader('date', server_1.Head.FormatDate());
                             res.setHeader('content-disposition', `attachment; filename="${info.FileName}"`);
                             res.setHeader('content-length', info.Size);
                             res.statusCode = 200;

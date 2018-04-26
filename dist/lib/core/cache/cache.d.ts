@@ -12,6 +12,7 @@ export declare class Cache {
     expires: number;
     weight: number;
     size: number;
+    modify_time: Date;
     constructor(uri: string, content_type: string);
 }
 export declare class CacheReportInfo {
@@ -20,6 +21,7 @@ export declare class CacheReportInfo {
     time: number;
     id: string;
     uri: string;
+    modify_time: Date;
 }
 export declare class CacheStorage {
     private Caches;
