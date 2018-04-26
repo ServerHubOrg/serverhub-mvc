@@ -21,6 +21,8 @@ const path = require('path');
 const fs = require('fs');
 const AutoRegister = require('./dist/lib/core/plugin/').AutoRegister;
 const { LoadModule, LoadModuleFrom } = require('./dist/lib/core/module');
+const { CheckForUpdate } = require('./dist/lib/update');
+const colors = require('colors');
 // const callsite = require('callsite'); // Will not be used.
 
 
@@ -33,6 +35,7 @@ const servers = [];
  */
 exports.Run = (config, appstart) => {
     // let appJsPath = callsite()[1].getFileName(); // Will not be used because I want developers to feel involved in configuration process.
+    CheckForUpdate(package['version']);
     if (!config['BaseDir'])
         throw new Error("Must specify server base dir at least.");
     libcore.UpdateGlobalVariable('ServerBaseDir', config['BaseDir']);
@@ -160,9 +163,9 @@ exports.Run = (config, appstart) => {
 
     plugin_info = AutoRegister();
     if (plugin_info.done) {
-        console.log(plugin_info.count, 'plugins loaded with no errors');
+        console.log('>>', colors.green(plugin_info.count.toString()) + ' plugins loaded with no errors');
     } else {
-        console.log('Only', plugin_info.count, 'plugins loaded.')
+        console.log('>>', colors.yellow(plugin_info.count.toString()), 'plugins loaded.')
     } // load all plugins.
 
     libcore.RegisterRouter(libroute.Route.GetRoute());
@@ -212,11 +215,11 @@ exports.Run = (config, appstart) => {
             }
         })
         // server.listen(port);
-        console.log('Server started on port:', ...port);
+        console.log('>> Server started on port:', colors.green(port.join(', ')));
     } catch (e) {
-        console.error('Server cannot start and listen to', ...port);
-        console.error('There might be another instance process of ServerHub. Please check and attempt to start later.')
-        console.error('Detailed error information:');
+        console.error('!! Server cannot start and listen to', colors.red(port.join(', ')));
+        console.error('   There might be another instance process of ServerHub. Please check and attempt to start later.')
+        console.error('   Detailed error information:');
         console.error(e);
         process.exit(1);
     }

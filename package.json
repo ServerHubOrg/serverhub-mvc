@@ -35,6 +35,7 @@
         "url": "https://github.com/ServerHubOrg/serverhub-mvc.git"
     },
     "dependencies": {
+        "colors": "^1.2.1",
         "js-beautify": "^1.7.5",
         "mysql": "^2.15.0"
     }
