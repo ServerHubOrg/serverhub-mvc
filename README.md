@@ -25,7 +25,7 @@ ServerHub can do a lot of things now. No matter you want to start a static websi
 
 ## Latest Updates
 
-TLS supported since v1.0.6, you can use your self-signed or verified certificate to hold an HTTPS connection for your websites. Module style of ServerHub controllers now supported (since v1.0.4). You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration (deprecated usage).
+Asynchronous plugins are supported since v1.0.8. TLS supported since v1.0.6, you can use your self-signed or verified certificate to hold an HTTPS connection for your websites. Module style of ServerHub controllers now supported (since v1.0.4). You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration (deprecated usage).
 
 Detailed update information could be found on [CHANGELOG.md](CHANGELOG.md) (English only).
 
