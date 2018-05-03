@@ -53,7 +53,7 @@ function RoutePath(path, request, response) {
     response.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
     let bPromise = plugin_1.BeforeRoute(request, response);
     let routeResult = ROUTE.RunRoute(path);
-    let finalStep = (errCount) => {
+    let doneAfterRoutePluginExecution = (errCount) => {
         if (!routeResult)
             return NoRoute(path, request, response);
         let method = request.method.toLowerCase();
@@ -73,11 +73,11 @@ function RoutePath(path, request, response) {
         else
             return NoRoute(path, request, response);
     };
-    let nextStep = (errCount) => {
+    let doneBeforeRoutePluginExecution = (errCount) => {
         let aPromise = plugin_1.AfterRoute(request, response, routeResult);
-        aPromise.then(finalStep);
+        aPromise.then(doneAfterRoutePluginExecution);
     };
-    bPromise.then(nextStep);
+    bPromise.then(doneBeforeRoutePluginExecution);
 }
 exports.RoutePath = RoutePath;
 function NoRoute(path, req, res) {

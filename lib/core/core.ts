@@ -86,12 +86,11 @@ export function SetGlobalVariable(variable: string, value: Object): void {
  * @param res Server response (response)
  */
 export function RoutePath(path: string, request: IncomingMessage, response: ServerResponse): void {
-
     response.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
 
     let bPromise = BeforeRoute(request, response);
     let routeResult = ROUTE.RunRoute(path);
-    let finalStep = (errCount: number) => {
+    let doneAfterRoutePluginExecution = (errCount: number) => {
         if (!routeResult)
             return NoRoute(path, request, response);
         let method = request.method.toLowerCase();
@@ -109,11 +108,11 @@ export function RoutePath(path: string, request: IncomingMessage, response: Serv
         } else
             return NoRoute(path, request, response);
     }
-    let nextStep = (errCount: number) => {
+    let doneBeforeRoutePluginExecution = (errCount: number) => {
         let aPromise = AfterRoute(request, response, routeResult);
-        aPromise.then(finalStep);
+        aPromise.then(doneAfterRoutePluginExecution);
     }
-    bPromise.then(nextStep);
+    bPromise.then(doneBeforeRoutePluginExecution);
 }
 
 function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void {

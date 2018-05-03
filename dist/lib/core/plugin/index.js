@@ -127,3 +127,7 @@ function GetRegisteredPlugins() {
     return RegisteredPlugins.slice(0);
 }
 exports.GetRegisteredPlugins = GetRegisteredPlugins;
+function GetRegisteredPluginsCount() {
+    return [BeforeRoutePlugins.length, AfterRoutePlugins.length];
+}
+exports.GetRegisteredPluginsCount = GetRegisteredPluginsCount;

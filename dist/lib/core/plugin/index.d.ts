@@ -6,4 +6,5 @@ declare function AfterRoute(request: IncomingMessage, response: ServerResponse, 
 declare function AutoRegister(): Object;
 declare function RegisterPlugin(plugin_name: string): boolean;
 declare function GetRegisteredPlugins(): Array<string>;
-export { AutoRegister, BeforeRoute, AfterRoute, RegisterPlugin, GetRegisteredPlugins };
+declare function GetRegisteredPluginsCount(): [number, number];
+export { AutoRegister, BeforeRoute, AfterRoute, RegisterPlugin, GetRegisteredPlugins, GetRegisteredPluginsCount };

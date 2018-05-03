@@ -119,4 +119,11 @@ function GetRegisteredPlugins(): Array<string> {
     return RegisteredPlugins.slice(0);
 }
 
-export { AutoRegister, BeforeRoute, AfterRoute, RegisterPlugin, GetRegisteredPlugins };
+/**
+ * Return <length of before-route plugins, length of after-route plugins>.
+ */
+function GetRegisteredPluginsCount(): [number, number] {
+    return [BeforeRoutePlugins.length, AfterRoutePlugins.length];
+}
+
+export { AutoRegister, BeforeRoute, AfterRoute, RegisterPlugin, GetRegisteredPlugins, GetRegisteredPluginsCount };
