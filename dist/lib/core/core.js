@@ -51,29 +51,33 @@ function SetGlobalVariable(variable, value) {
 exports.SetGlobalVariable = SetGlobalVariable;
 function RoutePath(path, request, response) {
     response.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
-    plugin_1.BeforeRoute(request, response, (requ, resp) => {
-        let routeResult = ROUTE.RunRoute(path);
-        plugin_1.AfterRoute(requ, resp, routeResult, (req, res) => {
-            if (!routeResult)
-                return NoRoute(path, req, res);
-            let method = req.method.toLowerCase();
-            if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
-                try {
-                    return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
-                }
-                catch (error) {
-                    console.error(error);
-                    if (!res.headersSent)
-                        res.setHeader('content-type', 'text/html');
-                    if (!res.writable)
-                        res.write(error_1.ErrorManager.RenderErrorAsHTML(error));
-                    res.end();
-                }
+    let bPromise = plugin_1.BeforeRoute(request, response);
+    let routeResult = ROUTE.RunRoute(path);
+    let finalStep = (errCount) => {
+        if (!routeResult)
+            return NoRoute(path, request, response);
+        let method = request.method.toLowerCase();
+        if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
+            try {
+                return (() => { controller.Controller.Dispatch(method, routeResult, request, response); })();
             }
-            else
-                return NoRoute(path, req, res);
-        });
-    });
+            catch (error) {
+                console.error(error);
+                if (!response.headersSent)
+                    response.setHeader('content-type', 'text/html');
+                if (!response.writable)
+                    response.write(error_1.ErrorManager.RenderErrorAsHTML(error));
+                response.end();
+            }
+        }
+        else
+            return NoRoute(path, request, response);
+    };
+    let nextStep = (errCount) => {
+        let aPromise = plugin_1.AfterRoute(request, response, routeResult);
+        aPromise.then(finalStep);
+    };
+    bPromise.then(nextStep);
 }
 exports.RoutePath = RoutePath;
 function NoRoute(path, req, res) {

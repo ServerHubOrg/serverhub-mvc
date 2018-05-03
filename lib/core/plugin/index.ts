@@ -19,31 +19,47 @@ const AfterRoutePlugins = new Array<Plugin>(0);
 const RegisteredPlugins = new Array<string>(0);
 
 
-function BeforeRoute(request: IncomingMessage, response: ServerResponse, final: (request: IncomingMessage, response: ServerResponse) => void) {
-    let fi = Promise.all(BeforeRoutePlugins.map((plugin) => {
-        plugin.main(request, response);
-        if (response.headersSent) {
-            return Promise.reject('Before-route phase plugins MUSTN\'T modify response content.');
-        } else return Promise.resolve(true);
-    })).then(() => {
-        final(request, response);
-    }).catch((reason) => {
-        console.error('Error happens when running some before-route phase plugins. The reason is:');
-        console.error('\t' + reason)
-    });
+async function BeforeRoute(request: IncomingMessage, response: ServerResponse) {
+    let index = 0;
+    let errorCount = 0;
+    for (; index < BeforeRoutePlugins.length; index++) {
+        let plugin = BeforeRoutePlugins[index];
+        try {
+            let exeRes = plugin.main(request, response) as Promise<boolean>;
+            if (exeRes instanceof Promise) {
+                await exeRes;
+            }
+            if (response.headersSent) {
+                throw new Error('Before-route phase plugins MUSTN\'T modify response content.');
+            }
+        } catch (e) {
+            console.error('Error happens when running some before-route phase plugins:');
+            console.error(e);
+            errorCount++;
+        }
+    }
+    return errorCount;
 }
-function AfterRoute(request: IncomingMessage, response: ServerResponse, route: RouteValue, final: (request: IncomingMessage, response: ServerResponse) => void) {
-    let fi = Promise.all(AfterRoutePlugins.map((plugin) => {
-        plugin.main(request, response, Object.assign({}, route));
-        if (response.headersSent) {
-            return Promise.reject('After-route phase plugins MUSTN\'T modify response content.');
-        } else return Promise.resolve(true);
-    })).then(() => {
-        final(request, response);
-    }).catch((reason) => {
-        console.error('Error happens when running some after-route phase plugins. The reason is:');
-        console.error('\t' + reason)
-    });
+async function AfterRoute(request: IncomingMessage, response: ServerResponse, route: RouteValue) {
+    let index = 0;
+    let errorCount = 0;
+    for (; index < AfterRoutePlugins.length; index++) {
+        let plugin = AfterRoutePlugins[index];
+        try {
+            let exeRes = plugin.main(request, response, route) as Promise<boolean>;
+            if (exeRes instanceof Promise) {
+                await exeRes;
+            }
+            if (response.headersSent) {
+                throw new Error('After-route phase plugins MUSTN\'T modify response content.');
+            }
+        } catch (e) {
+            console.error('Error happens when running some after-route phase plugins:');
+            console.error(e);
+            errorCount++;
+        }
+    }
+    return errorCount;
 }
 
 function AutoRegister(): Object {

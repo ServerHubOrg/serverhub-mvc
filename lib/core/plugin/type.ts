@@ -14,9 +14,9 @@ import { Route, RouteValue } from "../../route";
  * it is a mapping for developers using Node.js (CamelCase for inner use)
  */
 export default interface Plugin {
-    support_version: string;
+    version_support: string;
     version: string;
     phase: string;
-    app_name:string;
-    main: (request: IncomingMessage, response: ServerResponse, route?: RouteValue) => void;
+    app_name: string;
+    main: (request: IncomingMessage, response: ServerResponse, route?: RouteValue) => Promise<boolean>;
 }

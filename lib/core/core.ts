@@ -17,6 +17,7 @@ import { Route } from '../route/route';
 import { RCS } from './cache/rcs';
 import { CacheHelper } from "./helper/index";
 import { BeforeRoute, AfterRoute } from './plugin';
+import * as colors from "colors";
 
 
 const node_version = process.version;
@@ -88,31 +89,31 @@ export function RoutePath(path: string, request: IncomingMessage, response: Serv
 
     response.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
 
-    BeforeRoute(request, response, (requ, resp) => {
-        let routeResult = ROUTE.RunRoute(path);
-        AfterRoute(requ, resp, routeResult, (req, res) => {
-
-            if (!routeResult)
-                return NoRoute(path, req, res);
-
-            let method = req.method.toLowerCase();
-            if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
-                try {
-                    return (() => { controller.Controller.Dispatch(method, routeResult, req, res); })();
-                } catch (error) {
-                    console.error(error);
-                    if (!res.headersSent)
-                        res.setHeader('content-type', 'text/html');
-                    if (!res.writable)
-                        res.write(ErrorManager.RenderErrorAsHTML(error));
-                    res.end();
-                }
-
-            } else
-                return NoRoute(path, req, res);
-        })
-
-    });
+    let bPromise = BeforeRoute(request, response);
+    let routeResult = ROUTE.RunRoute(path);
+    let finalStep = (errCount: number) => {
+        if (!routeResult)
+            return NoRoute(path, request, response);
+        let method = request.method.toLowerCase();
+        if (routeResult.Controller && routeResult.Action && controller.Controller.Dispatchable(routeResult.Controller, routeResult.Action)) {
+            try {
+                return (() => { controller.Controller.Dispatch(method, routeResult, request, response); })();
+            } catch (error) {
+                console.error(error);
+                if (!response.headersSent)
+                    response.setHeader('content-type', 'text/html');
+                if (!response.writable)
+                    response.write(ErrorManager.RenderErrorAsHTML(error));
+                response.end();
+            }
+        } else
+            return NoRoute(path, request, response);
+    }
+    let nextStep = (errCount: number) => {
+        let aPromise = AfterRoute(request, response, routeResult);
+        aPromise.then(finalStep);
+    }
+    bPromise.then(nextStep);
 }
 
 function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void {
