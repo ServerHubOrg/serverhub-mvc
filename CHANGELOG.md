@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.0.9` May 4, 2018
+
+### Fix
+
+- Add dependency `request`. Fix startup failure in `v1.0.8`.
+
 ## `1.0.8` May 3, 2018
 
 ### Add
