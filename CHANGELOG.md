@@ -1,5 +1,15 @@
 # Changelog
 
+## `1.1.0` May 10, 2018
+
+### Add
+
+- ServerHub MVC now allows your site to automatically redirect HTTP traffic to HTTPS.
+
+### Update
+
+- `TLSOption`, `TLSOptions`, `SSLOption` and `SSLOption` are all supported and identically the same.
+
 ## `1.0.9` May 4, 2018
 
 ### Fix
