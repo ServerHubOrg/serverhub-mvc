@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.1.1` May 10, 2018
+
+### Fix
+
+- Host may not be able to query in some cases.
+
 ## `1.1.0` May 10, 2018
 
 ### Add
