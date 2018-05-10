@@ -203,6 +203,15 @@ exports.Run = (config, appstart) => {
                     key: tls.Key,
                     ca: tls.CA
                 }, (req, res) => {
+                    if (!req.connection.encrypted) {
+                        let host = req.headers.host.match(/^[^:]+/g)[0];
+                        res.writeHead(301, 'Moved Permanently', {
+                            Location: 'https://' + host + ':' + TLSPort + req.url
+                        });
+                        res.end();
+                        return;
+                    }
+
                     req['secure'] = true;
                     req['protocol'] = 'https';
                     try {

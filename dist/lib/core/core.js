@@ -52,6 +52,7 @@ function SetGlobalVariable(variable, value) {
 exports.SetGlobalVariable = SetGlobalVariable;
 function RoutePath(path, request, response) {
     response.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
+    response.setHeader('x-powered-by', `ServerHub`);
     let bPromise = plugin_1.BeforeRoute(request, response);
     let routeResult = ROUTE.RunRoute(path);
     let doneAfterRoutePluginExecution = (errCount) => {
