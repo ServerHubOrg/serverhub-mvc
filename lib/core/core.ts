@@ -37,7 +37,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     AsyncOperationTimeout: 10000, // default 10s
     PluginDir: 'plugin/',
     Verbose: true,
-    TLSOptions: void 0
+    TLSOptions: void 0,
+    RedirectToTLS: true
 } as GlobalEnvironmentVariables;
 
 /**

@@ -23,7 +23,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     AsyncOperationTimeout: 10000,
     PluginDir: 'plugin/',
     Verbose: true,
-    TLSOptions: void 0
+    TLSOptions: void 0,
+    RedirectToTLS: true
 };
 const core_env = {
     platform: process.platform,

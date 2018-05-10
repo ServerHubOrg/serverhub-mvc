@@ -17,8 +17,9 @@ export declare interface ServerHubConfig {
     DBConnectionString: string;
     DefaultPages: Array<string>;
     AsyncOperationTimeout: number;
-    TLSOption: TLSConfiguration;
-    SSLOption: TLSConfiguration;
+    TLSOptions: TLSConfiguration;
+    SSLOptions: TLSConfiguration;
+    RedirectToTLS: boolean;
 }
 
 export declare function Module(name: string): any;

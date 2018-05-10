@@ -16,6 +16,7 @@ export interface GlobalEnvironmentVariables {
     PluginDir: string;
     Verbose: boolean;
     TLSOptions: TLSConfiguration;
+    RedirectToTLS: true;
 }
 export interface TLSConfiguration {
     Port: number;

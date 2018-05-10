@@ -20,8 +20,13 @@ const package = require('./package.json');
 const path = require('path');
 const fs = require('fs');
 const AutoRegister = require('./dist/lib/core/plugin/').AutoRegister;
-const { LoadModule, LoadModuleFrom } = require('./dist/lib/core/module');
-const { CheckForUpdate } = require('./dist/lib/update');
+const {
+    LoadModule,
+    LoadModuleFrom
+} = require('./dist/lib/core/module');
+const {
+    CheckForUpdate
+} = require('./dist/lib/update');
 const colors = require('colors');
 // const callsite = require('callsite'); // Will not be used.
 
@@ -79,6 +84,10 @@ exports.Run = (config, appstart) => {
             libcore.SetGlobalVariable('DBConnectionString', dbs);
         else throw new Error('Unrecognized database connection string');
     }
+
+    if (config['RedirectToTLS'] === false) {
+        libcore.SetGlobalVariable("RedirectToTLS", false);
+    } else config['RedirectToTLS'] = true;
     if (config['WebDir']) {
         libcore.SetGlobalVariable('WebDir', config['WebDir']);
     }
@@ -106,8 +115,7 @@ exports.Run = (config, appstart) => {
         let controllerDirExist = fs.existsSync(controllerPath);
         if (!controllerDirExist) {
             console.error(`Controller directory ${controllerPath} does not exist, ServerHub will not register any controller and your route rules will not take effect.`);
-        }
-        else {
+        } else {
             let controllers = fs.readdirSync(controllerPath);
             if (controllers) {
                 // moduled controllers has higher priority.
@@ -175,7 +183,7 @@ exports.Run = (config, appstart) => {
     try {
         if (!Array.isArray(port))
             port = [port];
-        let tls = config['TLSOption'] || config['SSLOption'];
+        let tls = config['TLSOption'] || config['TLSOptions'] || config['SSLOption'] || config['SSLOptions'];
         if (tls && tls.hasOwnProperty('Port') && tls.hasOwnProperty('Cert') && tls.hasOwnProperty('Key') && tls.hasOwnProperty('CA')) {
             if (!(tls.Port instanceof Array))
                 tls.Port = [parseInt(tls.Port)];
@@ -187,6 +195,7 @@ exports.Run = (config, appstart) => {
                     throw new Error(`${tls.Port} is not defined in given ports: [${port.join(', ')}]`);
             })
         }
+        let TLSPort = (tls && tls.Port && tls.Port.length > 0) ? tls.Port[0] : -1;
         port.forEach(p => {
             if (tls && tls.Port.indexOf(p) !== -1) {
                 let server = https.createServer({
@@ -194,6 +203,8 @@ exports.Run = (config, appstart) => {
                     key: tls.Key,
                     ca: tls.CA
                 }, (req, res) => {
+                    req['secure'] = true;
+                    req['protocol'] = 'https';
                     try {
                         libcore.RoutePath(req.url, req, res);
                     } catch (error) {
@@ -204,6 +215,16 @@ exports.Run = (config, appstart) => {
                 servers.push(server);
             } else {
                 let server = http.createServer((req, res) => {
+                    if (TLSPort > 0 && config['RedirectToTLS']) {
+                        let host = req.headers.host.match(/^[^:]+/g)[0];
+                        res.writeHead(301, 'Moved Permanently', {
+                            Location: 'https://' + host + ':' + TLSPort + req.url
+                        });
+                        res.end();
+                        return;
+                    }
+                    req['secure'] = false;
+                    req['protocol'] = 'http';
                     try {
                         libcore.RoutePath(req.url, req, res);
                     } catch (error) {
