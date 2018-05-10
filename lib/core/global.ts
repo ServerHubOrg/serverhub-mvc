@@ -30,6 +30,7 @@ export interface GlobalEnvironmentVariables {
     Verbose: boolean;
     TLSOptions: TLSConfiguration;
     RedirectToTLS: true;
+    Hostname: string;
 };
 
 export interface TLSConfiguration {

@@ -158,6 +158,16 @@ exports.Run = (config, appstart) => {
         else throw new Error('Unsupported database provider', dbp);
     }
 
+    if (config['Hostname']) {
+        let host = config['Hostname'];
+        if (host.length > 0 && /[a-z\d.-_]+/i.test(host))
+            libcore.SetGlobalVariable('Hostname', host);
+        else {
+            config['Hostname'] = 'localhost';
+            throw new Error('Invalid hostname:', host);
+        }
+    }
+
 
     if (appstart)
         appstart(libroute.Route.GetRoute());
@@ -204,7 +214,11 @@ exports.Run = (config, appstart) => {
                     ca: tls.CA
                 }, (req, res) => {
                     if (!req.connection.encrypted) {
-                        let host = req.headers.host.match(/^[^:]+/g)[0];
+                        let host = req.headers['host'] ? req.headers.host.match(/^[^:]+/g)[0] : () => {
+                            if (config['Hostname'] !== 'localhost')
+                                if (req.connection.localAddress) return req.connection.localAddress;
+                            return config['Hostname'];
+                        };
                         res.writeHead(301, 'Moved Permanently', {
                             Location: 'https://' + host + ':' + TLSPort + req.url
                         });
@@ -225,7 +239,11 @@ exports.Run = (config, appstart) => {
             } else {
                 let server = http.createServer((req, res) => {
                     if (TLSPort > 0 && config['RedirectToTLS']) {
-                        let host = req.headers.host.match(/^[^:]+/g)[0];
+                        let host = req.headers['host'] ? req.headers.host.match(/^[^:]+/g)[0] : () => {
+                            if (config['Hostname'] !== 'localhost')
+                                if (req.connection.localAddress) return req.connection.localAddress;
+                            return config['Hostname'];
+                        };
                         res.writeHead(301, 'Moved Permanently', {
                             Location: 'https://' + host + ':' + TLSPort + req.url
                         });

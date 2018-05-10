@@ -38,7 +38,8 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     PluginDir: 'plugin/',
     Verbose: true,
     TLSOptions: void 0,
-    RedirectToTLS: true
+    RedirectToTLS: true,
+    Hostname: 'localhost'
 } as GlobalEnvironmentVariables;
 
 /**

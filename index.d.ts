@@ -20,6 +20,7 @@ export declare interface ServerHubConfig {
     TLSOptions: TLSConfiguration;
     SSLOptions: TLSConfiguration;
     RedirectToTLS: boolean;
+    Hostname: string;
 }
 
 export declare function Module(name: string): any;
