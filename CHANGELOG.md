@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.1.2-patch` May 20, 2018
+
+### Fix
+
+- Fix failed operation on uncompiled code.
+
 ## `1.1.2` May 20, 2018
 
 ### 520

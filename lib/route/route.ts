@@ -26,7 +26,7 @@ export class Route {
         this.IgnoredRules = new Array<string>(0);
     }
 
-    public MapRoute(routeName: string, routeRule: string, defaultValue: RouteValue) {
+    public MapRoute (routeName: string, routeRule: string, defaultValue: RouteValue) {
         this.Name = routeName;
         this.Rule = routeRule;
         this.Default = {
@@ -36,7 +36,7 @@ export class Route {
         } as RouteValue;
     }
 
-    public IgnoreRoute(routes: (string | RegExp)[]) {
+    public IgnoreRoute (routes: (string | RegExp)[]) {
         let rs = [];
         if (!(routes instanceof Array))
             rs.push(routes);
@@ -56,7 +56,7 @@ export class Route {
         });
     }
 
-    private Ignored(p: string) {
+    private Ignored (p: string) {
         if (!p) return true; // ignore undefined request.
         if (!p.endsWith('/'))
             p += '/';
@@ -76,17 +76,23 @@ export class Route {
         return ignored;
     }
 
-    public RunRoute(path: string): RouteValue {
+    public RunRoute (path: string): RouteValue {
         if (!path)
             path = '';
         if (path.startsWith('/'))
             path = path.substr(1);
+        let searchMatch = path.match(/\/?(\?.*)$/);
+        let search = '';
+        if (searchMatch) {
+            search = searchMatch[1];
+            path = path.substr(0, path.indexOf(search) - 1);
+        }
         if (path.length === 0) {
             return {
                 Controller: this.Default.Controller,
                 Action: this.Default.Action,
                 Id: this.Default.Id,
-                Search: ''
+                Search: search || ''
             } as RouteValue;
         }
 
@@ -107,8 +113,8 @@ export class Route {
         let reg_str = this.Rule.replace(/\//g, '\\/').replace('{controller}', regstr_controller);
 
         reg_str = reg_str.replace('{action}', regstr_action);
-        reg_str = '^' + reg_str.replace('{id}', regstr_id) + '\\/?(\\?.*)?$';
-
+        // reg_str = '^' + reg_str.replace('{id}', regstr_id) + '\\/?(\\?.*)?$';
+        reg_str = '^' + reg_str.replace('{id}', regstr_id) + '$';
         let regexp = new RegExp(reg_str);
         let match = path.match(regexp);
         if (match === null) {
@@ -123,12 +129,12 @@ export class Route {
             Controller: match[1],
             Action: match[2] || this.Default.Action,
             Id: match[2] ? (match[3] || this.Default.Id) : this.Default.Id,
-            Search: match[4] || ''
+            Search: search || match[4] || ''
         } as RouteValue;
         return result;
     }
 
-    public static GetRoute(): Route {
+    public static GetRoute (): Route {
         return Route.Instance;
     }
 }
