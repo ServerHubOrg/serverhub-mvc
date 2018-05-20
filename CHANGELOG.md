@@ -1,6 +1,6 @@
 # Changelog
 
-## `1.1.2-patch` May 20, 2018
+## `1.1.3` May 20, 2018
 
 ### Fix
 
