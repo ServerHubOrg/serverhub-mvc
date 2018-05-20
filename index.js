@@ -214,16 +214,21 @@ exports.Run = (config, appstart) => {
                     ca: tls.CA
                 }, (req, res) => {
                     if (!req.connection.encrypted) {
-                        let host = req.headers['host'] ? req.headers.host.match(/^[^:]+/g)[0] : () => {
-                            if (config['Hostname'] !== 'localhost')
-                                if (req.connection.localAddress) return req.connection.localAddress;
-                            return config['Hostname'];
+                        let host = '';
+                        let stopRedirection = false;
+                        if (config['Hostname'] !== 'localhost')
+                            host = config['Hostname'];
+                        else host = req.headers['host'] ? req.headers.host.match(/^[^:]+/g)[0] : () => {
+                            if (req.connection.localAddress) return req.connection.localAddress;
+                            stopRedirection = true;
                         };
-                        res.writeHead(301, 'Moved Permanently', {
-                            Location: 'https://' + host + ':' + TLSPort + req.url
-                        });
-                        res.end();
-                        return;
+                        if (!stopRedirection) {
+                            res.writeHead(301, 'Moved Permanently', {
+                                Location: 'https://' + host + ':' + TLSPort + req.url
+                            });
+                            res.end();
+                            return;
+                        }
                     }
 
                     req['secure'] = true;
@@ -239,16 +244,21 @@ exports.Run = (config, appstart) => {
             } else {
                 let server = http.createServer((req, res) => {
                     if (TLSPort > 0 && config['RedirectToTLS']) {
-                        let host = req.headers['host'] ? req.headers.host.match(/^[^:]+/g)[0] : () => {
-                            if (config['Hostname'] !== 'localhost')
-                                if (req.connection.localAddress) return req.connection.localAddress;
-                            return config['Hostname'];
+                        let host = '';
+                        let stopRedirection = false;
+                        if (config['Hostname'] !== 'localhost')
+                            host = config['Hostname'];
+                        else host = req.headers['host'] ? req.headers.host.match(/^[^:]+/g)[0] : () => {
+                            if (req.connection.localAddress) return req.connection.localAddress;
+                            stopRedirection = true;
                         };
-                        res.writeHead(301, 'Moved Permanently', {
-                            Location: 'https://' + host + ':' + TLSPort + req.url
-                        });
-                        res.end();
-                        return;
+                        if (!stopRedirection) {
+                            res.writeHead(301, 'Moved Permanently', {
+                                Location: 'https://' + host + ':' + TLSPort + req.url
+                            });
+                            res.end();
+                            return;
+                        }
                     }
                     req['secure'] = false;
                     req['protocol'] = 'http';
