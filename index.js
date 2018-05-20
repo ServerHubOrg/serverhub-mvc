@@ -223,6 +223,7 @@ exports.Run = (config, appstart) => {
                             stopRedirection = true;
                         };
                         if (!stopRedirection) {
+                            console.log('!! redirecting to:', host);
                             res.writeHead(301, 'Moved Permanently', {
                                 Location: 'https://' + host + ':' + TLSPort + req.url
                             });
@@ -253,6 +254,7 @@ exports.Run = (config, appstart) => {
                             stopRedirection = true;
                         };
                         if (!stopRedirection) {
+                            console.log('!! redirecting to:', host);
                             res.writeHead(301, 'Moved Permanently', {
                                 Location: 'https://' + host + ':' + TLSPort + req.url
                             });
