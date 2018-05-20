@@ -1,5 +1,15 @@
 # Changelog
 
+## `1.1.2` May 20, 2018
+
+### 520
+
+- I wish I can to say "I love you" to you.
+
+### Fix
+
+- 404 when search string exists on top level route.
+
 ## `1.1.1` May 10, 2018
 
 ### Fix

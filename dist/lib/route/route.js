@@ -1,7 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+Object.defineProperty(exports, "__esModule", { value: true });
 class Route {
     constructor() {
         this.Name = 'default';
@@ -34,11 +32,14 @@ class Route {
                     if (!route.endsWith('/'))
                         route += '/';
                     this.IgnoredRules.push(route);
-                } else
+                }
+                else
                     this.IgnoredRules.push('/' + route);
-            } else if (route instanceof RegExp) {
+            }
+            else if (route instanceof RegExp) {
                 this.IgnoredRules.push(route);
-            } else
+            }
+            else
                 throw new Error('Should be either string or RegExp object.');
         });
     }
@@ -56,7 +57,8 @@ class Route {
             if (typeof rule === 'string') {
                 if (rule.indexOf(p) === 0)
                     ignored = true;
-            } else if (rule.test(p) === true) {
+            }
+            else if (rule.test(p) === true) {
                 ignored = true;
             }
         });
@@ -67,19 +69,12 @@ class Route {
             path = '';
         if (path.startsWith('/'))
             path = path.substr(1);
-
-        let search = path.match(/\/?(\?.*)$/);
-        if (search) {
-            search = search[1];
-            path = path.substr(0, path.indexOf(search) - 1);
-        }
-
         if (path.length === 0) {
             return {
                 Controller: this.Default.Controller,
                 Action: this.Default.Action,
                 Id: this.Default.Id,
-                Search: search || ''
+                Search: ''
             };
         }
         if (this.Ignored(path))
@@ -92,15 +87,12 @@ class Route {
             if (!endsWithSlash && !check[1].endsWith('/'))
                 path = path + '/';
         }
-
-
         let regstr_controller = '([a-z][a-z\\d_\.\-]{0,30}[a-z\\d_])';
         let regstr_action = '([a-z][a-z\\d_\.\-]{0,30}[a-z\\d_])?';
         let regstr_id = '([^\\\\/*?:"<>|\\n]{0,128})';
         let reg_str = this.Rule.replace(/\//g, '\\/').replace('{controller}', regstr_controller);
         reg_str = reg_str.replace('{action}', regstr_action);
-        reg_str = '^' + reg_str.replace('{id}', regstr_id) + '$';
-        // reg_str = '^' + reg_str.replace('{id}', regstr_id) + '\\/?(\\?.*)?$';
+        reg_str = '^' + reg_str.replace('{id}', regstr_id) + '\\/?(\\?.*)?$';
         let regexp = new RegExp(reg_str);
         let match = path.match(regexp);
         if (match === null) {
@@ -114,7 +106,7 @@ class Route {
             Controller: match[1],
             Action: match[2] || this.Default.Action,
             Id: match[2] ? (match[3] || this.Default.Id) : this.Default.Id,
-            Search: search || match[4] || ''
+            Search: match[4] || ''
         };
         return result;
     }
@@ -123,4 +115,5 @@ class Route {
     }
 }
 Route.Instance = new Route();
-exports.Route = Route;;
+exports.Route = Route;
+;
