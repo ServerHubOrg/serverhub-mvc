@@ -39,7 +39,15 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     Verbose: true,
     TLSOptions: void 0,
     RedirectToTLS: true,
-    Hostname: 'localhost'
+    Hostname: 'localhost',
+    LogConfig: {
+        Dir: 'log/',
+        MaxSize: 65536,
+        Access: true,
+        Error: true,
+        Runtime: false,
+        Filename: 'serverhub'
+    }
 } as GlobalEnvironmentVariables;
 
 /**
