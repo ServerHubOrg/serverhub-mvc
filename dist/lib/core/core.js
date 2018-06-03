@@ -8,6 +8,8 @@ const content_type_1 = require("./content-type");
 const rcs_1 = require("./cache/rcs");
 const index_1 = require("./helper/index");
 const plugin_1 = require("./plugin");
+const server_1 = require("./server");
+const log_1 = require("./log");
 const node_version = process.version;
 global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['EnvironmentVariables'] : {
     ServerBaseDir: __dirname,
@@ -25,7 +27,15 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     Verbose: true,
     TLSOptions: void 0,
     RedirectToTLS: true,
-    Hostname: 'localhost'
+    Hostname: 'localhost',
+    LogConfig: {
+        Dir: 'log/',
+        MaxSize: 65536,
+        Access: true,
+        Error: true,
+        Runtime: true,
+        Filename: 'serverhub'
+    }
 };
 const core_env = {
     platform: process.platform,
@@ -51,9 +61,13 @@ function SetGlobalVariable(variable, value) {
     global['EnvironmentVariables'][variable] = value;
 }
 exports.SetGlobalVariable = SetGlobalVariable;
-function RoutePath(path, request, response) {
-    response.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
-    response.setHeader('x-powered-by', `ServerHub`);
+function RoutePath(path, request, res) {
+    res.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
+    res.setHeader('x-powered-by', `ServerHub`);
+    let response = new server_1.ServerHubResponse(res);
+    response.on('finish', () => {
+        log_1.LogAccess(request.connection.remoteAddress || '::1', path, response.__length__, request['user'] || 'guest', '-', request.method, request['secure'], request.httpVersion, response.statusCode);
+    });
     let bPromise = plugin_1.BeforeRoute(request, response);
     let routeResult = ROUTE.RunRoute(path);
     let doneAfterRoutePluginExecution = (errCount) => {

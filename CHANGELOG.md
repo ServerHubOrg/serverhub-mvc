@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.2.0` June 3, 2018
+
+### Add
+
+- Multi-process log system.
+
 ## `1.1.3` May 20, 2018
 
 ### Fix

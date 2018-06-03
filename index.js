@@ -19,6 +19,11 @@ const https = require('https');
 const package = require('./package.json');
 const path = require('path');
 const fs = require('fs');
+const logService = require('./dist/lib/core/log/').LogService;
+const {
+    LogError,
+    LogRuntime
+} = require('./dist/lib/core/log/');
 const AutoRegister = require('./dist/lib/core/plugin/').AutoRegister;
 const {
     LoadModule,
@@ -168,6 +173,18 @@ exports.Run = (config, appstart) => {
         }
     }
 
+    if (config['LogConfig']) {
+        let cfg = config['LogConfig'];
+        let temp = {};
+        if (cfg.Dir) temp['Dir'] = cfg.Dir;
+        if (cfg.Access && cfg.Access === false) temp['Access'] = false;
+        if (cfg.Runtime && cfg.Runtime === false) temp['Runtime'] = false;
+        if (cfg.Error && cfg.Error === false) temp['Error'] = false;
+        if (cfg.Filename) temp['Filename'] = cfg.Filename;
+        if (cfg.MaxSize && cfg.MaxSize > 0) temp['MaxSize'] = cfg.MaxSize;
+        libcore.SetGlobalVariable('LogConfig', temp);
+    }
+
 
     if (appstart)
         appstart(libroute.Route.GetRoute());
@@ -276,6 +293,7 @@ exports.Run = (config, appstart) => {
         })
         // server.listen(port);
         console.log('>> Server started on port:', colors.green(port.join(', ')));
+        logService.Start();
     } catch (e) {
         console.error('!! Server cannot start and listen to', colors.red(port.join(', ')));
         console.error('   There might be another instance process of ServerHub. Please check and attempt to start later.')
@@ -296,3 +314,7 @@ global_load_from_properties.map(p => {
 global_load_properties.map(p => {
     global[p] = LoadModule;
 })
+global['LogService'] = {
+    Runtime: LogRuntime,
+    Error: LogError
+}

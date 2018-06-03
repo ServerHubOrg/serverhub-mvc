@@ -1,0 +1,68 @@
+/// <reference types="node" />
+import { ServerResponse, OutgoingHttpHeaders } from "http";
+import * as net from 'net';
+declare class ServerHubResponse implements ServerResponse {
+    __length__: number;
+    readonly __res__: ServerResponse;
+    private res;
+    statusCode: number;
+    statusMessage: string;
+    upgrading: boolean;
+    chunkedEncoding: boolean;
+    shouldKeepAlive: boolean;
+    useChunkedEncodingByDefault: boolean;
+    sendDate: boolean;
+    readonly finished: boolean;
+    readonly headersSent: boolean;
+    connection: net.Socket;
+    writable: boolean;
+    readonly writableHighWaterMark: number;
+    constructor(res: ServerResponse);
+    write(chunk: any, cb?: Function): boolean;
+    write(chunk: any, encoding?: string, cb?: Function): boolean;
+    _write(chunk: any, encoding: string, callback: (err?: Error) => void): void;
+    _writev?(chunks: Array<{
+        chunk: any;
+        encoding: string;
+    }>, callback: (err?: Error) => void): void;
+    _destroy(err: Error, callback: Function): void;
+    _final(callback: Function): void;
+    pipe<T extends NodeJS.WritableStream>(destination: T, options?: {
+        end?: boolean;
+    }): T;
+    setDefaultEncoding(encoding: string): this;
+    end(cb?: Function): void;
+    end(chunk: any, cb?: Function): void;
+    end(chunk: any, encoding?: string, cb?: Function): void;
+    cork(): void;
+    uncork(): void;
+    assignSocket(socket: net.Socket): void;
+    detachSocket(socket: net.Socket): void;
+    writeContinue(callback?: () => void): void;
+    writeHead(statusCode: number, headers?: OutgoingHttpHeaders): void;
+    writeHead(statusCode: number, reasonPhrase?: string, headers?: OutgoingHttpHeaders): void;
+    setTimeout(msecs: number, callback?: () => void): this;
+    destroy(error: Error): void;
+    setHeader(name: string, value: number | string | string[]): void;
+    getHeader(name: string): number | string | string[] | undefined;
+    getHeaders(): OutgoingHttpHeaders;
+    getHeaderNames(): string[];
+    hasHeader(name: string): boolean;
+    removeHeader(name: string): void;
+    addTrailers(headers: OutgoingHttpHeaders | Array<[string, string]>): void;
+    flushHeaders(): void;
+    addListener(event: string, listener: (...args: any[]) => void): this;
+    emit(event: string | symbol, ...args: any[]): boolean;
+    on(event: string, listener: (...args: any[]) => void): this;
+    once(event: string, listener: (...args: any[]) => void): this;
+    prependListener(event: string, listener: (...args: any[]) => void): this;
+    prependOnceListener(event: string, listener: (...args: any[]) => void): this;
+    removeListener(event: string, listener: (...args: any[]) => void): this;
+    removeAllListeners(event?: string | symbol): this;
+    setMaxListeners(n: number): this;
+    getMaxListeners(): number;
+    listeners(event: string | symbol): Function[];
+    listenerCount(type: string | symbol): number;
+    eventNames(): Array<string | symbol>;
+}
+export { ServerHubResponse };

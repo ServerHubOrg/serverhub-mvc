@@ -7,6 +7,7 @@
  */
 
 import { Headers, IsValidHeaders, IsValidHeader, GetReasonMessage, TransformHeader, FormatDate } from "./head";
+import { ServerHubResponse } from './response'
 const Head = {
     IsValidHeaders: IsValidHeaders,
     IsValidHeader: IsValidHeader,
@@ -14,4 +15,4 @@ const Head = {
     TransformHeader: TransformHeader,
     FormatDate: FormatDate
 };
-export { Head, Headers };
+export { Head, Headers, ServerHubResponse };

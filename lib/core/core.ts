@@ -18,6 +18,8 @@ import { RCS } from './cache/rcs';
 import { CacheHelper } from "./helper/index";
 import { BeforeRoute, AfterRoute } from './plugin';
 import * as colors from "colors";
+import { ServerHubResponse } from './server';
+import { LogAccess } from './log';
 
 
 const node_version = process.version;
@@ -45,7 +47,7 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
         MaxSize: 65536,
         Access: true,
         Error: true,
-        Runtime: false,
+        Runtime: true,
         Filename: 'serverhub'
     }
 } as GlobalEnvironmentVariables;
@@ -95,9 +97,14 @@ export function SetGlobalVariable (variable: string, value: Object): void {
  * @param req Incomming message (request)
  * @param res Server response (response)
  */
-export function RoutePath (path: string, request: IncomingMessage, response: ServerResponse): void {
-    response.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
-    response.setHeader('x-powered-by', `ServerHub`);
+export function RoutePath (path: string, request: IncomingMessage, res: ServerResponse): void {
+    res.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
+    res.setHeader('x-powered-by', `ServerHub`);
+
+    let response = new ServerHubResponse(res);
+    response.on('finish', () => {
+        LogAccess(request.connection.remoteAddress || '::1', path, response.__length__, request['user'] || 'guest', '-', request.method, request['secure'], request.httpVersion, response.statusCode);
+    })
 
     let bPromise = BeforeRoute(request, response);
     let routeResult = ROUTE.RunRoute(path);

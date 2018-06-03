@@ -9,37 +9,8 @@ enum EWorkerType {
     RUNTIME = 2
 }
 
-class Worker {
-    private _alive = true;
-    private _type: EWorkerType;
-    private _cp: ChildProcess;
-    get Alive () {
-        return this._alive;
-    }
-    constructor(cp: ChildProcess, type: EWorkerType) {
-        this._type = type;
-        this._cp = cp;
-        this._alive = true;
-        cp.on('exit', (code) => {
-            this._alive = false;
-            WorkerManager.GetInstace().ForkWorker(this._type);
-        });
-        cp.on('message', (m) => {
-            if (m instanceof Object && m.error) {
-                this._alive = false;
-                WorkerManager.GetInstace().ForkWorker(this._type);
-            }
-        })
-    }
-    public WriteLog (data: string) {
-        if (!data.endsWith('\n'))
-            data += '\n';
-        this._cp.send(data);
-    }
-}
-
 interface IWorkerCollection {
-    [x: string]: Worker
+    [x: string]: ChildProcess
 }
 
 class WorkerManager {
@@ -66,35 +37,58 @@ class WorkerManager {
                     case EWorkerType.ERROR: typestr = 'error'; break;
                     case EWorkerType.RUNTIME: typestr = 'runtime'; break;
                 }
-                let childp = fork('./worker.js', [`filename=${variables.LogConfig.Filename}-${typestr}`, `maxsize=${variables.LogConfig.MaxSize}`], {
+
+                if (!fs.existsSync(log_path))
+                    fs.mkdirSync(log_path)
+
+                const loop_till_created = () => {
+                    if (childp.connected)
+                        res();
+                    else process.nextTick(loop_till_created)
+                };
+
+                let childp = fork(path.resolve(__dirname, './worker.js'), [`filename=${variables.LogConfig.Filename}-${typestr}`, `maxsize=${variables.LogConfig.MaxSize}`], {
                     cwd: log_path
                 });
-                this._workers[typestr] = new Worker(childp, type);
-                res();
+                childp.on('exit', (code) => {
+                    WorkerManager.GetInstace().ForkWorker(type);
+                });
+                childp.on('message', (m) => {
+                    if (m instanceof Object && m.error) {
+                        WorkerManager.GetInstace().ForkWorker(type);
+                    } else {
+                        console.log(m);
+                    }
+                })
+                childp.on('error', e => {
+                    console.error(e);
+                })
+                this._workers[typestr] = childp;
+                process.nextTick(loop_till_created);
             } catch (err) {
                 rej(err);
             }
         })
     }
 
-    public Use (type: EWorkerType): (data: string) => void {
+    public Use (type: EWorkerType, data: string): void {
         switch (type) {
             case EWorkerType.RUNTIME:
-                return this._workers.runtime.WriteLog
+                this._workers.runtime.send(data + '\n'); break;
             case EWorkerType.ACCESS:
-                return this._workers.access.WriteLog
+                this._workers.access.send(data + '\n'); break;
             case EWorkerType.ERROR:
-                return this._workers.error.WriteLog
+                this._workers.error.send(data + '\n'); break;
         }
     }
     public Status (type: EWorkerType): boolean {
         switch (type) {
             case EWorkerType.RUNTIME:
-                return this._workers.runtime.Alive || false;
+                return this._workers.runtime && !this._workers.runtime.killed || false;
             case EWorkerType.ACCESS:
-                return this._workers.access.Alive || false;
+                return this._workers.access && !this._workers.access.killed || false;
             case EWorkerType.ERROR:
-                return this._workers.error.Alive || false;
+                return this._workers.error && !this._workers.error.killed || false;
         }
     }
 }
