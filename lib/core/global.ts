@@ -31,8 +31,17 @@ export interface GlobalEnvironmentVariables {
     TLSOptions: TLSConfiguration;
     RedirectToTLS: true;
     Hostname: string;
+    LogConfig: LogConfiguration;
 };
 
+export interface LogConfiguration {
+    Dir: string;
+    MaxSize: number;
+    Access: boolean;
+    Error: boolean;
+    Runtime: boolean;
+    Filename: string;
+}
 export interface TLSConfiguration {
     Port: number;
     Cert: string;

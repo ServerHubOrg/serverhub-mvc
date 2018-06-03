@@ -1,4 +1,5 @@
 import { Headers, IsValidHeaders, IsValidHeader, GetReasonMessage, TransformHeader, FormatDate } from "./head";
+import { ServerHubResponse } from './response';
 declare const Head: {
     IsValidHeaders: typeof IsValidHeaders;
     IsValidHeader: typeof IsValidHeader;
@@ -6,4 +7,4 @@ declare const Head: {
     TransformHeader: typeof TransformHeader;
     FormatDate: typeof FormatDate;
 };
-export { Head, Headers };
+export { Head, Headers, ServerHubResponse };
