@@ -1,6 +1,6 @@
 # Changelog
 
-## `1.2.1` June 14, 2018
+## `1.3.0` June 14, 2018
 
 ### Update
 
