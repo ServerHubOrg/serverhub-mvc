@@ -17,13 +17,13 @@ class Route {
     }
     MapRoute(routeName, routeRule, defaultValue) {
         this.Name = routeName;
+        if (!routeRule)
+            routeRule = '';
         if (!routeRule.startsWith('/'))
             routeRule = '/' + routeRule;
-        if (!this.ValidateRule(routeRule)) {
-            this.Rule = routeRule;
-            this.RulePrefix = routeRule.slice(0, routeRule.indexOf('/{controller}'));
-        }
+        this.ValidateRule(routeRule);
         this.Rule = routeRule;
+        this.RulePrefix = routeRule.slice(0, routeRule.indexOf('/{controller}'));
         this.Default = {
             Controller: (defaultValue && defaultValue.Controller) ? defaultValue.Controller : 'home',
             Action: (defaultValue && defaultValue.Action) ? defaultValue.Action : 'index',
@@ -82,58 +82,6 @@ class Route {
             }
         });
         return ignored;
-    }
-    RunRoutev1(path) {
-        if (!path)
-            path = '';
-        if (path.startsWith('/'))
-            path = path.substr(1);
-        let searchMatch = path.match(/\/?(\?.*)$/);
-        let search = '';
-        if (searchMatch) {
-            search = searchMatch[1];
-            path = path.substr(0, path.indexOf(search) - 1);
-        }
-        if (path.length === 0) {
-            return {
-                Controller: this.Default.Controller,
-                Action: this.Default.Action,
-                Id: this.Default.Id,
-                Search: search || ''
-            };
-        }
-        if (this.Ignored(path))
-            return void 0;
-        if (path.match(/\/\/+$/))
-            return void 0;
-        let endsWithSlash = path.endsWith('/');
-        let check = path.split('/');
-        if (check && check.length === this.Rule.split('/').length - 1) {
-            if (!endsWithSlash && !check[1].endsWith('/'))
-                path = path + '/';
-        }
-        let regstr_controller = '([a-z][a-z\\d_\.\-]{0,30}[a-z\\d_])';
-        let regstr_action = '([a-z][a-z\\d_\.\-]{0,30}[a-z\\d_])?';
-        let regstr_id = '([^\\\\/*?:"<>|\\n]{0,128})';
-        let reg_str = this.Rule.replace(/\//g, '\\/').replace('{controller}', regstr_controller);
-        reg_str = reg_str.replace('{action}', regstr_action);
-        reg_str = '^' + reg_str.replace('{id}', regstr_id) + '$';
-        let regexp = new RegExp(reg_str);
-        let match = path.match(regexp);
-        if (match === null) {
-            path += '/';
-            match = path.match(regexp);
-            if (match === null)
-                return void 0;
-        }
-        let result;
-        result = {
-            Controller: match[1],
-            Action: match[2] || this.Default.Action,
-            Id: match[2] ? (match[3] || this.Default.Id) : this.Default.Id,
-            Search: search || match[4] || ''
-        };
-        return result;
     }
     RunRoute(path) {
         if (!path || path.length === 0)

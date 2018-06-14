@@ -10,7 +10,6 @@ export declare class Route {
     IgnoreRoute(routes: (string | RegExp)[]): void;
     private ValidateRule(input);
     private Ignored(p);
-    RunRoutev1(path: string): RouteValue;
     RunRoute(path: string): RouteValue;
     static GetRoute(): Route;
 }

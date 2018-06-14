@@ -1,5 +1,13 @@
 # Changelog
 
+## `1.2.1` June 14, 2018
+
+### Update
+
+- Runtime Route Algorithm v2.
+- Update route rules.
+- Remove redundant code blocks.
+
 ## `1.2.0` June 3, 2018
 
 ### Add

@@ -5,8 +5,17 @@ module.exports = function () {
     describe('Route Moudle', function () {
         let r = new route.Route();
         it('map route', function (done) {
-            expect(() => r.MapRoute('test', 'v1/{controller}/{action}/{id}', { Controller: "home", Action: 'index', Id: 1 })).not.to.throw();
+            expect(() => r.MapRoute('test', 'v1/{controller}/{action}/{id}', {
+                Controller: "home",
+                Action: 'index',
+                Id: 1
+            })).not.to.throw();
+            expect(() => r.MapRoute('test', '/{controller}/{action}/{id}')).not.to.throw();
+            expect(() => r.MapRoute('test', void 0)).to.throw();
             expect(() => r.MapRoute('test', 'v1/{controller}/{action}/{id}')).not.to.throw();
+            expect(() => r.MapRoute('test', 'v1/{action}/{id}')).to.throw();
+            expect(() => r.MapRoute('test', 'v1/{controller}/{action}/{id}#^#&#&$')).to.throw();
+            expect(() => r.MapRoute('test', 'v1/{controller}/{action}...')).to.throw();
             done();
         })
 
@@ -40,6 +49,7 @@ module.exports = function () {
             expect(r.Ignored('/v2')).to.equal(true);
             expect(r.Ignored('/www/index.html')).to.equal(false);
             expect(r.Ignored(void 0)).to.equal(true);
+            expect(r.Ignored('./')).to.equal(false);
             done();
         })
 
@@ -61,6 +71,12 @@ module.exports = function () {
             done();
         });
 
+
+        it('should match no route: invalid controller name', function (done) {
+            expect(r.RunRoute('v1/..home')).to.be.a('undefined');
+            done();
+        });
+
         it('should match no route: duplicated slash', function (done) {
             expect(r.RunRoute('/home//')).to.be.a('undefined');
             done();
@@ -73,13 +89,13 @@ module.exports = function () {
         });
 
         it('should match no route: resource', function (done) {
-            expect(r.RunRoute('v1/interest.svg')).to.be.a('undefined');
+            expect(r.RunRoute('v1/interest.svg')).to.be.a('object');
             done();
         });
 
 
         it('route match ignored', function (done) {
-            expect(r.RunRoute('v1/home/what')).to.be.a('undefined');
+            expect(r.RunRoute('v1/home/what')).to.be.a('object');
             done();
         })
 
