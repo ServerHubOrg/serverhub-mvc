@@ -6,6 +6,7 @@ export declare enum CompileTimeError {
     SH010101 = 65793,
     SH010102 = 65794,
     SH010103 = 65795,
+    SH010201 = 66049,
 }
 export declare enum RuntimeError {
     SH020101 = 131329,

@@ -164,6 +164,7 @@ var CompileTimeError;
     CompileTimeError[CompileTimeError["SH010101"] = 65793] = "SH010101";
     CompileTimeError[CompileTimeError["SH010102"] = 65794] = "SH010102";
     CompileTimeError[CompileTimeError["SH010103"] = 65795] = "SH010103";
+    CompileTimeError[CompileTimeError["SH010201"] = 66049] = "SH010201";
 })(CompileTimeError = exports.CompileTimeError || (exports.CompileTimeError = {}));
 ;
 var RuntimeError;
@@ -187,6 +188,7 @@ const ErrorTemplate = {
     SH010101: "Controller '$${0}' is not a valid controller.",
     SH010102: "Controller path '$${0}' does not exist on '$${1}'.",
     SH010103: "Unresolved controller file.",
+    SH010201: "Invalid route rule: $${0}. The possible reason is:$${1}",
     SH020101: "Controller '$${0}' not registered.",
     SH020102: "Default router not found.",
     SH020201: "View file '$${0}' does not exist on '$${1}'.",
