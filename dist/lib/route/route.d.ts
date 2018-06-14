@@ -4,10 +4,13 @@ export declare class Route {
     private Rule;
     private Default;
     private IgnoredRules;
+    private RulePrefix;
     constructor();
     MapRoute(routeName: string, routeRule: string, defaultValue: RouteValue): void;
     IgnoreRoute(routes: (string | RegExp)[]): void;
+    private ValidateRule(input);
     private Ignored(p);
+    RunRoutev1(path: string): RouteValue;
     RunRoute(path: string): RouteValue;
     static GetRoute(): Route;
 }

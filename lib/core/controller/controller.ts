@@ -23,10 +23,10 @@ const QueryRegex = /((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)=((?:(?:[
  */
 class ControllerCollection {
     private Controllers = {};
-    public Add(bundle: ControllerBundle): void {
+    public Add (bundle: ControllerBundle): void {
         this.Controllers[bundle.Name] = bundle;
     }
-    public Remove(controllerName: string): ControllerBundle {
+    public Remove (controllerName: string): ControllerBundle {
         if (this.Controllers.hasOwnProperty(controllerName)) {
             let bundle = this.Controllers[controllerName];
             delete this.Controllers[controllerName];
@@ -34,19 +34,19 @@ class ControllerCollection {
         }
         return void 0;
     }
-    public Has(controllerName: string): boolean {
+    public Has (controllerName: string): boolean {
         if (this.Controllers.hasOwnProperty(controllerName)) {
             return true;
         }
         return false;
     }
 
-    public HasAction(controllerName: string, actionName: string): boolean {
+    public HasAction (controllerName: string, actionName: string): boolean {
         actionName = actionName.toLowerCase();
         return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].Controller.hasOwnProperty(actionName));
     }
 
-    public async DispatchController(controllerName: string, actionName: string, idString: string, search: string, dispatch: ControllDispatch): Promise<boolean> {
+    public async DispatchController (controllerName: string, actionName: string, idString: string, search: string, dispatch: ControllDispatch): Promise<boolean> {
         /* handling search
          *
          * According to RFC 1738 (https://tools.ietf.org/html/rfc1738):
@@ -69,20 +69,7 @@ class ControllerCollection {
          * hex            = digit | "A" | "B" | "C" | "D" | "E" | "F" |
          *                  "a" | "b" | "c" | "d" | "e" | "f"
          */
-        let searchGroup = new Map<string, string>();
-        if (search && search.length > 2) {
-            if (!SearchRegex.test(search))
-                console.error('search not valid:', search);
-            else {
-                let all = search.match(SearchRegex)[1];
-                all.split('&').forEach(query => {
-                    let match = query.match(QueryRegex);
-                    if (match && match.length === 3) {
-                        searchGroup.set(match[1], match[2]);
-                    }
-                })
-            }
-        }
+
 
         const __innerOperations = async () => {
             if (this.Has(controllerName)) {
@@ -129,7 +116,7 @@ class ControllerCollection {
                             }
                         };
                         try {
-                            context = await controller[action](dispatch.Request, shResponse, dispatch.Method, idString, searchGroup);
+                            context = await controller[action](dispatch.Request, shResponse, dispatch.Method, idString, search);
                         } catch (e) {
                             if ((e as Error).message.match(/.*not.*define/i))
                                 console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
@@ -168,11 +155,11 @@ export class Controller {
      * Register a new controller
      * @param controller Controller file name
      */
-    public static Register(controller: string) {
+    public static Register (controller: string) {
         Controller.Collection.Add(Register(controller));
     }
 
-    public static RegisterM(controller: string) {
+    public static RegisterM (controller: string) {
         Controller.Collection.Add(RegisterM(controller));
     }
 
@@ -180,7 +167,7 @@ export class Controller {
      * Unregister a controller (not frequently used)
      * @param controllerName Controller file name
      */
-    public static Unregister(controllerName: string) {
+    public static Unregister (controllerName: string) {
         Controller.Collection.Remove(controllerName);
     }
 
@@ -191,7 +178,7 @@ export class Controller {
      * @param request HTTP request info
      * @param response Server response
      */
-    public static async Dispatch(method: string, route: RouteValue, request: IncomingMessage, response: ServerResponse): Promise<boolean> {
+    public static async Dispatch (method: string, route: RouteValue, request: IncomingMessage, response: ServerResponse): Promise<boolean> {
         return Controller.Collection.DispatchController(route.Controller, route.Action, route.Id, route.Search, {
             Method: method,
             Request: request,
@@ -199,7 +186,7 @@ export class Controller {
         } as ControllDispatch).then(() => true).catch(() => false);
     }
 
-    public static Dispatchable(controllerName: string, actionName: string): boolean {
+    public static Dispatchable (controllerName: string, actionName: string): boolean {
         return Controller.Collection.HasAction(controllerName, actionName);
     }
 }

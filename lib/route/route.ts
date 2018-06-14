@@ -1,3 +1,4 @@
+
 /**
  * Route Entry
  * 
@@ -5,6 +6,10 @@
  * March 13, 2018
  * Yang Zhongdong (yangzd1996@outlook.com)
  */
+import { ErrorManager, CompileTimeError } from "../core/error/error";
+const ControllerRegexp = /^\/((?:(?:\.[a-z\d_-])|(?:[a-z]))[a-z\d_-][a-z\d_.-]+)/;
+const ActionRegexp = /^\/((?:(?:[a-z_])|(?:[a-z]))[a-z\d_.-]+)/;
+const IdRegexp = /^\/((?:\d+\.?\d*)|(?:0x[a-f\d]+)|(?:[01]+b)|(?:\d+e[+-]?\d+))$/i;
 
 /**
  * Route static class provide operations such as map a new route or ignore a specific one.
@@ -15,9 +20,10 @@ export class Route {
     private Rule: string;
     private Default: RouteValue;
     private IgnoredRules: Array<string | RegExp>;
+    private RulePrefix: string;
     constructor() {
         this.Name = 'default';
-        this.Rule = '{controller}/{action}/{id}';
+        this.Rule = '/{controller}/{action}/{id}';
         this.Default = {
             Controller: 'home',
             Action: 'index',
@@ -28,6 +34,12 @@ export class Route {
 
     public MapRoute (routeName: string, routeRule: string, defaultValue: RouteValue) {
         this.Name = routeName;
+        if (!routeRule.startsWith('/'))
+            routeRule = '/' + routeRule;
+        if (!this.ValidateRule(routeRule)) {
+            this.Rule = routeRule;
+            this.RulePrefix = routeRule.slice(0, routeRule.indexOf('/{controller}'));
+        }
         this.Rule = routeRule;
         this.Default = {
             Controller: (defaultValue && defaultValue.Controller) ? defaultValue.Controller : 'home',
@@ -56,7 +68,20 @@ export class Route {
         });
     }
 
-    private Ignored (p: string) {
+    private ValidateRule (input: string): boolean {
+        if (!input.includes('/{controller}/{action}'))
+            throw new Error(ErrorManager.RenderError(CompileTimeError.SH010201, input, 'controller and action fields are required'));
+
+        if (!input.match(/^[a-z\d._{}\/-]+$/i))
+            throw new Error(ErrorManager.RenderError(CompileTimeError.SH010201, input, 'there are some invalid characters.'));
+
+        if (!input.endsWith('}/') && !input.endsWith('}'))
+            throw new Error(ErrorManager.RenderError(CompileTimeError.SH010201, input, 'invalid rule ending'));
+
+        return true;
+    }
+
+    private Ignored (p: string): boolean {
         if (!p) return true; // ignore undefined request.
         if (!p.endsWith('/'))
             p += '/';
@@ -76,7 +101,14 @@ export class Route {
         return ignored;
     }
 
-    public RunRoute (path: string): RouteValue {
+    /**
+     * !!DEPRECATED
+     * 
+     * Try to route a path
+     * 
+     * @param path request path
+     */
+    public RunRoutev1 (path: string): RouteValue {
         if (!path)
             path = '';
         if (path.startsWith('/'))
@@ -131,6 +163,79 @@ export class Route {
             Id: match[2] ? (match[3] || this.Default.Id) : this.Default.Id,
             Search: search || match[4] || ''
         } as RouteValue;
+        return result;
+    }
+
+    /**
+     * Route a path with Runtime Route Algorithm v2.
+     * @param path request path
+     */
+    public RunRoute (path: string): RouteValue {
+        // normalization
+        if (!path || path.length === 0)
+            path = '/';
+        else if (!path.startsWith('/'))
+            path = '/' + path;
+
+        // remove prefix.
+        if (path.startsWith(this.RulePrefix))
+            path = path.replace(this.RulePrefix, '');
+        else if (this.RulePrefix && path !== '/')
+            return void 0; // unable to route with neither '/' nor prefixed path.
+
+        // parse params
+        let params = null;
+        if (path.includes('?')) {
+            let temp = {};
+            try {
+                let paramstr = path.slice(path.indexOf('?') + 1);
+                paramstr.split('&').forEach(ele => {
+                    let key = ele.slice(0, ele.indexOf('='));
+                    let value = ele.slice(ele.indexOf('=') + 1);
+                    Object.defineProperty(temp, key, { value: value, writable: false });
+                })
+            } catch (err) { }
+            params = temp;
+            path = path.slice(0, path.indexOf('?'));
+        }
+
+        let result = {} as RouteValue;
+        result.Search = params;
+        // starts with controller?
+        let ctrlr_match = path.match(ControllerRegexp);
+        if (!ctrlr_match || ctrlr_match.length !== 2) {
+            // no controller
+            if (path === '/') {
+                result = {
+                    Controller: this.Default.Controller,
+                    Action: this.Default.Action,
+                    Id: this.Default.Id,
+                    Search: params
+                }
+            } else
+                return void 0;
+        } else {
+            result.Controller = ctrlr_match[1];
+            path = path.replace('/' + result.Controller, '');
+        }
+
+        // starts with action now?
+        let act_match = path.match(ActionRegexp);
+        if (!act_match || act_match.length !== 2) {
+            result.Action = this.Default.Action;
+        } else {
+            result.Action = act_match[1];
+            path = path.replace('/' + result.Action, '');
+        }
+
+        // ends with id?
+        let id_match = path.match(IdRegexp);
+        if (!id_match || id_match.length !== 2) {
+            result.Id = this.Default.Id;
+        } else {
+            result.Id = id_match[1];
+        }
+
         return result;
     }
 

@@ -36,6 +36,7 @@ Category | Type | Unique | Cause
 01 | 01 | 01 | [Controller name not valid](#sh010101)
 01 | 01 | 02 | [Controller path not valid](#sh010102)
 01 | 01 | 03 | [Controller cannot be resolved](#sh010103)
+01 | 02 | 01 | [Route rule not valid](#sh010201)
 02 | 01 | 01 | [Controller not registered](#sh020101)
 02 | 01 | 02 | [Default controller not found](#sh020102)
 02 | 07 | 01 | [AppStart method not found](#sh020701)
@@ -79,6 +80,13 @@ A controller path does not match any files in the content directory. Check the g
 ***Controller cannot be resolved***
 
 The controller file is not able to be resolved. May be you used a `const controller = ...` expression?
+
+#### SH010201
+
+<span id='sh010201'></span>
+***Invalid route rule detected***
+
+The custom route rule defined in serverhubinstance.Run() method is not supported.
 
 ## Runtime Errors (RTE) (SH02____)
 

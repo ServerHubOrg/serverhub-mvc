@@ -8,7 +8,7 @@
 
 import { GlobalEnvironmentVariables } from "../global";
 export class ErrorManager {
-    public static RenderError(errorEnum: CompileTimeError | RuntimeError, ...params): string {
+    public static RenderError (errorEnum: CompileTimeError | RuntimeError, ...params): string {
         if (errorEnum === void 0)
             throw new Error('SH000000: Fatal error, code not correct');
         if (CompileTimeError[errorEnum] !== void 0) {
@@ -27,7 +27,7 @@ export class ErrorManager {
             return RuntimeError[errorEnum] + ': ' + errortemplate;
         } else throw new Error('ErrorManager cannot determine your error');
     }
-    public static RenderErrorAsHTML(error: Error): string {
+    public static RenderErrorAsHTML (error: Error): string {
         if (!(error instanceof Error))
             throw new Error('Error not defined');
         let stack = '';
@@ -167,7 +167,8 @@ export enum CompileTimeError {
     // - controller
     SH010101 = 0x010101,
     SH010102 = 0x010102,
-    SH010103 = 0x010103
+    SH010103 = 0x010103,
+    SH010201 = 0x010201
     // TODO
 };
 
@@ -196,6 +197,7 @@ const ErrorTemplate = {
     SH010101: "Controller '$${0}' is not a valid controller.", // 0：controllerName.ext, .ext is expected to be .js, see doc/Errors.md.
     SH010102: "Controller path '$${0}' does not exist on '$${1}'.", // 0：controllerName.js; 1: controllerPath, see global['EnvironmentVariables'].
     SH010103: "Unresolved controller file.",
+    SH010201: "Invalid route rule: $${0}. The possible reason is:$${1}", // 0: route rule string. 1: reason.
     SH020101: "Controller '$${0}' not registered.", // 0: controllerName.
     SH020102: "Default router not found.",
     SH020201: "View file '$${0}' does not exist on '$${1}'.", // 0：viewFileName.js; 1: viewPath, see global['EnvironmentVariables'].
