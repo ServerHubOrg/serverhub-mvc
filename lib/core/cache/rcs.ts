@@ -16,6 +16,7 @@ import { CacheHelper, RangeParser } from '../helper';
 import * as npath from 'path';
 import * as nfs from 'fs';
 import { Head } from '../server';
+import { LogError } from '../log';
 
 interface RangePair {
     Start: number;
@@ -26,13 +27,13 @@ export class RCS {
     private constructor() { }
     private static Instance = new RCS();
 
-    public static Service(): RCS {
+    public static Service (): RCS {
         return RCS.Instance;
     }
 
     private CacheManager = new CacheStorage();
 
-    private GenerateEtag(): string {
+    private GenerateEtag (): string {
         let n = 16;
         let tag = '';
         while (n > 0) {
@@ -47,7 +48,7 @@ export class RCS {
      * Check whether a resource is cacheable for ServerHub. Detailed information, please refer to doc/Cache. Can only be used on HTTP request.
      * @param uri URI of target resource.
      */
-    public Cacheable(uri: string): boolean {
+    public Cacheable (uri: string): boolean {
         let reg = new RegExp(/^((?:\/[^/?.]*)+)(\/[^/?><#!\\|"'`]*)(\?(?:&?(?:[a-z\d]+=[a-z\d]+)?)+)?$/i);
         let shorreg = new RegExp(/^(\/[^/?><#!\\|"'`]*)(\?(?:&?(?:[a-z\d]+=[a-z\d]+)?)+)?$/i);
 
@@ -65,7 +66,7 @@ export class RCS {
         }
     }
 
-    public GetUri(uri: string, res: ServerResponse, req: IncomingMessage): void {
+    public GetUri (uri: string, res: ServerResponse, req: IncomingMessage): void {
         let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
         if (this.Cacheable(uri)) {
             if (uri.endsWith('?'))
@@ -199,7 +200,7 @@ export class RCS {
                             });
                         }
                     } catch (e) {
-                        console.error(e);
+                        LogError('runtime', e.toString());
                     }
                 }
             }
@@ -207,7 +208,7 @@ export class RCS {
         } else throw new Error(ErrorManager.RenderError(RuntimeError.SH020707, uri));
     }
 
-    public GetCacheReport(res: ServerResponse) {
+    public GetCacheReport (res: ServerResponse) {
         res.setHeader('content-type', "text/html");
         let ret = '';
         let entries = this.CacheManager.CacheReport().entries();
@@ -280,7 +281,7 @@ export class RCS {
         res.end();
     }
 
-    public WCS(cache: Cache): void {
+    public WCS (cache: Cache): void {
         let time_array = new Array<CacheReportInfo>(0);
         let weight_array = new Array<CacheReportInfo>(0);
         let size_array = new Array<CacheReportInfo>(0);

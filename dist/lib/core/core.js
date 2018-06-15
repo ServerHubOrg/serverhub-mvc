@@ -65,8 +65,9 @@ function RoutePath(path, request, res) {
     res.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
     res.setHeader('x-powered-by', `ServerHub`);
     let response = new server_1.ServerHubResponse(res);
+    request['__address__'] = request.connection.remoteAddress;
     response.on('finish', () => {
-        log_1.LogAccess(request.connection.remoteAddress || '::1', path, response.__length__, request['user'] || 'guest', '-', request.method, request['secure'], request.httpVersion, response.statusCode);
+        log_1.LogAccess(request['__address__'] || '::1', path, response.__length__, request['user'] || 'guest', '-', request.method, request['secure'], request.httpVersion, response.statusCode);
     });
     let bPromise = plugin_1.BeforeRoute(request, response);
     let routeResult = ROUTE.RunRoute(path);
@@ -80,6 +81,7 @@ function RoutePath(path, request, res) {
             }
             catch (error) {
                 console.error(error);
+                log_1.LogError('runtime', 'Cannot dispatch controller');
                 if (!response.headersSent)
                     response.setHeader('content-type', 'text/html');
                 if (!response.writable)

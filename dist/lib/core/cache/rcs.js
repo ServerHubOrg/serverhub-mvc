@@ -8,6 +8,7 @@ const helper_1 = require("../helper");
 const npath = require("path");
 const nfs = require("fs");
 const server_1 = require("../server");
+const log_1 = require("../log");
 class RCS {
     constructor() {
         this.CacheManager = new cache_1.CacheStorage();
@@ -180,7 +181,7 @@ class RCS {
                         }
                     }
                     catch (e) {
-                        console.error(e);
+                        log_1.LogError('runtime', e.toString());
                     }
                 }
             }

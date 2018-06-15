@@ -13,13 +13,14 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { IncomingMessage, ServerResponse } from "http";
 import { RouteValue } from "../../route";
+import { LogError } from "../log";
 
 const BeforeRoutePlugins = new Array<Plugin>(0);
 const AfterRoutePlugins = new Array<Plugin>(0);
 const RegisteredPlugins = new Array<string>(0);
 
 
-async function BeforeRoute(request: IncomingMessage, response: ServerResponse) {
+async function BeforeRoute (request: IncomingMessage, response: ServerResponse) {
     let index = 0;
     let errorCount = 0;
     for (; index < BeforeRoutePlugins.length; index++) {
@@ -33,14 +34,14 @@ async function BeforeRoute(request: IncomingMessage, response: ServerResponse) {
                 throw new Error('Before-route phase plugins MUSTN\'T modify response content.');
             }
         } catch (e) {
-            console.error('Error happens when running some before-route phase plugins:');
-            console.error(e);
+            LogError('plugin', 'Error happens when running some before-route phase plugins:');
+            LogError('plugin', e);
             errorCount++;
         }
     }
     return errorCount;
 }
-async function AfterRoute(request: IncomingMessage, response: ServerResponse, route: RouteValue) {
+async function AfterRoute (request: IncomingMessage, response: ServerResponse, route: RouteValue) {
     let index = 0;
     let errorCount = 0;
     for (; index < AfterRoutePlugins.length; index++) {
@@ -54,15 +55,15 @@ async function AfterRoute(request: IncomingMessage, response: ServerResponse, ro
                 throw new Error('After-route phase plugins MUSTN\'T modify response content.');
             }
         } catch (e) {
-            console.error('Error happens when running some after-route phase plugins:');
-            console.error(e);
+            LogError('plugin', 'Error happens when running some after-route phase plugins:');
+            LogError('plugin', e);
             errorCount++;
         }
     }
     return errorCount;
 }
 
-function AutoRegister(): Object {
+function AutoRegister (): Object {
     let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
     let go_through = true;
     let count = 0;
@@ -97,7 +98,7 @@ function AutoRegister(): Object {
     };
 }
 
-function RegisterPlugin(plugin_name: string): boolean {
+function RegisterPlugin (plugin_name: string): boolean {
     let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
     let plugin_path = path.resolve(variables.ServerBaseDir, variables.PluginDir, plugin_name)
     let m = LoadAsModule(plugin_path) as Plugin;
@@ -115,14 +116,14 @@ function RegisterPlugin(plugin_name: string): boolean {
     return false;
 }
 
-function GetRegisteredPlugins(): Array<string> {
+function GetRegisteredPlugins (): Array<string> {
     return RegisteredPlugins.slice(0);
 }
 
 /**
  * Return <length of before-route plugins, length of after-route plugins>.
  */
-function GetRegisteredPluginsCount(): [number, number] {
+function GetRegisteredPluginsCount (): [number, number] {
     return [BeforeRoutePlugins.length, AfterRoutePlugins.length];
 }
 

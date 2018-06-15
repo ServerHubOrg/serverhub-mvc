@@ -34,8 +34,18 @@ process.argv.forEach(arg => {
     }
 });
 
+let logstream;
 let initialPath = path.resolve(process.cwd(), `${filename}-${new Date().getTime()}.log`);
-let logstream = fs.createWriteStream(initialPath);
+let lastLog = FindLastLog();
+if (lastLog) {
+    let fstat = fs.statSync(path.resolve(process.cwd(), lastLog));
+    if (fstat.size <= maxsize)
+        logstream = fs.createWriteStream(path.resolve(process.cwd(), lastLog), { start: fstat.size, flags: 'a+' });
+    else logstream = fs.createWriteStream(initialPath)
+} else {
+    logstream = fs.createWriteStream(initialPath)
+}
+
 StreamWrapper(logstream);
 
 process.on('message', (data: string) => {
@@ -43,7 +53,15 @@ process.on('message', (data: string) => {
         if (logstream.bytesWritten > maxsize) {
             const newstream = () => {
                 logstream.close();
-                logstream = fs.createWriteStream(path.resolve(process.cwd(), `${filename}-${new Date().getTime()}.log`))
+                let lastLog = FindLastLog();
+                if (lastLog) {
+                    let fstat = fs.statSync(path.resolve(process.cwd(), lastLog));
+                    if (fstat.size <= maxsize)
+                        logstream = fs.createWriteStream(path.resolve(process.cwd(), lastLog), { start: fstat.size });
+                    else logstream = fs.createWriteStream(path.resolve(process.cwd(), `${filename}-${new Date().getTime()}.log`))
+                } else {
+                    logstream = fs.createWriteStream(path.resolve(process.cwd(), `${filename}-${new Date().getTime()}.log`))
+                }
                 logstream.on('open', () => {
                     StreamWrapper(logstream);
                     logstream.write(data);
@@ -67,3 +85,22 @@ process.on('message', (data: string) => {
         })
     }
 })
+
+
+function FindLastLog (): string | null {
+    let files = fs.readdirSync(process.cwd());
+    if (files && files.length > 0) {
+        let last = new Date(1970, 1, 1).getTime();
+        let newest = null;
+        files.forEach((f, i, arr) => {
+            if (f.endsWith('.log') && f.startsWith(filename)) {
+                let time = parseInt(f.slice(filename.length + 1, f.length - 4));
+                if (time > last) {
+                    last = time;
+                    newest = f;
+                }
+            }
+        });
+        return newest;
+    } else return null;
+}

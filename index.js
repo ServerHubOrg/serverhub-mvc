@@ -240,7 +240,7 @@ exports.Run = (config, appstart) => {
                             stopRedirection = true;
                         };
                         if (!stopRedirection) {
-                            console.log('!! redirecting to:', host);
+                            LogRuntime('system', `Redirecting to: ${host}`);
                             res.writeHead(301, 'Moved Permanently', {
                                 Location: 'https://' + host + ':' + TLSPort + req.url
                             });
@@ -251,10 +251,11 @@ exports.Run = (config, appstart) => {
 
                     req['secure'] = true;
                     req['protocol'] = 'https';
+                    let conn = req.connection.remoteAddress;
                     try {
                         libcore.RoutePath(req.url, req, res);
                     } catch (error) {
-                        console.error(error);
+                        LogError('runtime', error.code, ['client', conn], req.url);
                     }
                 });
                 server.listen(p);
@@ -271,7 +272,7 @@ exports.Run = (config, appstart) => {
                             stopRedirection = true;
                         };
                         if (!stopRedirection) {
-                            console.log('!! redirecting to:', host);
+                            LogRuntime('system', `Redirecting to: ${host}`);
                             res.writeHead(301, 'Moved Permanently', {
                                 Location: 'https://' + host + ':' + TLSPort + req.url
                             });
@@ -281,10 +282,11 @@ exports.Run = (config, appstart) => {
                     }
                     req['secure'] = false;
                     req['protocol'] = 'http';
+                    let conn = req.connection.remoteAddress;
                     try {
                         libcore.RoutePath(req.url, req, res);
                     } catch (error) {
-                        console.error(error);
+                        LogError('runtime', error.code, ['client', conn], req.url);
                     }
                 });
                 server.listen(p);
