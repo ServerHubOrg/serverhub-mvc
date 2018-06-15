@@ -13,6 +13,7 @@ const error_1 = require("../error/error");
 const view_1 = require("../view/view");
 const model_1 = require("../model/model");
 const response_1 = require("./response");
+const log_1 = require("../log");
 const PlantableVariables = ["View", "Runtime", "Console"];
 const SearchRegex = /(((?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@&=])+)/i;
 const QueryRegex = /((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)=((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)/i;
@@ -63,7 +64,7 @@ class ControllerCollection {
                                 }
                                 else {
                                     if (timeout <= 0) {
-                                        console.error('Request to:', dispatch.Request.url, 'timeout because current timeout limit is', variables.AsyncOperationTimeout, 'milliseconds');
+                                        log_1.LogError('runtime', ['Request to:', dispatch.Request.url, 'timeout because current timeout limit is', variables.AsyncOperationTimeout, 'milliseconds'].join(' '));
                                     }
                                     if (shResponse.headersSent)
                                         dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders());
@@ -85,7 +86,7 @@ class ControllerCollection {
                             }
                             catch (e) {
                                 if (e.message.match(/.*not.*define/i))
-                                    console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?');
+                                    log_1.LogError('runtime', 'Undefined reference. Did you missed a "this" reference while using controller scope variables?');
                                 else
                                     throw e;
                             }

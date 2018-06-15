@@ -14,6 +14,7 @@ import { ApplyModel } from '../view/view';
 import { ReadModel } from '../model/model';
 import { Route, RouteValue } from "../../route/route";
 import { SHResponse } from "./response";
+import { LogError } from "../log";
 
 const PlantableVariables = ["View", "Runtime", "Console"];
 const SearchRegex = /(((?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@&=])+)/i;
@@ -93,7 +94,7 @@ class ControllerCollection {
                             }
                             else {
                                 if (timeout <= 0) {
-                                    console.error('Request to:', dispatch.Request.url, 'timeout because current timeout limit is', variables.AsyncOperationTimeout, 'milliseconds');
+                                    LogError('runtime', ['Request to:', dispatch.Request.url, 'timeout because current timeout limit is', variables.AsyncOperationTimeout, 'milliseconds'].join(' '));
                                 }
                                 if (shResponse.headersSent)
                                     dispatch.Response.writeHead(shResponse.statusCode, shResponse.getHeaders() as OutgoingHttpHeaders);
@@ -119,7 +120,7 @@ class ControllerCollection {
                             context = await controller[action](dispatch.Request, shResponse, dispatch.Method, idString, search);
                         } catch (e) {
                             if ((e as Error).message.match(/.*not.*define/i))
-                                console.error('Undefined reference. Did you missed a "this" reference while using controller scope variables?')
+                                LogError('runtime', 'Undefined reference. Did you missed a "this" reference while using controller scope variables?')
                             else throw e;
                         }
                         wait_loop(controller['Runtime']['WAIT']);

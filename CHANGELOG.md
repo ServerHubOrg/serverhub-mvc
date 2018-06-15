@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.3.1` June 16, 2018
+
+### Update
+
+- Redirect all runtime/compile-time logs to internal logger.
+
 ## `1.3.0` June 14, 2018
 
 ### Update

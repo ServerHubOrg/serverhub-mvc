@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const plugin_loader_1 = require("./plugin-loader");
 const path = require("path");
 const fs = require("fs");
+const log_1 = require("../log");
 const BeforeRoutePlugins = new Array(0);
 const AfterRoutePlugins = new Array(0);
 const RegisteredPlugins = new Array(0);
@@ -30,8 +31,8 @@ function BeforeRoute(request, response) {
                 }
             }
             catch (e) {
-                console.error('Error happens when running some before-route phase plugins:');
-                console.error(e);
+                log_1.LogError('plugin', 'Error happens when running some before-route phase plugins:');
+                log_1.LogError('plugin', e);
                 errorCount++;
             }
         }
@@ -55,8 +56,8 @@ function AfterRoute(request, response, route) {
                 }
             }
             catch (e) {
-                console.error('Error happens when running some after-route phase plugins:');
-                console.error(e);
+                log_1.LogError('plugin', 'Error happens when running some after-route phase plugins:');
+                log_1.LogError('plugin', e);
                 errorCount++;
             }
         }

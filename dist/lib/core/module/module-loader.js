@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
+const log_1 = require("../log");
 function ModuleLoader(moduleName, includePath) {
     let mod;
     try {
@@ -19,7 +20,7 @@ function ModuleLoader(moduleName, includePath) {
         }
     }
     catch (e) {
-        console.error(e);
+        log_1.LogError('runtime', e.toString());
     }
 }
 exports.ModuleLoader = ModuleLoader;

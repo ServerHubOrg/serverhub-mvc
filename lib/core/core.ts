@@ -19,7 +19,7 @@ import { CacheHelper } from "./helper/index";
 import { BeforeRoute, AfterRoute } from './plugin';
 import * as colors from "colors";
 import { ServerHubResponse } from './server';
-import { LogAccess } from './log';
+import { LogAccess, LogError } from './log';
 
 
 const node_version = process.version;
@@ -102,8 +102,9 @@ export function RoutePath (path: string, request: IncomingMessage, res: ServerRe
     res.setHeader('x-powered-by', `ServerHub`);
 
     let response = new ServerHubResponse(res);
+    request['__address__'] = request.connection.remoteAddress;
     response.on('finish', () => {
-        LogAccess(request.connection.remoteAddress || '::1', path, response.__length__, request['user'] || 'guest', '-', request.method, request['secure'], request.httpVersion, response.statusCode);
+        LogAccess(request['__address__'] || '::1', path, response.__length__, request['user'] || 'guest', '-', request.method, request['secure'], request.httpVersion, response.statusCode);
     })
 
     let bPromise = BeforeRoute(request, response);
@@ -117,6 +118,7 @@ export function RoutePath (path: string, request: IncomingMessage, res: ServerRe
                 return (() => { controller.Controller.Dispatch(method, routeResult, request, response); })();
             } catch (error) {
                 console.error(error);
+                LogError('runtime', 'Cannot dispatch controller');
                 if (!response.headersSent)
                     response.setHeader('content-type', 'text/html');
                 if (!response.writable)

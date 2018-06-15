@@ -6,13 +6,14 @@
  * Yang Zhongdong (yangzd1996@outlook.com)
  */
 import * as path from 'path';
+import { LogError } from '../log';
 
 /**
  * Load one module from specific folder with its module name.
  * @param moduleName Name of the module. Ignore the .js extension
  * @param includePath Absolute path to the module directory
  */
-function ModuleLoader(moduleName: string, includePath: string): any {
+function ModuleLoader (moduleName: string, includePath: string): any {
     let mod: any;
     try {
         if (includePath === void 0 || includePath === null || includePath.length === 0) {
@@ -27,7 +28,7 @@ function ModuleLoader(moduleName: string, includePath: string): any {
             else throw new Error('Unbale to import module: ' + mpath);
         }
     } catch (e) {
-        console.error(e);
+        LogError('runtime', e.toString())
     }
 }
 
