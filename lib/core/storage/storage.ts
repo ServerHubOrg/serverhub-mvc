@@ -138,11 +138,11 @@ export class StorageService {
         let stat = fs.fstatSync(fs.openSync(filePath, 'r'));
         let info = {
             Name: filePath.match(/[^?/]*\.?[^.?/]*$/i)[0] as string,
-            FileName: filePath.match(/[^\\/:*"<>|?]+\.[^.]+$/)[0] as string,
+            FileName: filePath.match(/[^\\/:*"<>|?]+(?:\.?[^./\\]+)$/)[0] as string,
             Size: stat.size,
             Path: filePath,
             LogicalPath: path,
-            Extension: filePath.match(/\.[^/.?]*$/i)[0] as string,
+            Extension: /\.[^/.?\\]*$/i.test(filePath) ? filePath.match(/\.[^/.?\\]*$/i)[0] as string : void 0,
             BirthTime: stat.birthtime,
             ModifiedTime: stat.mtime
         } as FileInfo;

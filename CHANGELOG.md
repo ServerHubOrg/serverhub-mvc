@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.4.0` June 29, 2018
+
+### Fix
+
+- Unable to cache or serve files without extensions.
+
 ## `1.3.1` June 16, 2018
 
 ### Update

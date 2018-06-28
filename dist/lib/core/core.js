@@ -122,7 +122,10 @@ function NoRoute(path, req, res) {
         return rcs_1.RCS.Service().GetUri(path, res, req);
     let filepath = nodepath.resolve(variables.ServerBaseDir, variables.WebDir, path.substr(1));
     if (!path.endsWith('/') && fs.existsSync(filepath)) {
-        res.setHeader('content-type', content_type_1.ContentType.GetContentType(filepath.match(/\.[a-z\d]*$/i)[0]));
+        if (/\.[a-z\d]*$/i.test(filepath))
+            res.setHeader('content-type', content_type_1.ContentType.GetContentType(filepath.match(/\.[a-z\d]*$/i)[0]));
+        else
+            res.setHeader('content-type', 'text/plain');
         res.write(fs.readFileSync(filepath));
         res.end();
     }

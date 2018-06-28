@@ -26,7 +26,7 @@ class RCS {
         return tag;
     }
     Cacheable(uri) {
-        let reg = new RegExp(/^((?:\/[^/?.]*)+)(\/[^/?><#!\\|"'`]*)(\?(?:&?(?:[a-z\d]+=[a-z\d]+)?)+)?$/i);
+        let reg = new RegExp(/^((?:\/[^/?]*)+)(\/[^/?><#!\\|"'`]*)(\?(?:&?(?:[a-z\d]+=[a-z\d]+)?)+)?$/i);
         let shorreg = new RegExp(/^(\/[^/?><#!\\|"'`]*)(\?(?:&?(?:[a-z\d]+=[a-z\d]+)?)+)?$/i);
         let match = uri.match(reg);
         let shortmatch = uri.match(shorreg);

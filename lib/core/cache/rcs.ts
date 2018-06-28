@@ -49,7 +49,7 @@ export class RCS {
      * @param uri URI of target resource.
      */
     public Cacheable (uri: string): boolean {
-        let reg = new RegExp(/^((?:\/[^/?.]*)+)(\/[^/?><#!\\|"'`]*)(\?(?:&?(?:[a-z\d]+=[a-z\d]+)?)+)?$/i);
+        let reg = new RegExp(/^((?:\/[^/?]*)+)(\/[^/?><#!\\|"'`]*)(\?(?:&?(?:[a-z\d]+=[a-z\d]+)?)+)?$/i);
         let shorreg = new RegExp(/^(\/[^/?><#!\\|"'`]*)(\?(?:&?(?:[a-z\d]+=[a-z\d]+)?)+)?$/i);
 
         let match = uri.match(reg);
