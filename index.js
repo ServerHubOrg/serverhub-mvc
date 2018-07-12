@@ -52,11 +52,12 @@ exports.Run = (config, appstart) => {
 
     libcore.SetGlobalVariable('PackageData', package);
 
-    let port = 926; // Birthday of my beloved friend, Changrui.
+    let ports = 926; // Birthday of my beloved friend, Changrui.
     if (config['Port']) {
         if (config['Port'] instanceof Array)
-            port = config['Port'].map(p => parseInt(p));
-        else port = [parseInt(config['Port'])];
+            ports = config['Port'].map(p => parseInt(p));
+        else ports = [parseInt(config['Port'])];
+        libcore.UpdateGlobalVariable('Port', ports);
     }
 
     if (config['PageNotFound']) {
@@ -208,8 +209,8 @@ exports.Run = (config, appstart) => {
 
 
     try {
-        if (!Array.isArray(port))
-            port = [port];
+        if (!Array.isArray(ports))
+            ports = [ports];
         let tls = config['TLSOption'] || config['TLSOptions'] || config['SSLOption'] || config['SSLOptions'];
         if (tls && tls.hasOwnProperty('Port')) {
             if (!(tls.Port instanceof Array))
@@ -217,13 +218,16 @@ exports.Run = (config, appstart) => {
             else {
                 tls.Port = tls.Port.map(p => parseInt(p));
             }
+            let ps = [];
             tls.Port.map(p => {
-                if (port.indexOf(p) === -1)
-                    throw new Error(`${tls.Port} is not defined in given ports: [${port.join(', ')}]`);
-            })
+                if (ports.indexOf(p) === -1)
+                    throw new Error(`${tls.Port} is not defined in given ports: [${ports.join(', ')}]`);
+                else ps.push(p);
+            });
+            libcore.UpdateGlobalVariable('TLSOptions', tls);
         }
         let TLSPort = (tls && tls.Port && tls.Port.length > 0) ? tls.Port[0] : -1;
-        port.forEach(p => {
+        ports.forEach(p => {
             if (tls && tls.Port.indexOf(p) !== -1) {
                 let server = https.createServer({
                     cert: tls.Cert,
@@ -293,11 +297,11 @@ exports.Run = (config, appstart) => {
                 servers.push(server);
             }
         })
-        // server.listen(port);
-        console.log('>> Server started on port:', colors.green(port.join(', ')));
+        // server.listen(ports);
+        console.log('>> Server started on ports:', colors.green(ports.join(', ')));
         logService.Start();
     } catch (e) {
-        console.error('!! Server cannot start and listen to', colors.red(port.join(', ')));
+        console.error('!! Server cannot start and listen to', colors.red(ports.join(', ')));
         console.error('   There might be another instance process of ServerHub. Please check and attempt to start later.')
         console.error('   Detailed error information:');
         console.error(e);

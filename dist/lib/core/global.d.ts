@@ -1,6 +1,6 @@
 export interface GlobalEnvironmentVariables {
     ServerBaseDir: string;
-    Port: number;
+    Port: Array<number>;
     PageNotFound: string;
     ControllerDir: string;
     ViewDir: string;
@@ -29,7 +29,7 @@ export interface LogConfiguration {
     Filename: string;
 }
 export interface TLSConfiguration {
-    Port: number;
+    Port: Array<number>;
     Cert: string;
     Key: string;
     CA: string;

@@ -14,9 +14,6 @@ const view_1 = require("../view/view");
 const model_1 = require("../model/model");
 const response_1 = require("./response");
 const log_1 = require("../log");
-const PlantableVariables = ["View", "Runtime", "Console"];
-const SearchRegex = /(((?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@&=])+)/i;
-const QueryRegex = /((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)=((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)/i;
 class ControllerCollection {
     constructor() {
         this.Controllers = {};
