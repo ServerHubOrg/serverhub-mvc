@@ -17,7 +17,6 @@ import { Route } from '../route/route';
 import { RCS } from './cache/rcs';
 import { CacheHelper } from "./helper/index";
 import { BeforeRoute, AfterRoute } from './plugin';
-import * as colors from "colors";
 import { ServerHubResponse } from './server';
 import { LogAccess, LogError } from './log';
 
@@ -42,6 +41,7 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     TLSOptions: void 0,
     RedirectToTLS: true,
     Hostname: 'localhost',
+    Port: [80],
     LogConfig: {
         Dir: 'log/',
         MaxSize: 65536,
@@ -64,11 +64,11 @@ const core_env = {
  * Expose to developer using ServerHub. Developers can use this function to register custom controllers.
  * @param controllerJs Controller file name
  */
-export function RegisterController(controllerJs: string) {
+export function RegisterController (controllerJs: string) {
     return controller.Controller.Register(controllerJs);
 }
 
-export function RegisterControllerM(controllerJs: string) {
+export function RegisterControllerM (controllerJs: string) {
     return controller.Controller.RegisterM(controllerJs);
 }
 
@@ -77,7 +77,7 @@ export function RegisterControllerM(controllerJs: string) {
  * @param variable Which global variable to update
  * @param value New value of the global variable.
  */
-export function UpdateGlobalVariable(variable: string, value: Object): boolean {
+export function UpdateGlobalVariable (variable: string, value: Object): boolean {
     if (global['EnvironmentVariables'].hasOwnProperty(variable)) { global['EnvironmentVariables'][variable] = value; return true; }
     return false;
 }
@@ -87,7 +87,7 @@ export function UpdateGlobalVariable(variable: string, value: Object): boolean {
  * @param variable What global variable to set
  * @param value Value of the variable
  */
-export function SetGlobalVariable(variable: string, value: Object): void {
+export function SetGlobalVariable (variable: string, value: Object): void {
     global['EnvironmentVariables'][variable] = value;
 }
 
@@ -97,7 +97,7 @@ export function SetGlobalVariable(variable: string, value: Object): void {
  * @param req Incomming message (request)
  * @param res Server response (response)
  */
-export function RoutePath(path: string, request: IncomingMessage, res: ServerResponse): void {
+export function RoutePath (path: string, request: IncomingMessage, res: ServerResponse): void {
     res.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
     res.setHeader('x-powered-by', `ServerHub`);
 
@@ -135,7 +135,7 @@ export function RoutePath(path: string, request: IncomingMessage, res: ServerRes
     bPromise.then(doneBeforeRoutePluginExecution);
 }
 
-function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void {
+function NoRoute (path: string, req: IncomingMessage, res: ServerResponse): void {
     let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
 
     if (path === '/') {
@@ -178,6 +178,6 @@ function NoRoute(path: string, req: IncomingMessage, res: ServerResponse): void 
     }
 }
 var ROUTE: Route;
-export function RegisterRouter(route: Route): void {
+export function RegisterRouter (route: Route): void {
     ROUTE = route;
 }

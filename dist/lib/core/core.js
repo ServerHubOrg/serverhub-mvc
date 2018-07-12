@@ -28,6 +28,7 @@ global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['Enviro
     TLSOptions: void 0,
     RedirectToTLS: true,
     Hostname: 'localhost',
+    Port: [80],
     LogConfig: {
         Dir: 'log/',
         MaxSize: 65536,

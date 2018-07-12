@@ -4,7 +4,7 @@ import { TLSConfiguration, LogConfiguration } from "./dist/lib/core/global";
 export declare function Run(config: ServerHubConfig, appstart: (route: Route) => void): void;
 
 export declare interface ServerHubConfig {
-    Port: number;
+    Port: Array<number>;
     BaseDir: string;
     WebDir: string;
     PageNotFound: string;
