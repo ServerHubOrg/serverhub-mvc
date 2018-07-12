@@ -1,5 +1,14 @@
 # Changelog
 
+## `1.4.1` July 12, 2018
+
+### Update
+- Update runtime log output.
+
+### Fix
+- Missing function call at previous versions.
+- Wrong type annotation in global.ts.
+
 ## `1.4.0` June 29, 2018
 
 ### Fix

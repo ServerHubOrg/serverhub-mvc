@@ -25,7 +25,7 @@ ServerHub can do a lot of things now. No matter you want to start a static websi
 
 ## Latest Updates
 
-`v1.3.0` updated route rules and engine. `v1.2.0` supports **runtime** and **error** log service. They are available through `global` object. `v1.1.0` supports auto-redirect HTTP traffic to HTTPS. Asynchronous plugins are supported since `v1.0.8`. TLS supported since `v1.0.6`, you can use your self-signed or verified certificate to hold an HTTPS connection for your websites. Module style of ServerHub controllers now supported (since `v1.0.4`). You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration (deprecated usage).
+`v1.4.1` Updated the runtime log and fix some unclear annotations. `v1.3.0` updated route rules and engine. `v1.2.0` supports **runtime** and **error** log service. They are available through `global` object. `v1.1.0` supports auto-redirect HTTP traffic to HTTPS. Asynchronous plugins are supported since `v1.0.8`. TLS supported since `v1.0.6`, you can use your self-signed or verified certificate to hold an HTTPS connection for your websites. Module style of ServerHub controllers now supported (since `v1.0.4`). You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration (deprecated usage).
 
 Detailed update information could be found on [CHANGELOG.md](CHANGELOG.md) (English only).
 
