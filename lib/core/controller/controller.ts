@@ -16,17 +16,30 @@ import { Route, RouteValue } from "../../route/route";
 import { SHResponse } from "./response";
 import { LogError } from "../log";
 
-const PlantableVariables = ["View", "Runtime", "Console"];
-const SearchRegex = /(((?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@&=])+)/i;
-const QueryRegex = /((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)=((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)/i;
+
+/* These constants are previously used, leave them here as a tip.* /
+// const PlantableVariables = ["View", "Runtime", "Console"];
+// const SearchRegex = /(((?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@&=])+)/i;
+// const QueryRegex = /((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)=((?:(?:[-a-z\d$_.+!*'(),]|(?:%[\da-f]{2}))|[;:@])+)/i;
+
 /**
  * Controller storage service provider
  */
 class ControllerCollection {
     private Controllers = {};
+
+    /**
+     * Add a parsed and verified controller to the major collection.
+     * @param bundle Controller bundle object
+     */
     public Add (bundle: ControllerBundle): void {
         this.Controllers[bundle.Name] = bundle;
     }
+
+    /**
+     * Remove a controller from collection with its name.
+     * @param controllerName Name of controller to remove
+     */
     public Remove (controllerName: string): ControllerBundle {
         if (this.Controllers.hasOwnProperty(controllerName)) {
             let bundle = this.Controllers[controllerName];
@@ -35,6 +48,11 @@ class ControllerCollection {
         }
         return void 0;
     }
+
+    /**
+     * Check the existence of a controller.
+     * @param controllerName Name of the controller to check existence
+     */
     public Has (controllerName: string): boolean {
         if (this.Controllers.hasOwnProperty(controllerName)) {
             return true;
@@ -42,11 +60,25 @@ class ControllerCollection {
         return false;
     }
 
+    /**
+     * Check whether an action method/function exist within a controller
+     * @param controllerName Name of controller to search within
+     * @param actionName Action to check existence
+     */
     public HasAction (controllerName: string, actionName: string): boolean {
         actionName = actionName.toLowerCase();
         return (this.Controllers.hasOwnProperty(controllerName) && this.Controllers[controllerName].Controller.hasOwnProperty(actionName));
     }
 
+    /**
+     * Try to dispatch an action method in matched controller.
+     * @param controllerName Name of controller to dispatch
+     * @param actionName Action to be matched
+     * @param idString Parsed Id string
+     * @param search Search string
+     * @param dispatch An object contains IncomingMessage and ServerResponse object reference
+     * @returns Promise that yield an boolean when resolved
+     */
     public async DispatchController (controllerName: string, actionName: string, idString: string, search: string, dispatch: ControllDispatch): Promise<boolean> {
         /* handling search
          *
@@ -160,6 +192,10 @@ export class Controller {
         Controller.Collection.Add(Register(controller));
     }
 
+    /**
+     * Register a new module style controller
+     * @param controller Controller module file name
+     */
     public static RegisterM (controller: string) {
         Controller.Collection.Add(RegisterM(controller));
     }
@@ -187,6 +223,12 @@ export class Controller {
         } as ControllDispatch).then(() => true).catch(() => false);
     }
 
+    /**
+     * Check the existence of a controller action and returns whether it is dispatchable.
+     * @param controllerName Controller to search
+     * @param actionName Action to match
+     * @returns Result of match test
+     */
     public static Dispatchable (controllerName: string, actionName: string): boolean {
         return Controller.Collection.HasAction(controllerName, actionName);
     }
