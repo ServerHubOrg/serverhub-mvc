@@ -9,49 +9,49 @@
     <style>
         body {
             margin: 0;
+            background: linear-gradient(to bottom right, #f9f9f9, #e0e0e0) !important;
+            width: 100vw;
+            height: 100vh;
         }
-        h1 {
-            font-size: 48px;
-            font-family: 'Roboto Mono', monospace;
-            margin-bottom: 16px;
-        }
-        h1#var1 {
-            display: block;
-        }
-        h1#var2 {
-            display: none;
-        }
+
         p.sublink {
-            font-size: 24px;
+            font-size: 32px;
         }
+
         p {
             color: #666666;
-            font-size: 16px;
             margin-top: 16px;
+            font-size: 14px;
             margin-bottom: 4px;
             max-width: 800px;
         }
+
         hr {
             border: 0;
             border-top: 3px solid #9e9e9e;
             max-width: 256px;
             margin: 16px 0 0 0;
         }
+
         * {
             font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-decoration: none;
         }
+
         a {
             color: #2196f3;
         }
+
         a:hover {
             text-decoration: solid #2196f3 underline;
         }
+
         span.status-code {
-            font-size: 128px;
+            font-size: 12em;
             font-family: 'Roboto Mono', monospace;
-            color: #c62828;
+            color: #3a719e;
         }
+
         section.content {
             width: calc(100% - 128px);
             display: block;
@@ -59,68 +59,70 @@
             top: 80px;
             left: 64px;
         }
+
         section.code {
-            width: 256px;
-            height: 180px;
+            height: 12em;
             position: absolute;
             right: 64px;
             bottom: 80px;
             text-align: right;
         }
-        @media screen and (max-width:500px) {
-            h1#var1 {
-                display: none;
-            }
-            h1#var2 {
-                display: block;
-                margin-top: 16px;
-            }
-            section.content {
-                width: calc(100% - 32px);
-                top: 96px;
-                left: 16px;
-            }
+
+        @media screen and (min-width:960px) {
             section.code {
-                width: 96px;
-                height: 64px;
-                right: 16px;
-                top: 32px;
-                text-align: right;
+                height: 18em;
             }
             span.status-code {
-                font-size: 48px;
-            }
-            hr {
-                border-top: 1.5px solid #9e9e9e;
-                max-width: 64px;
+                font-size: 18em;
             }
         }
+
+        @media screen and (max-width:500px) {
+            section.content {
+                width: calc(100% - 32px);
+                top: 128px;
+                left: 16px;
+            }
+            section.code {
+                height: 5em;
+                right: 16px;
+                top: 32px;
+                text-align: right;
+            }
+            span.status-code {
+                font-size: 5em;
+            }
+            hr {
+                border-top: 1.5px solid #9e9e9e;
+                max-width: 128px;
+            }
+            p.sublink {
+                font-size: 28px;
+            }
+        }
+
         @media screen and (max-height:420px) {
-            h1#var1 {
-                display: none;
-            }
-            h1#var2 {
-                display: block;
-                margin-top: 16px;
-            }
             section.content {
                 width: calc(100% - 32px);
                 top: 96px;
                 left: 16px;
             }
             section.code {
-                width: 96px;
-                height: 64px;
+                height: 3em;
                 right: 16px;
                 top: 32px;
                 text-align: right;
             }
             span.status-code {
-                font-size: 48px;
+                font-size: 3em;
             }
             hr {
                 border-top: 1.5px solid #9e9e9e;
                 max-width: 64px;
+            }
+
+            p.sublink {
+                font-size: 26px;
             }
         }
     </style>
@@ -129,14 +131,11 @@
 <body>
     <main>
         <section class="content">
-            <h1 id='var1'>Are you lost?</h1>
-            <h1 id='var2'>lost?</h1>
-            <p class='sublink'>Let's
-                <a href="/">go home</a>
+            <p class='sublink'>Go
+                <a href="/">home</a>
             </p>
             <hr>
-            <p>ServerHub cannot find a path to your requested content. It could either be removed or cannot be accessed at this
-                moment. Contact you Internet administrator or call the website service provider for help.</p>
+            <p>ServerHub cannot find a path to your requested content or service.</p>
         </section>
         <section class="code">
             <span class="status-code">404</span>

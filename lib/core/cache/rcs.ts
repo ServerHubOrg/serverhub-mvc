@@ -99,7 +99,8 @@ export class RCS {
                     if (variables.PageNotFound && variables.PageNotFound.length !== 0)
                         res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
                     else
-                        res.write(ErrorManager.RenderErrorAsHTML(error));
+                        // res.write(ErrorManager.RenderErrorAsHTML(error));
+                        res.write(CacheHelper.Cache(npath.resolve(__dirname,'../', '404.html')).Content);
                     res.end();
                     return;
                 }
@@ -129,7 +130,8 @@ export class RCS {
                         if (variables.PageNotFound && variables.PageNotFound.length !== 0)
                             res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
                         else
-                            res.write(ErrorManager.RenderErrorAsHTML(new Error(ErrorManager.RenderError(RuntimeError.SH020706, uri))));
+                            // res.write(ErrorManager.RenderErrorAsHTML(new Error(ErrorManager.RenderError(RuntimeError.SH020706, uri))));
+                            res.write(CacheHelper.Cache(npath.resolve(__dirname, '../','404.html')).Content);
                         res.end();
                         return;
                     }
