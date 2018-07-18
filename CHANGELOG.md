@@ -1,5 +1,11 @@
 # Changelog
 
+## `1.4.2` July 18, 2018
+
+### Update
+- New error render type.
+- New 404 page design.
+
 ## `1.4.1` July 12, 2018
 
 ### Update
