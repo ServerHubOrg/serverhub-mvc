@@ -7,29 +7,58 @@
  */
 
 import { GlobalEnvironmentVariables } from "../global";
+import { LogError } from "../log";
 export class ErrorManager {
+    private static writeErrorLog (error: string | Error) {
+        if (typeof error === 'string') {
+            LogError('runtime', error);
+        } else if (error instanceof Error) {
+            let err = [];
+            if (error.stack) {
+                err.push(error.stack);
+            }
+            err.push(error.name);
+            err.push(error.message);
+            LogError('runtime', err.join('@'));
+        }
+    }
     public static RenderError (errorEnum: CompileTimeError | RuntimeError, ...params): string {
-        if (errorEnum === void 0)
-            throw new Error('SH000000: Fatal error, code not correct');
+        if (errorEnum === void 0) {
+            let err = new Error('SH000000: Fatal error, code not correct');
+            ErrorManager.writeErrorLog(err);
+            throw err;
+        }
         if (CompileTimeError[errorEnum] !== void 0) {
             let errortemplate = ErrorTemplate[CompileTimeError[errorEnum]] as string;
             params.forEach((ele, idx) => {
                 if (errortemplate.indexOf('$${' + idx + '}') !== -1)
                     errortemplate = errortemplate.replace('$${' + idx + '}', ele);
             });
-            return CompileTimeError[errorEnum] + ': ' + errortemplate;
+            let err = CompileTimeError[errorEnum] + ': ' + errortemplate;
+            ErrorManager.writeErrorLog(err);
+            return err;
         } else if (RuntimeError[errorEnum] !== void 0) {
             let errortemplate = ErrorTemplate[RuntimeError[errorEnum]];
             params.forEach((ele, idx) => {
                 if (errortemplate.indexOf('$${' + idx + '}') !== -1)
                     errortemplate = errortemplate.replace('$${' + idx + '}', ele);
             });
-            return RuntimeError[errorEnum] + ': ' + errortemplate;
-        } else throw new Error('ErrorManager cannot determine your error');
+            let err = RuntimeError[errorEnum] + ': ' + errortemplate;
+            ErrorManager.writeErrorLog(err);
+            return err;
+        } else {
+            let err = new Error('ErrorManager cannot determine your error');
+            ErrorManager.writeErrorLog(err);
+            throw err;
+        }
     }
     public static RenderErrorAsHTML (error: Error): string {
-        if (!(error instanceof Error))
-            throw new Error('Error not defined');
+        if (!(error instanceof Error)) {
+            let err = new Error('Error not defined');
+            ErrorManager.writeErrorLog(err);
+            throw err;
+        }
+        ErrorManager.writeErrorLog(error);
         let stack = '';
         let stackvalue = (error.stack as string).split('\n');
         stackvalue.forEach(ele => {

@@ -75,7 +75,7 @@ class RCS {
                     if (variables.PageNotFound && variables.PageNotFound.length !== 0)
                         res.write(helper_1.CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
                     else
-                        res.write(error_1.ErrorManager.RenderErrorAsHTML(error));
+                        res.write(helper_1.CacheHelper.Cache(npath.resolve(__dirname, '../', '404.html')).Content);
                     res.end();
                     return;
                 }
@@ -106,7 +106,7 @@ class RCS {
                         if (variables.PageNotFound && variables.PageNotFound.length !== 0)
                             res.write(helper_1.CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
                         else
-                            res.write(error_1.ErrorManager.RenderErrorAsHTML(new Error(error_1.ErrorManager.RenderError(error_1.RuntimeError.SH020706, uri))));
+                            res.write(helper_1.CacheHelper.Cache(npath.resolve(__dirname, '../', '404.html')).Content);
                         res.end();
                         return;
                     }

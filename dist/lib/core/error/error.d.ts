@@ -1,4 +1,5 @@
 export declare class ErrorManager {
+    private static writeErrorLog(error);
     static RenderError(errorEnum: CompileTimeError | RuntimeError, ...params: any[]): string;
     static RenderErrorAsHTML(error: Error): string;
 }

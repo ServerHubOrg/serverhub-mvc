@@ -81,7 +81,6 @@ function RoutePath(path, request, res) {
                 return (() => { controller.Controller.Dispatch(method, routeResult, request, response); })();
             }
             catch (error) {
-                console.error(error);
                 log_1.LogError('runtime', 'Cannot dispatch controller');
                 if (!response.headersSent)
                     response.setHeader('content-type', 'text/html');
@@ -134,7 +133,7 @@ function NoRoute(path, req, res) {
         res.setHeader('content-type', 'text/html');
         res.writeHead(404);
         let pageNotFound = '';
-        if (variables.PageNotFound !== null && variables.PageNotFound.length === 0)
+        if (!variables.PageNotFound || variables.PageNotFound.length === 0)
             pageNotFound = index_1.CacheHelper.Cache(nodepath.resolve(__dirname, '404.html')).Content;
         else
             pageNotFound = index_1.CacheHelper.Cache(nodepath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content;
