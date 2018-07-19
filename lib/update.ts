@@ -6,7 +6,7 @@
 import * as http from "http";
 import * as request from "request";
 import * as colors from "colors";
-function CheckForUpdate(current: string): void {
+function CheckForUpdate (current: string): void {
     let re = request('http://registry.npmjs.org/serverhub-mvc');
     re.onRequestResponse = function (res: http.IncomingMessage) {
         let response = '';
@@ -21,7 +21,12 @@ function CheckForUpdate(current: string): void {
                 }
             }
         })
+    };
+    re.onRequestError = function (err) {
+        console.error(err);
+        console.error('The above error can be caused when your machine is offline.')
     }
+
 }
 
 export { CheckForUpdate };

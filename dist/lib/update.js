@@ -17,5 +17,9 @@ function CheckForUpdate(current) {
             }
         });
     };
+    re.onRequestError = function (err) {
+        console.error(err);
+        console.error('The above error can be caused when your machine is offline.');
+    };
 }
 exports.CheckForUpdate = CheckForUpdate;

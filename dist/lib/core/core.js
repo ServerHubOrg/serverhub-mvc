@@ -10,6 +10,7 @@ const index_1 = require("./helper/index");
 const plugin_1 = require("./plugin");
 const server_1 = require("./server");
 const log_1 = require("./log");
+const middleware_1 = require("./middleware");
 const node_version = process.version;
 global['EnvironmentVariables'] = global['EnvironmentVariables'] ? global['EnvironmentVariables'] : {
     ServerBaseDir: __dirname,
@@ -65,6 +66,10 @@ exports.SetGlobalVariable = SetGlobalVariable;
 function RoutePath(path, request, res) {
     res.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
     res.setHeader('x-powered-by', `ServerHub`);
+    let middlewareExecutor = new middleware_1.MiddlewareExecutor();
+    let middlewareResult = middlewareExecutor.Run(request, path);
+    path = middlewareResult.Path;
+    request = middlewareResult.Req;
     let response = new server_1.ServerHubResponse(res);
     request['__address__'] = request.connection.remoteAddress;
     response.on('finish', () => {

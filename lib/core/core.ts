@@ -19,6 +19,7 @@ import { CacheHelper } from "./helper/index";
 import { BeforeRoute, AfterRoute } from './plugin';
 import { ServerHubResponse } from './server';
 import { LogAccess, LogError } from './log';
+import { MiddlewareExecutor } from "./middleware";
 
 
 const node_version = process.version;
@@ -100,6 +101,11 @@ export function SetGlobalVariable (variable: string, value: Object): void {
 export function RoutePath (path: string, request: IncomingMessage, res: ServerResponse): void {
     res.setHeader('server', `ServerHub/${(global['EnvironmentVariables'] as GlobalEnvironmentVariables).PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
     res.setHeader('x-powered-by', `ServerHub`);
+
+    let middlewareExecutor = new MiddlewareExecutor();
+    let middlewareResult = middlewareExecutor.Run(request, path);
+    path = middlewareResult.Path;
+    request = middlewareResult.Req;
 
     let response = new ServerHubResponse(res);
     request['__address__'] = request.connection.remoteAddress;
