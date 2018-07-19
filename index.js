@@ -33,6 +33,8 @@ const {
     CheckForUpdate
 } = require('./dist/lib/update');
 const colors = require('colors');
+const registerMiddleware = require('./dist/lib/core/middleware/').RegisterMiddleware;
+
 // const callsite = require('callsite'); // Will not be used.
 
 
@@ -307,6 +309,15 @@ exports.Run = (config, appstart) => {
         console.error(e);
         process.exit(1);
     }
+}
+
+exports.Middleware = (pathFilter, main) => {
+    if ((pathFilter instanceof RegExp || typeof pathFilter === 'string') && main instanceof Function) {
+        registerMiddleware({
+            Main: main,
+            Filter: pathFilter
+        });
+    } else throw new Error('Middleware must have string or regular expression path filter. And main entry must be a function')
 }
 
 exports.Module = exports.module = exports.Load = exports.load = LoadModule;
