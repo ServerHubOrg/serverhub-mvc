@@ -1,5 +1,13 @@
 # Changelog
 
+## `1.5.0` July 19, 2018
+
+### Add
+- New middleware system.
+
+### Fix
+- Fix missing error handling when unable to check for updates.
+
 ## `1.4.2` July 18, 2018
 
 ### Update
