@@ -103,7 +103,10 @@ export function RoutePath (path: string, request: IncomingMessage, res: ServerRe
     res.setHeader('x-powered-by', `ServerHub`);
 
     let middlewareExecutor = new MiddlewareExecutor();
-    let middlewareResult = middlewareExecutor.Run(request, path);
+    let middlewareResult = middlewareExecutor.Run(request, path) || {
+        Req: request,
+        Path: path
+    };
     path = middlewareResult.Path;
     request = middlewareResult.Req;
 

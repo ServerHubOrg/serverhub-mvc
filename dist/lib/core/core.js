@@ -67,7 +67,10 @@ function RoutePath(path, request, res) {
     res.setHeader('server', `ServerHub/${global['EnvironmentVariables'].PackageData['version']} (${core_env.platform}) Node.js ${core_env.node_version}`);
     res.setHeader('x-powered-by', `ServerHub`);
     let middlewareExecutor = new middleware_1.MiddlewareExecutor();
-    let middlewareResult = middlewareExecutor.Run(request, path);
+    let middlewareResult = middlewareExecutor.Run(request, path) || {
+        Req: request,
+        Path: path
+    };
     path = middlewareResult.Path;
     request = middlewareResult.Req;
     let response = new server_1.ServerHubResponse(res);

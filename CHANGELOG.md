@@ -1,5 +1,10 @@
 # Changelog
 
+## `1.5.1` July 20, 2018
+
+### Fix
+- `v1.5.0` may cause runtime failure when no middleware defined.
+
 ## `1.5.0` July 19, 2018
 
 ### Add
