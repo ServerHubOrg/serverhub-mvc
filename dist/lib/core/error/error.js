@@ -6,11 +6,9 @@ class ErrorManager {
         if (typeof error === 'string') {
             log_1.LogError('runtime', error);
         }
-        else if (error instanceof Error) {
+        if (error instanceof Error) {
             let err = [];
-            if (error.stack) {
-                err.push(error.stack);
-            }
+            err.push(error.stack);
             err.push(error.name);
             err.push(error.message);
             log_1.LogError('runtime', err.join('@'));

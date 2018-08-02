@@ -13,6 +13,7 @@
         "mvc",
         "nodejs"
     ],
+    "homepage": "https://serverhub.io/",
     "author": "DevChache",
     "license": "MIT",
     "devDependencies": {

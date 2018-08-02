@@ -262,6 +262,11 @@ exports.Run = (config, appstart) => {
                         libcore.RoutePath(req.url, req, res);
                     } catch (error) {
                         LogError('runtime', error.code, ['client', conn], req.url);
+                        try {
+                            res.statusCode = 500;
+                            res.statusMessage = "Internal Server Error";
+                        } catch (e) {}
+                        res.end();
                     }
                 });
                 server.listen(p);
@@ -293,6 +298,11 @@ exports.Run = (config, appstart) => {
                         libcore.RoutePath(req.url, req, res);
                     } catch (error) {
                         LogError('runtime', error.code, ['client', conn], req.url);
+                        try {
+                            res.statusCode = 500;
+                            res.statusMessage = "Internal Server Error";
+                        } catch (e) {}
+                        res.end();
                     }
                 });
                 server.listen(p);

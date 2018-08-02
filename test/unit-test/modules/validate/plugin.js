@@ -2,7 +2,11 @@ const PluginValidation = require('../../../../dist/lib/core/validate/').PluginVa
 const expect = require('chai').expect;
 
 module.exports = function () {
-    global['EnvironmentVariables'] = {
+    if (global['EnvironmentVariables']) {
+        global['EnvironmentVariables'].PackageData = {
+            version: 'v1.0.4'
+        }
+    } else global['EnvironmentVariables'] = {
         PackageData: {
             version: 'v1.0.4'
         }
@@ -13,8 +17,7 @@ module.exports = function () {
             version: 'v1.0.0',
             app_name: 'serverhub-plugin-test',
             phase: 'before-route',
-            main: function (req, res) {
-            }
+            main: function (req, res) {}
         }
         it('valid plugin', function (done) {
             let p = new PluginValidation();
@@ -39,7 +42,7 @@ module.exports = function () {
         it('invalid plugin: parameters not enough (before-route)', function (done) {
             let p = new PluginValidation();
             let t = Object.assign({}, target);
-            t.main = function () { };
+            t.main = function () {};
             expect(() => p.Validate(t)).to.throw();
             done();
         });
@@ -47,7 +50,7 @@ module.exports = function () {
             let p = new PluginValidation();
             let t = Object.assign({}, target);
             t.phase = 'after-route'
-            t.main = function () { };
+            t.main = function () {};
             expect(() => p.Validate(t)).to.throw();
             done();
         });
