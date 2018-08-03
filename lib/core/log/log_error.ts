@@ -4,7 +4,11 @@ import { DateTime } from "../util/";
 
 export default async function (type: string, message: string, note = [], source = '') {
     // [Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/home/live/ap/htdocs/test
-    let data = ` [${ConvertLogDate(new Date())}] [${type}] [${note.join(' ')}] "${message}" ${source}`;
+    let data = "";
+    // if (message.includes('\n'))
+    //     data = ` [${ConvertLogDate(new Date())}] [${type}] [${note.join(' ')}] \`${message}\` ${source}]`;
+    // else
+    data = ` [${ConvertLogDate(new Date())}] [${type}] [${note.join(' ')}] "${message}" ${source}]`;
 
     if (!WorkerManager.GetInstace().Status(EWorkerType.ERROR)) {
         await WorkerManager.GetInstace().ForkWorker(EWorkerType.ERROR);
