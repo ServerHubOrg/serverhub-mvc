@@ -1,5 +1,10 @@
 # Changelog
 
+## `1.5.2` August 3, 2018
+
+### Fix
+- Add missing close bracket of error log.
+
 ## `1.5.1` July 20, 2018
 
 ### Fix
