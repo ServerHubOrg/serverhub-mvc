@@ -12,7 +12,8 @@ const worker_manager_1 = require("./worker_manager");
 const _1 = require("../util/");
 function default_1(type, message, note = [], source = '') {
     return __awaiter(this, void 0, void 0, function* () {
-        let data = ` [${ConvertLogDate(new Date())}] [${type}] [${note.join(' ')}] "${message}" ${source}`;
+        let data = "";
+        data = ` [${ConvertLogDate(new Date())}] [${type}] [${note.join(' ')}] "${message}" ${source}]`;
         if (!worker_manager_1.WorkerManager.GetInstace().Status(worker_manager_1.EWorkerType.ERROR)) {
             yield worker_manager_1.WorkerManager.GetInstace().ForkWorker(worker_manager_1.EWorkerType.ERROR);
             worker_manager_1.WorkerManager.GetInstace().Use(worker_manager_1.EWorkerType.ERROR, data);

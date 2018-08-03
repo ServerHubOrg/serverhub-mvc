@@ -3,6 +3,7 @@ const error = require('./error');
 const wrapper = require('./wrapper');
 const route = require('./route');
 const util = require('./util');
+const log = require('./log');
 
 module.exports = function () {
     describe('Modules', function () {
@@ -11,5 +12,6 @@ module.exports = function () {
         wrapper();
         route();
         util();
+        log();
     })
 }

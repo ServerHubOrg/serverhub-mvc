@@ -12,12 +12,7 @@ class LogService {
         let variables = global['EnvironmentVariables'];
         if (variables.LogConfig.Runtime) {
             LogServiceCallback(worker_manager_1.EWorkerType.RUNTIME, () => {
-                let ports = variables.Port.map(p => {
-                    if (variables.TLSOptions && variables.TLSOptions.Port.includes(p))
-                        return `${p} (TLS)`;
-                    else
-                        return `${p}`;
-                }).join(', ');
+                let ports = variables.Port.map(p => (variables.TLSOptions && variables.TLSOptions.Port.includes(p)) ? `${p} (TLS)` : `${p}`).join(', ');
                 log_runtime_1.default('system', 'ServerHub started at: ' + ports);
             });
         }
