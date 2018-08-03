@@ -3,3 +3,4 @@ unit_test/
 playground/
 .nyc_output/
 coverage/
+test/log/

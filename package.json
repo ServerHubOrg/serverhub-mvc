@@ -9,6 +9,14 @@
         "prepare": "gulp",
         "play": "node playground/app.js"
     },
+    "nyc": {
+        "exclude": [
+            "**/log/**"
+        ],
+        "include":[
+            "dist/**"
+        ]
+    },
     "keywords": [
         "mvc",
         "nodejs"
@@ -22,7 +30,7 @@
         "coveralls": "^3.0.1",
         "eslint": "^4.19.1",
         "graceful-fs": "^4.1.11",
-        "gulp": "^3.9.1",
+        "gulp": "^4.0.0",
         "gulp-filter": "^5.1.0",
         "gulp-typescript": "^3.2.4",
         "minimatch": "^3.0.4",
