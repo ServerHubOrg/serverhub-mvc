@@ -19,9 +19,10 @@ For details of the CLI tool, checkout [serverhub-cli](https://www.npmjs.com/pack
 ServerHub can do a lot of things now. No matter you want to start a static website or build a dynamic web service, it is super convenient. Let's see some things most people would like to do with ServerHub:
 
 1. Static website: Support downloading and caching. Your frequently used resources will be cached in memory. Once they are changed, ServerHub will automatically refresh the cache and make sure they are the lastest.
-2. Dynamic website: Support MVC architecture. With custom route, all requests will be send to corresponding handlers.
-3. WebAPIs: Inspired by [ASP.NET](https://www.asp.net/), ServerHub can also be used to provide WebAPI service for your applications.
-4. Proxy*: (Still designing).
+1. Dynamic website: Support MVC architecture. With custom route, all requests will be send to corresponding handlers.
+1. WebAPIs: Inspired by [ASP.NET](https://www.asp.net/), ServerHub can also be used to provide WebAPI service for your applications.
+1. WebSocket: WebSocket is not supported for both HTTP and HTTPS. You may need to make sure your TLS certificate is valid (self generated may not work).
+1. Proxy*: (To be tested).
 
 ## Latest Updates
 

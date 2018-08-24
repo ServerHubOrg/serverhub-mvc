@@ -1,5 +1,9 @@
 # Changelog
 
+## `1.6.0` August 24, 2018
+### Add
+- Socket support. Benifit from npm/ws.
+
 ## `1.5.2` August 3, 2018
 
 ### Fix

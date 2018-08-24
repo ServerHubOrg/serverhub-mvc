@@ -17,9 +17,10 @@ ServerHub MVC ([npm/serverhub-mvc](https://www.npmjs.com/package/serverhub-mvc))
 当前，ServerHub 已经可以做不少事情了。不论你是想启动一个静态资源服务器还是搭建一个动态数据的 Web 服务，ServerHub 都能提供充分的支持。目前，大多数开发者会使用 ServerHub 来完成：
 
 1. 静态服务器：支持文件下载和缓存。你最常使用的资源会被缓存在内存当中。一旦本地资源改变，ServerHub 会自动刷新缓存记录以确保处于最新状态。
-2. 动态网站：原生支持 MVC 架构。有了自定义路由，所有的请求都可以被准确无误转发到相应的处理程序中。
-3. WebAPI：设计灵感来自于 [ASP.NET](https://www.asp.net/)。ServerHub 可以用来为你的各种应用程序提供 WebAPI 服务。
-4. Proxy*：佛曰不可说。
+1. 动态网站：原生支持 MVC 架构。有了自定义路由，所有的请求都可以被准确无误转发到相应的处理程序中。
+1. WebAPI：设计灵感来自于 [ASP.NET](https://www.asp.net/)。ServerHub 可以用来为你的各种应用程序提供 WebAPI 服务。
+1. WebSocket: 现在你可以为你的服务器开启 WebSocket 支持了，不论是使用 HTTP 还是 HTTPS 协议（自签署的 TLS 证书除外）都能使用。
+1. Proxy*：佛曰不可说。
 
 ## 最近更新
 
