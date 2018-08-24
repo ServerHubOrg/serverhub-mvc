@@ -13,7 +13,7 @@
         "exclude": [
             "**/log/**"
         ],
-        "include":[
+        "include": [
             "dist/**"
         ]
     },
@@ -43,9 +43,11 @@
         "url": "https://github.com/ServerHubOrg/serverhub-mvc.git"
     },
     "dependencies": {
+        "@types/ws": "^6.0.0",
         "colors": "^1.2.1",
         "js-beautify": "^1.7.5",
         "mysql": "^2.15.0",
-        "request": "^2.85.0"
+        "request": "^2.85.0",
+        "ws": "^6.0.0"
     }
 }
