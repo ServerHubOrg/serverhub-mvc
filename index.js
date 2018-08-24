@@ -20,6 +20,7 @@ const package = require('./package.json');
 const path = require('path');
 const fs = require('fs');
 const logService = require('./dist/lib/core/log/').LogService;
+const ws = require('ws');
 const {
     LogError,
     LogRuntime
@@ -208,7 +209,7 @@ exports.Run = (config, appstart) => {
 
     libcore.RegisterRouter(libroute.Route.GetRoute());
 
-
+    let sockets = [];
 
     try {
         if (!Array.isArray(ports))
@@ -229,6 +230,20 @@ exports.Run = (config, appstart) => {
             libcore.UpdateGlobalVariable('TLSOptions', tls);
         }
         let TLSPort = (tls && tls.Port && tls.Port.length > 0) ? tls.Port[0] : -1;
+        let _socketPort = [];
+        if (config['SocketOptions'] && config['SocketOptions']['Port']) {
+            if (config['SocketOptions']['Port'] instanceof Array && config['SocketOptions']['Port'].length > 0) {
+                config['SocketOptions']['Port'].map(sp => {
+                    _socketPort.push(parseInt(sp))
+                })
+            } else {
+                let po = config['SocketOptions']['Port'];
+                if (typeof po === 'string')
+                    _socketPort = [parseInt(po)]
+                else if (typeof po === 'number')
+                    _socketPort = [po];
+            }
+        }
         ports.forEach(p => {
             if (tls && tls.Port.indexOf(p) !== -1) {
                 let server = https.createServer({
@@ -271,6 +286,22 @@ exports.Run = (config, appstart) => {
                 });
                 server.listen(p);
                 servers.push(server);
+
+                if (_socketPort.indexOf(p) !== -1) {
+                    let ss = new ws.Server({
+                        server: server,
+                        verifyClient: (info) => {
+                            console.log(info);
+                        }
+                    });
+                    ss.on('connection', config['SocketOptions']['ConnectionCallback'] ? config['SocketOptions']['ConnectionCallback'] : () => {
+                        throw new Error('No callback specified in your configuration.');
+                    });
+                    ss.on('error', (err) => {
+                        console.error(err);
+                    })
+                    sockets.push(ss);
+                }
             } else {
                 let server = http.createServer((req, res) => {
                     if (TLSPort > 0 && config['RedirectToTLS']) {
@@ -307,6 +338,22 @@ exports.Run = (config, appstart) => {
                 });
                 server.listen(p);
                 servers.push(server);
+
+                if (_socketPort.indexOf(p) !== -1) {
+                    let ss = new ws.Server({
+                        server: server,
+                        verifyClient: (info) => {
+                            console.log(info);
+                        }
+                    });
+                    ss.on('connection', config['SocketOptions']['ConnectionCallback'] ? config['SocketOptions']['ConnectionCallback'] : () => {
+                        throw new Error('No callback specified in your configuration.');
+                    });
+                    ss.on('error', (err) => {
+                        console.error(err);
+                    })
+                    sockets.push(ss);
+                }
             }
         })
         // server.listen(ports);
@@ -318,6 +365,11 @@ exports.Run = (config, appstart) => {
         console.error('   Detailed error information:');
         console.error(e);
         process.exit(1);
+    }
+
+    return {
+        Servers: servers,
+        Sockets: sockets
     }
 }
 

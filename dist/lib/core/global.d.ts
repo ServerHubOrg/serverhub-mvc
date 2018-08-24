@@ -1,3 +1,5 @@
+/// <reference types="ws" />
+import * as WebSocket from "ws";
 export interface GlobalEnvironmentVariables {
     ServerBaseDir: string;
     Port: Array<number>;
@@ -33,4 +35,8 @@ export interface TLSConfiguration {
     Cert: string;
     Key: string;
     CA: string;
+}
+export interface SocketConfiguration {
+    Port: Array<number> | number;
+    ConnectionCallback: (ws: WebSocket) => void;
 }

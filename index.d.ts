@@ -1,9 +1,15 @@
 import { Route } from "./dist/lib/route/route";
 import { TLSConfiguration, LogConfiguration } from "./dist/lib/core/global";
-import { IncomingMessage } from "http";
+import { IncomingMessage, Server as HTTPServer } from "http";
 import { MiddlewareBundle } from "./dist/lib/core/middleware/middleware";
+import { Server as HTTPSServer } from "https";
+import * as WebSocket from "ws";
+import { SocketConfiguration } from "./lib/core/global";
 
-export declare function Run (config: ServerHubConfig, appstart: (route: Route) => void): void;
+export declare function Run (config: ServerHubConfig, appstart: (route: Route) => void): {
+    Servers: HTTPServer | HTTPSServer,
+    Sockets: Array<WebSocket>
+};
 
 export declare function Middleware (pathFilter: string, main: (req: IncomingMessage, path?: string) => MiddlewareBundle): void;
 
@@ -25,7 +31,8 @@ export declare interface ServerHubConfig {
     SSLOptions: TLSConfiguration;
     RedirectToTLS: boolean;
     Hostname: string;
-    LogConfig: LogConfiguration
+    LogConfig: LogConfiguration;
+    SocketOptions:SocketConfiguration;
 }
 
 export declare function Module (name: string): any;
