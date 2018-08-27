@@ -25,6 +25,12 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Proxy - Playground",
+            "program": "${workspaceFolder}/playground/proxy.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch",
             "program": "${workspaceFolder}/test/server/app.js"
         }
