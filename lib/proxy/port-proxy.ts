@@ -88,7 +88,7 @@ const connectionListener = async (req: IncomingMessage, res: ServerResponse) => 
             options.headers.referer = GetHostString(!!TLS, entry.ForwardHostname, entry.ForwardPort);
             options.headers.host = entry.ForwardHostname + ':' + entry.ForwardPort;
             options.host = entry.ForwardHostname + ':' + entry.ForwardPort;
-            
+
             let r = request(GetHostString(!!TLS, entry.ForwardHostname, entry.ForwardPort), options);
             r.on('response', (rs) => {
                 res.writeHead(rs.statusCode, rs.headers);
@@ -144,7 +144,8 @@ export default function (table: IRedirectTable, proxy_port = 8080, https?: TLSCo
             server = screateServer({
                 key: https.Key,
                 cert: https.Cert,
-                ca: https.CA
+                ca: https.CA || '',
+                passphrase: https.Passphrase || ''
             }, connectionListener);
         }
         server.on('listening', () => {

@@ -105,7 +105,8 @@ function default_1(table, proxy_port = 8080, https) {
             server = https_1.createServer({
                 key: https.Key,
                 cert: https.Cert,
-                ca: https.CA
+                ca: https.CA || '',
+                passphrase: https.Passphrase || ''
             }, connectionListener);
         }
         server.on('listening', () => {
