@@ -392,6 +392,7 @@ exports.Middleware = (pathFilter, main) => {
 
 
 exports.Proxy = (type, config) => {
+    console.info('Proxy is an experiment feature. Do not use in production environment.')
     try {
         if (type === 'port') {
             let port = config.port || 80;

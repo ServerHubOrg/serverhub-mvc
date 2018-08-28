@@ -1,4 +1,10 @@
 # Changelog
+## `1.6.1` August 28, 2018
+### Fix
+- TLS Passphrase supported.
+
+### Experiment
+- Port forwarding under testing.
 
 ## `1.6.0` August 24, 2018
 ### Add
