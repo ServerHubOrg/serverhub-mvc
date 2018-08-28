@@ -21,12 +21,12 @@ ServerHub can do a lot of things now. No matter you want to start a static websi
 1. Static website: Support downloading and caching. Your frequently used resources will be cached in memory. Once they are changed, ServerHub will automatically refresh the cache and make sure they are the lastest.
 1. Dynamic website: Support MVC architecture. With custom route, all requests will be send to corresponding handlers.
 1. WebAPIs: Inspired by [ASP.NET](https://www.asp.net/), ServerHub can also be used to provide WebAPI service for your applications.
-1. WebSocket: WebSocket is not supported for both HTTP and HTTPS. You may need to make sure your TLS certificate is valid (self generated may not work).
+1. WebSocket: WebSocket is now supported for both HTTP and HTTPS. You may need to make sure your TLS certificate is valid (self generated may not work).
 1. Proxy*: (To be tested).
 
 ## Latest Updates
 
-`v1.5.0` Adds middleware system to the master/dev branch and now ready to release, with the ability to rewrite URL of resources. `v1.4.1` Updated the runtime log and fix some unclear annotations. `v1.3.0` updated route rules and engine. `v1.2.0` supports **runtime** and **error** log service. They are available through `global` object. `v1.1.0` supports auto-redirect HTTP traffic to HTTPS. Asynchronous plugins are supported since `v1.0.8`. TLS supported since `v1.0.6`, you can use your self-signed or verified certificate to hold an HTTPS connection for your websites. Module style of ServerHub controllers now supported (since `v1.0.4`). You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration (deprecated usage).
+`v1.6.0` adds WebSocket support. `v1.5.0` adds middleware system to the master/dev branch and now ready to release, with the ability to rewrite URL of resources. `v1.4.1` updated the runtime log and fix some unclear annotations. `v1.3.0` updated route rules and engine. `v1.2.0` supports **runtime** and **error** log service. They are available through `global` object. `v1.1.0` supports auto-redirect HTTP traffic to HTTPS. Asynchronous plugins are supported since `v1.0.8`. TLS supported since `v1.0.6`, you can use your self-signed or verified certificate to hold an HTTPS connection for your websites. Module style of ServerHub controllers now supported (since `v1.0.4`). You can import your own libraries in your controllers now. Legacy ways of scripting controllers will also be supported. But a little workaround should be taken into consideration (deprecated usage).
 
 Detailed update information could be found on [CHANGELOG.md](CHANGELOG.md) (English only).
 
