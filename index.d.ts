@@ -5,6 +5,7 @@ import { MiddlewareBundle } from "./dist/lib/core/middleware/middleware";
 import { Server as HTTPSServer } from "https";
 import * as WebSocket from "ws";
 import { SocketConfiguration } from "./lib/core/global";
+import { IRedirectTable } from "./dist/lib/proxy/port-proxy";
 
 export declare function Run (config: ServerHubConfig, appstart: (route: Route) => void): {
     Servers: HTTPServer | HTTPSServer,
@@ -12,7 +13,8 @@ export declare function Run (config: ServerHubConfig, appstart: (route: Route) =
 };
 
 export declare function Middleware (pathFilter: string, main: (req: IncomingMessage, path?: string) => MiddlewareBundle): void;
-
+export declare function Proxy (type: 'port', config: { port: number, table: IRedirectTable, tls: TLSConfiguration }): void;
+// export declare function Proxy (type: 'tcp', config: { port: number, encryption: any }): void;
 export declare interface ServerHubConfig {
     Port: Array<number>;
     BaseDir: string;
@@ -32,7 +34,7 @@ export declare interface ServerHubConfig {
     RedirectToTLS: boolean;
     Hostname: string;
     LogConfig: LogConfiguration;
-    SocketOptions:SocketConfiguration;
+    SocketOptions: SocketConfiguration;
 }
 
 export declare function Module (name: string): any;

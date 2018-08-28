@@ -21,6 +21,7 @@ const path = require('path');
 const fs = require('fs');
 const logService = require('./dist/lib/core/log/').LogService;
 const ws = require('ws');
+const proxy = require('./dist/lib/proxy');
 const {
     LogError,
     LogRuntime
@@ -40,13 +41,19 @@ const registerMiddleware = require('./dist/lib/core/middleware/').RegisterMiddle
 
 
 const servers = [];
-
+let SERVER_RUNNING = false;
 /**
  * Call this method to start ServerHub service.
  * @param {object} config Initial configuration
  * @param {function} appstart Callback when ServerHub starts.
  */
 exports.Run = (config, appstart) => {
+    if (SERVER_RUNNING) {
+        console.log(colors.red('!! One ServerHub instance is already running on your current application.'));
+        return false;
+    }
+    SERVER_RUNNING = true;
+
     // let appJsPath = callsite()[1].getFileName(); // Will not be used because I want developers to feel involved in configuration process.
     CheckForUpdate(package['version']);
     if (!config['BaseDir'])
@@ -249,7 +256,8 @@ exports.Run = (config, appstart) => {
                 let server = https.createServer({
                     cert: tls.Cert,
                     key: tls.Key,
-                    ca: tls.CA
+                    ca: tls.CA || '',
+                    passphrase: tls.Passphrase || ''
                 }, (req, res) => {
                     if (!req.connection.encrypted) {
                         let host = '';
@@ -380,6 +388,22 @@ exports.Middleware = (pathFilter, main) => {
             Filter: pathFilter
         });
     } else throw new Error('Middleware must have string or regular expression path filter. And main entry must be a function')
+}
+
+
+exports.Proxy = (type, config) => {
+    try {
+        if (type === 'port') {
+            let port = config.port || 80;
+            let table = config.table || [];
+            let httpsC = config.tls || void 0;
+            proxy.PortProxy.default(table, port, httpsC);
+        }
+    } catch (e) {
+        console.error('Error creating proxy.');
+        console.error(e);
+        process.exit(1);
+    }
 }
 
 exports.Module = exports.module = exports.Load = exports.load = LoadModule;

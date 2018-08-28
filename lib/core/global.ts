@@ -48,7 +48,8 @@ export interface TLSConfiguration {
     Port: Array<number>;
     Cert: string;
     Key: string;
-    CA: string;
+    CA?: string;
+    Passphrase?: string;
 }
 export interface SocketConfiguration {
     Port: Array<number> | number;
