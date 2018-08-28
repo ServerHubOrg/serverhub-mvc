@@ -256,7 +256,8 @@ exports.Run = (config, appstart) => {
                 let server = https.createServer({
                     cert: tls.Cert,
                     key: tls.Key,
-                    ca: tls.CA
+                    ca: tls.CA || '',
+                    passphrase: tls.Passphrase || ''
                 }, (req, res) => {
                     if (!req.connection.encrypted) {
                         let host = '';
