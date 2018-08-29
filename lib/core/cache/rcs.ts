@@ -100,7 +100,7 @@ export class RCS {
                         res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
                     else
                         // res.write(ErrorManager.RenderErrorAsHTML(error));
-                        res.write(CacheHelper.Cache(npath.resolve(__dirname,'../', '404.html')).Content);
+                        res.write(CacheHelper.Cache(npath.resolve(__dirname, '../', '404.html')).Content);
                     res.end();
                     return;
                 }
@@ -131,7 +131,7 @@ export class RCS {
                             res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
                         else
                             // res.write(ErrorManager.RenderErrorAsHTML(new Error(ErrorManager.RenderError(RuntimeError.SH020706, uri))));
-                            res.write(CacheHelper.Cache(npath.resolve(__dirname, '../','404.html')).Content);
+                            res.write(CacheHelper.Cache(npath.resolve(__dirname, '../', '404.html')).Content);
                         res.end();
                         return;
                     }
@@ -163,10 +163,18 @@ export class RCS {
                             if (parsedRanges.length === 1) {
                                 if (parsedRanges[0].start === 0 && parsedRanges[0].end === info.Size - 1)
                                     res.statusCode = 200;
+                                parsedRanges[0].end--;
                                 res.setHeader('content-type', contentType);
+                                let bufferEndIndex = 10 * 1024 * 1024 + parsedRanges[0].start - 1;
                                 res.setHeader('date', Head.FormatDate());
-                                res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + r.end).join(', ')) + '/' + info.Size;
-                                let stream = nfs.createReadStream(info.Path, parsedRanges[0]);
+                                res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + (bufferEndIndex > r.end ? r.end : bufferEndIndex)).join(', ') + '/' + info.Size);
+                                let stream = nfs.createReadStream(info.Path, {
+                                    start: parsedRanges[0].start,
+                                    end: bufferEndIndex
+                                });
+                                stream.on('open', () => {
+                                    res.flushHeaders();
+                                })
                                 stream.pipe(res);
                                 stream.on('close', () => {
                                     res.end();
