@@ -31,6 +31,12 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Cache - Playground",
+            "program": "${workspaceFolder}/playground/server/app.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch",
             "program": "${workspaceFolder}/test/server/app.js"
         }

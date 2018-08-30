@@ -130,18 +130,29 @@ class RCS {
                     try {
                         if (req.headers.hasOwnProperty('range')) {
                             let parsedRanges = helper_1.RangeParser(req.headers['range'], info.Size);
-                            if (!parsedRanges)
-                                throw new Error();
                             res.statusCode = 206;
                             res.setHeader('accept-ranges', 'bytes');
                             let contentType = content_type_1.ContentType.GetContentType(info.Extension);
                             if (parsedRanges.length === 1) {
-                                if (parsedRanges[0].start === 0 && parsedRanges[0].end === info.Size - 1)
-                                    res.statusCode = 200;
                                 res.setHeader('content-type', contentType);
+                                let bufferEndIndex = 10 * 1024 * 1024 + parsedRanges[0].start - 1;
                                 res.setHeader('date', server_1.Head.FormatDate());
-                                res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + r.end).join(', ')) + '/' + info.Size;
-                                let stream = nfs.createReadStream(info.Path, parsedRanges[0]);
+                                if (parsedRanges[0].start === 0 && parsedRanges[0].end === info.Size - 1) {
+                                    bufferEndIndex = parsedRanges[0].end;
+                                    res.statusCode = 200;
+                                    res.setHeader('content-length', info.Size);
+                                }
+                                else {
+                                    res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + (bufferEndIndex > r.end ? r.end : bufferEndIndex)).join(', ') + '/' + info.Size);
+                                }
+                                let stream = nfs.createReadStream(info.Path, {
+                                    start: parsedRanges[0].start,
+                                    end: bufferEndIndex,
+                                    highWaterMark: 1024
+                                });
+                                stream.on('open', () => {
+                                    res.flushHeaders();
+                                });
                                 stream.pipe(res);
                                 stream.on('close', () => {
                                     res.end();
@@ -150,7 +161,6 @@ class RCS {
                             else {
                                 res.setHeader('content-type', 'multipart/byteranges; boundary=$serverhubservice');
                                 let count = parsedRanges.length;
-                                let totalLength = 0;
                                 const streamloop = (index) => {
                                     let stream = nfs.createReadStream(info.Path, parsedRanges[index]);
                                     res.write(`${index !== 0 ? '\n' : ''}--$serverhubservice\nContent-Type: ${contentType}\nContent-Range: bytes ${parsedRanges[index].start}-${parsedRanges[index].end}/${info.Size}\n`);
@@ -173,7 +183,7 @@ class RCS {
                             res.setHeader('content-disposition', `attachment; filename="${info.FileName}"`);
                             res.setHeader('content-length', info.Size);
                             res.statusCode = 200;
-                            let rstream = nfs.createReadStream(info.Path, { start: 0, end: info.Size });
+                            let rstream = nfs.createReadStream(info.Path, { start: 0, end: info.Size - 1 });
                             rstream.pipe(res);
                             rstream.on('close', () => {
                                 res.end();
