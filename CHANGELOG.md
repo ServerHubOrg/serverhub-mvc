@@ -1,4 +1,9 @@
 # Changelog
+## `1.6.2` August 30, 2018
+### Fix
+- Wrong partial content handler. Not supposed to directly slice data stream.
+- Remove useless credential validation in HTTP based WebSocket.
+
 ## `1.6.1` August 28, 2018
 ### Fix
 - TLS Passphrase supported.
