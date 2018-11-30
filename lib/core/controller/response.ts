@@ -112,9 +112,10 @@ class SHResponse {
         this._WriteHeadCalled = true;
         if (header)
             Object.keys(header).forEach(headerKey => {
+                let value = header[headerKey];
                 headerKey = headerKey.toLowerCase();
                 if (ValidHeaders.indexOf(headerKey) !== -1) {
-                    this._Headers[headerKey] = header[headerKey];
+                    this._Headers[headerKey] = value;
                 }
             });
         this._HeaderSent = true;
