@@ -84,3 +84,8 @@ If you are willing to receive more information, stories, tutorials and release i
 MIT
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FServerHubOrg%2Fserverhub-mvc?ref=badge_large)
+
+## Support
+Thanks [JetBrains](https://www.jetbrains.com/?from=serverhub-mvc), ServerHub Open Source Projects benifits from their kindness!
+
+[![JetBrains](asset/jetbrains-variant-2.svg)](https://www.jetbrains.com/?from=serverhub-mvc)
