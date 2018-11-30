@@ -145,7 +145,7 @@ export function RoutePath (path: string, request: IncomingMessage, res: ServerRe
 
 function NoRoute (path: string, req: IncomingMessage, res: ServerResponse): void {
     let variables = global['EnvironmentVariables'] as GlobalEnvironmentVariables;
-
+    path = path.match(/^([^?]*)/)[1];
     if (path === '/') {
         let hasmatch = false;
         variables.DefaultPages.forEach(ele => {
