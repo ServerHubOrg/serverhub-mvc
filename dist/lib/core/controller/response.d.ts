@@ -11,7 +11,7 @@ declare class SHResponse {
     statusCode: number;
     getHeaderNames(): Array<string>;
     hasHeader(name: string): boolean;
-    getContent(encoding?: string): String;
+    getContent(): String;
     getHeader(name: string): any;
     getHeaders(): Object;
     setHeader(prop: string, value: any): void;

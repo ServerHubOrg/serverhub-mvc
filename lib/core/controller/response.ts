@@ -47,8 +47,8 @@ class SHResponse {
         return this._Headers.hasOwnProperty(name);
     }
 
-    public getContent(encoding = 'utf8'): String {
-        return this._Content ? this._Content.toString(encoding) : void 0;
+    public getContent(): String {
+        return this._Content ? this._Content: void 0;
     }
 
     public getHeader(name: string): any {
