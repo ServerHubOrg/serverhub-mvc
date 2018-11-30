@@ -26,8 +26,8 @@ function QueryDomain(str, col) {
     col.forEach(ent => {
         if (host.endsWith(ent.Hostname))
             entry = {
-                RemoteHostname: ent.RemoteHostname,
-                RemotePort: ent.RemotePort,
+                ForwardHostname: ent.ForwardHostname,
+                ForwardPort: ent.ForwardPort,
                 Hostname: ent.Hostname
             };
     });
@@ -54,11 +54,10 @@ const connectionListener = (req, res) => __awaiter(this, void 0, void 0, functio
                 followAllRedirects: true,
                 followRedirect: true
             };
-            options.headers.referer = GetHostString(!!TLS, entry.RemoteHostname, entry.RemotePort);
-            options.headers.host = entry.RemoteHostname + ':' + entry.RemotePort;
-            options.host = entry.RemoteHostname + ':' + entry.RemotePort;
-            console.log(options.headers);
-            let r = request(GetHostString(!!TLS, entry.RemoteHostname, entry.RemotePort), options);
+            options.headers.referer = GetHostString(!!TLS, entry.ForwardHostname, entry.ForwardPort);
+            options.headers.host = entry.ForwardHostname + ':' + entry.ForwardPort;
+            options.host = entry.ForwardHostname + ':' + entry.ForwardPort;
+            let r = request(GetHostString(!!TLS, entry.ForwardHostname, entry.ForwardPort), options);
             r.on('response', (rs) => {
                 res.writeHead(rs.statusCode, rs.headers);
             });
@@ -93,7 +92,7 @@ function default_1(table, proxy_port = 8080, https) {
     PROXY_COUNT++;
     if (table) {
         table.forEach(ent => {
-            if ((net_1.isIPv4(ent.Hostname) || IsDomain(ent.Hostname)) && ent.RemotePort < 65536 && ent.RemotePort > 0) {
+            if ((net_1.isIPv4(ent.Hostname) || IsDomain(ent.Hostname)) && ent.ForwardPort < 65536 && ent.ForwardPort > 0) {
                 filteredTable.push(ent);
             }
         });
@@ -106,7 +105,8 @@ function default_1(table, proxy_port = 8080, https) {
             server = https_1.createServer({
                 key: https.Key,
                 cert: https.Cert,
-                ca: https.CA
+                ca: https.CA || '',
+                passphrase: https.Passphrase || ''
             }, connectionListener);
         }
         server.on('listening', () => {

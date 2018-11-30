@@ -17,8 +17,8 @@ import * as colors from 'colors';
 
 export interface IRedirectEntry {
     Hostname: string;
-    RemoteHostname: string;
-    RemotePort: number;
+    ForwardHostname: string;
+    ForwardPort: number;
 }
 
 export interface IRedirectTable extends Array<IRedirectEntry> { };
@@ -43,8 +43,8 @@ function QueryDomain (str: string, col: IRedirectTable): IRedirectEntry {
     col.forEach(ent => {
         if (host.endsWith(ent.Hostname))
             entry = {
-                RemoteHostname: ent.RemoteHostname,
-                RemotePort: ent.RemotePort,
+                ForwardHostname: ent.ForwardHostname,
+                ForwardPort: ent.ForwardPort,
                 Hostname: ent.Hostname
             } as IRedirectEntry;
     });
@@ -85,11 +85,11 @@ const connectionListener = async (req: IncomingMessage, res: ServerResponse) => 
                 followRedirect: true
             } as request.CoreOptions;
 
-            options.headers.referer = GetHostString(!!TLS, entry.RemoteHostname, entry.RemotePort);
-            options.headers.host = entry.RemoteHostname + ':' + entry.RemotePort;
-            options.host = entry.RemoteHostname + ':' + entry.RemotePort;
-            console.log(options.headers);
-            let r = request(GetHostString(!!TLS, entry.RemoteHostname, entry.RemotePort), options);
+            options.headers.referer = GetHostString(!!TLS, entry.ForwardHostname, entry.ForwardPort);
+            options.headers.host = entry.ForwardHostname + ':' + entry.ForwardPort;
+            options.host = entry.ForwardHostname + ':' + entry.ForwardPort;
+
+            let r = request(GetHostString(!!TLS, entry.ForwardHostname, entry.ForwardPort), options);
             r.on('response', (rs) => {
                 res.writeHead(rs.statusCode, rs.headers);
             });
@@ -132,7 +132,7 @@ export default function (table: IRedirectTable, proxy_port = 8080, https?: TLSCo
     if (table) {
         // validation
         table.forEach(ent => {
-            if ((IsIPv4(ent.Hostname) || IsDomain(ent.Hostname)) && ent.RemotePort < 65536 && ent.RemotePort > 0) {
+            if ((IsIPv4(ent.Hostname) || IsDomain(ent.Hostname)) && ent.ForwardPort < 65536 && ent.ForwardPort > 0) {
                 filteredTable.push(ent);
             }
         });
@@ -144,7 +144,8 @@ export default function (table: IRedirectTable, proxy_port = 8080, https?: TLSCo
             server = screateServer({
                 key: https.Key,
                 cert: https.Cert,
-                ca: https.CA
+                ca: https.CA || '',
+                passphrase: https.Passphrase || ''
             }, connectionListener);
         }
         server.on('listening', () => {

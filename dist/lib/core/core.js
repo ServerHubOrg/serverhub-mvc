@@ -109,6 +109,7 @@ function RoutePath(path, request, res) {
 exports.RoutePath = RoutePath;
 function NoRoute(path, req, res) {
     let variables = global['EnvironmentVariables'];
+    path = path.match(/^([^?]*)/)[1];
     if (path === '/') {
         let hasmatch = false;
         variables.DefaultPages.forEach(ele => {
