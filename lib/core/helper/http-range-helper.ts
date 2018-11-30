@@ -20,7 +20,7 @@ interface HTTPRange {
  * Parse range string to a normalized one.
  * @param {string} range Raw HTTP range string
  */
-function RangeParser(range: string, fileLength: number): Array<HTTPRange> {
+function RangeParser(range = '', fileLength: number): Array<HTTPRange> {
     let rangeTester = /^bytes=((?:(\d*-\d+)|(?:,\s?)|(\d+-\d*))+)$/;
     let match = range.match(rangeTester);
     if (match === null || match === void 0)
@@ -45,7 +45,7 @@ function RangeParser(range: string, fileLength: number): Array<HTTPRange> {
             } else if (segs[1] === '' && segs[0] !== '') {
                 newRange = {
                     start: parseInt(segs[0]),
-                    end: fileLength
+                    end: fileLength - 1
                 };
             } else if (segs.indexOf('') === -1) {
                 let start = parseInt(segs[0]);

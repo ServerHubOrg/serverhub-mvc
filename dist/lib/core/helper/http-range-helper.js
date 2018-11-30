@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function RangeParser(range, fileLength) {
+function RangeParser(range = '', fileLength) {
     let rangeTester = /^bytes=((?:(\d*-\d+)|(?:,\s?)|(\d+-\d*))+)$/;
     let match = range.match(rangeTester);
     if (match === null || match === void 0)
@@ -28,7 +28,7 @@ function RangeParser(range, fileLength) {
             else if (segs[1] === '' && segs[0] !== '') {
                 newRange = {
                     start: parseInt(segs[0]),
-                    end: fileLength
+                    end: fileLength - 1
                 };
             }
             else if (segs.indexOf('') === -1) {

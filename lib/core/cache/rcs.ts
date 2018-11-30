@@ -12,7 +12,7 @@ import { ErrorManager, RuntimeError } from '../error/error';
 import { StorageService, FileInfo } from '../storage/storage';
 import { GlobalEnvironmentVariables } from '../global';
 import { ContentType } from '../content-type';
-import { CacheHelper, RangeParser } from '../helper';
+import { CacheHelper, RangeParser, HTTPRange } from '../helper';
 import * as npath from 'path';
 import * as nfs from 'fs';
 import { Head } from '../server';
@@ -100,7 +100,7 @@ export class RCS {
                         res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
                     else
                         // res.write(ErrorManager.RenderErrorAsHTML(error));
-                        res.write(CacheHelper.Cache(npath.resolve(__dirname,'../', '404.html')).Content);
+                        res.write(CacheHelper.Cache(npath.resolve(__dirname, '../', '404.html')).Content);
                     res.end();
                     return;
                 }
@@ -131,7 +131,7 @@ export class RCS {
                             res.write(CacheHelper.Cache(npath.resolve(variables.ServerBaseDir, variables.PageNotFound)).Content);
                         else
                             // res.write(ErrorManager.RenderErrorAsHTML(new Error(ErrorManager.RenderError(RuntimeError.SH020706, uri))));
-                            res.write(CacheHelper.Cache(npath.resolve(__dirname, '../','404.html')).Content);
+                            res.write(CacheHelper.Cache(npath.resolve(__dirname, '../', '404.html')).Content);
                         res.end();
                         return;
                     }
@@ -154,19 +154,28 @@ export class RCS {
                     try {
                         if (req.headers.hasOwnProperty('range')) {
                             let parsedRanges = RangeParser(req.headers['range'] as string, info.Size);
-                            if (!parsedRanges)
-                                throw new Error();
-
                             res.statusCode = 206;
                             res.setHeader('accept-ranges', 'bytes');
                             let contentType = ContentType.GetContentType(info.Extension);
                             if (parsedRanges.length === 1) {
-                                if (parsedRanges[0].start === 0 && parsedRanges[0].end === info.Size - 1)
-                                    res.statusCode = 200;
                                 res.setHeader('content-type', contentType);
+                                let bufferEndIndex = 10 * 1024 * 1024 + parsedRanges[0].start - 1;
                                 res.setHeader('date', Head.FormatDate());
-                                res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + r.end).join(', ')) + '/' + info.Size;
-                                let stream = nfs.createReadStream(info.Path, parsedRanges[0]);
+                                if (parsedRanges[0].start === 0 && parsedRanges[0].end === info.Size - 1) {
+                                    bufferEndIndex = parsedRanges[0].end;
+                                    res.statusCode = 200;
+                                    res.setHeader('content-length', info.Size);
+                                } else {
+                                    res.setHeader('content-range', 'bytes ' + parsedRanges.map(r => r.start + '-' + (bufferEndIndex > r.end ? r.end : bufferEndIndex)).join(', ') + '/' + info.Size);
+                                }
+                                let stream = nfs.createReadStream(info.Path, {
+                                    start: parsedRanges[0].start,
+                                    end: bufferEndIndex,
+                                    highWaterMark: 1024
+                                });
+                                stream.on('open', () => {
+                                    res.flushHeaders();
+                                })
                                 stream.pipe(res);
                                 stream.on('close', () => {
                                     res.end();
@@ -174,7 +183,6 @@ export class RCS {
                             } else {
                                 res.setHeader('content-type', 'multipart/byteranges; boundary=$serverhubservice');
                                 let count = parsedRanges.length;
-                                let totalLength = 0;
                                 const streamloop = (index) => {
                                     let stream = nfs.createReadStream(info.Path, parsedRanges[index]);
                                     res.write(`${index !== 0 ? '\n' : ''}--$serverhubservice\nContent-Type: ${contentType}\nContent-Range: bytes ${parsedRanges[index].start}-${parsedRanges[index].end}/${info.Size}\n`);
@@ -195,7 +203,7 @@ export class RCS {
                             res.setHeader('content-disposition', `attachment; filename="${info.FileName}"`);
                             res.setHeader('content-length', info.Size);
                             res.statusCode = 200;
-                            let rstream = nfs.createReadStream(info.Path, { start: 0, end: info.Size });
+                            let rstream = nfs.createReadStream(info.Path, { start: 0, end: info.Size - 1 });
                             rstream.pipe(res);
                             rstream.on('close', () => {
                                 res.end();

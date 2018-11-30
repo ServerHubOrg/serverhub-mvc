@@ -298,9 +298,6 @@ exports.Run = (config, appstart) => {
                 if (_socketPort.indexOf(p) !== -1) {
                     let ss = new ws.Server({
                         server: server,
-                        verifyClient: (info) => {
-                            console.log(info);
-                        }
                     });
                     ss.on('connection', config['SocketOptions']['ConnectionCallback'] ? config['SocketOptions']['ConnectionCallback'] : () => {
                         throw new Error('No callback specified in your configuration.');
@@ -350,9 +347,6 @@ exports.Run = (config, appstart) => {
                 if (_socketPort.indexOf(p) !== -1) {
                     let ss = new ws.Server({
                         server: server,
-                        verifyClient: (info) => {
-                            console.log(info);
-                        }
                     });
                     ss.on('connection', config['SocketOptions']['ConnectionCallback'] ? config['SocketOptions']['ConnectionCallback'] : () => {
                         throw new Error('No callback specified in your configuration.');
@@ -392,6 +386,7 @@ exports.Middleware = (pathFilter, main) => {
 
 
 exports.Proxy = (type, config) => {
+    console.info('Proxy is an experiment feature. Do not use in production environment.')
     try {
         if (type === 'port') {
             let port = config.port || 80;
